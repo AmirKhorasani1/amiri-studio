@@ -1,0 +1,77 @@
+@import "tailwindcss";
+@import "./fonts.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+body {
+  font-family: "Poppins", sans-serif;
+  @apply bg-white text-black dark:bg-black dark:text-white;
+}
+
+
+@layer components {
+  .bg-primary {
+    @apply bg-white text-black dark:bg-black dark:text-white
+  }
+
+  .bg-secondary {
+    @apply bg-neutral-200 text-black dark:bg-neutral-950 dark:text-white
+  }
+  
+  .border-primary {
+    @apply border border-neutral-200 dark:border-neutral-800
+  }
+  .btn {
+    @apply text-[15px] px-3.5 md:px-4.5 py-3 font-medium duration-200 cursor-pointer;
+  }
+
+  .btn-primary {
+    @apply rounded-full bg-neutral-100 px-3.5 md:px-4.5 py-3 text-sm md:text-[14.5px] font-medium text-black transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98];
+  }
+
+  .btn-secondary {
+    @apply rounded-full border-2 border-neutral-800 bg-neutral-950 px-3.5 md:px-4.5 py-3 text-sm md:text-[14.5px] font-medium text-white transition-colors duration-200 hover:bg-neutral-800;
+  }
+
+  .flex-row {
+    @apply flex items-center;
+  }
+
+  .flex-col-center {
+    @apply flex flex-col items-center;
+  }
+}
+
+/* --- Scrollbar Styling --- */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #282828 #000000;
+}
+
+::-webkit-scrollbar {
+  @apply w-2.5 h-2.5;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-[#343434] rounded-[5px];
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-[#1c1c1c] rounded-[5px] hover:bg-[#2b2b2b];
+}
+
+/* Hide scrollbar but keep scroll functionality */
+.no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
