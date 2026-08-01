@@ -6,7 +6,7 @@ let ioInstance;
 function initSocket(server, allowedOrigins) {
   ioInstance = new Server(server, {
     cors: {
-      origin: allowedOrigins, // آرایه — Socket.io خودش چندتا origin رو پشتیبانی می‌کنه
+      origin: allowedOrigins,
       methods: ["GET", "POST"],
     },
   });
@@ -29,6 +29,19 @@ function initSocket(server, allowedOrigins) {
       } catch (error) {
         socket.emit("auth-error", "Unauthorized");
       }
+    });
+
+    // --- Typing indicator ---
+    // socket.to(room) broadcasts to everyone in the room EXCEPT the sender,
+    // so the person typing never sees their own indicator echoed back.
+    socket.on("typing", (conversationId) => {
+      if (!conversationId) return;
+      socket.to(conversationId).emit("typing", conversationId);
+    });
+
+    socket.on("stop-typing", (conversationId) => {
+      if (!conversationId) return;
+      socket.to(conversationId).emit("stop-typing", conversationId);
     });
 
     socket.on("disconnect", () => {

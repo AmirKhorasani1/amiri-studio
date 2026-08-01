@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "ignoreDeprecations": "6.0",
+
+    "baseUrl": ".",
+
+    "paths": {
+      "@/*": ["src/*"],
+
+      "@api/*": ["src/api/*"],
+      "@assets/*": ["src/assets/*"],
+
+      "@components/*": ["src/components/*"],
+      "@common/*": ["src/components/common/*"],
+      "@layouts/*": ["src/components/layouts/*"],
+      "@templates/*": ["src/components/templates/*"],
+      "@admin/*": ["src/components/templates/admin/*"],
+      "@home/*": ["src/components/templates/home/*"],
+      "@tools/*": ["src/components/templates/tools/*"],
+      "@ui/*": ["src/components/ui/*"],
+
+      "@context/*": ["src/context/*"],
+      "@lib/*": ["src/lib/*"],
+      "@pages/*": ["src/pages/*"],
+      "@styles/*": ["src/styles/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}

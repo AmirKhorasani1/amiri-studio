@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login, saveToken } from "../api/authApi";
+import { login, saveToken } from "@api/authApi";
 
 const AdminLogin = () => {
   const [password, setPassword] = useState("");
@@ -40,7 +40,7 @@ const AdminLogin = () => {
           placeholder="Password"
           autoFocus
           className="w-full rounded-lg border border-neutral-800 bg-neutral-950 px-3 py-2.5 text-sm
-                     text-white placeholder-neutral-600 outline-none focus:border-neutral-500"
+            text-white placeholder-neutral-600 outline-none focus:border-neutral-500"
         />
 
         {error && <p className="mt-2 text-xs text-red-400">{error}</p>}
@@ -49,7 +49,7 @@ const AdminLogin = () => {
           type="submit"
           disabled={loading || !password}
           className="mt-4 w-full rounded-lg bg-white py-2.5 text-sm font-semibold text-black
-                     transition-colors hover:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-50"
+            transition-colors hover:bg-neutral-200 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {loading ? "Signing in..." : "Sign in"}
         </button>

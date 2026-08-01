@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { isLoggedIn } from "../api/authApi";
+import { isLoggedIn } from "@api/authApi";
 
 const ProtectedRoute = ({ children }) => {
   if (!isLoggedIn()) {

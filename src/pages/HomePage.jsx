@@ -1,9 +1,10 @@
-import BlogSection from "../features/portfolio/blog/BlogSection";
-import ContactMeSection from "../features/portfolio/contact-me/ContactMeSection";
-import HeroSection from "../features/portfolio/hero/HeroSection";
-import ProjectsSection from "../features/portfolio/projects/ProjectsSection";
-import SkillsSection from "../features/portfolio/skills/SkillsSection";
-import ToolsSection from "../features/portfolio/tools/ToolsSection";
+import HeroSection from "@home/hero/HeroSection"
+import ToolsSection from "@home/tools/ToolsSection"
+import SkillsSection from "@home/skills/SkillsSection"
+import ProjectsSection from "@home/projects/ProjectsSection"
+import PortfolioAssistant from "@home/portfolio-assistant/PortfolioAssistant"
+import ContactMeSection from "@home/contact/ContactMeSection"
+import BlogSection from "@home/Blog/BlogSection"
 
 export default function HomePage() {
   return (
@@ -13,6 +14,7 @@ export default function HomePage() {
       <SkillsSection />
       <ProjectsSection />
       <ContactMeSection />
+      <PortfolioAssistant />
       <BlogSection />
     </>
   );

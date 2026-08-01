@@ -1,7 +1,7 @@
 import React from 'react'
 import { FiSun, FiMoon, FiMonitor } from 'react-icons/fi'
 import { motion } from 'framer-motion'
-import { useTheme } from '../../context/ThemeContext'
+import { useTheme } from '@context/ThemeContext'
 
 const OPTIONS = [
   { key: 'system', icon: FiMonitor, label: 'سیستم' },

@@ -48,8 +48,8 @@ const SectionTitle = ({
       )}
 
       <h2
-        className="font-medium leading-[1.15] tracking-tighter text-white text-4xl md:text-5xl"
-        style={{ letterSpacing: "-0.03em" }}
+        className="max-w-2xl leading-[1.2] md:leading-[1.05] tracking-[-1em] text-white text-[39px] md:text-[52px]"
+        style={{ letterSpacing: "-0.03em", fontWeight: 480 }}
       >
         {renderTitle()}
       </h2>

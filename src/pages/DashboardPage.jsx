@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
-import ChatSidebar from "../features/dashboard/ChatSidebar";
-import ChatWindow from "../features/dashboard/ChatWindow";
-import { getAllConversations } from "../api/conversationApi";
-import { getToken } from "../api/authApi";
-import { socket } from "../lib/socket";
+import ChatSidebar from "@admin/inbox/ChatSidebar";
+import ChatWindow from "@admin/inbox/ChatWindow";
+import { getAllConversations } from "@api/conversationApi";
+import { getToken } from "@api/authApi";
+import { socket } from "@lib/socket";
 
 const ChatDashboardPage = () => {
   const [conversations, setConversations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeId, setActiveId] = useState(null);
 
-  // بار اول: کل لیست مکالمات رو از API بگیر
   useEffect(() => {
     getAllConversations()
       .then((res) => setConversations(res.data.data))
@@ -18,7 +17,6 @@ const ChatDashboardPage = () => {
       .finally(() => setLoading(false));
   }, []);
 
-  // وارد شدن به admin-room برای گرفتن آپدیت‌های زنده لیست
   useEffect(() => {
     const token = getToken();
     socket.emit("join-admin-room", token);
