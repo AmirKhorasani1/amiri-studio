@@ -5,7 +5,6 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { HiChevronDown } from 'react-icons/hi'
 import { HiOutlineMenuAlt4 } from 'react-icons/hi'
 import { IoClose } from 'react-icons/io5'
-import { BsTriangleFill } from 'react-icons/bs'
 import {
   HiOutlineSwatch,
   HiOutlineDocumentText,
@@ -25,6 +24,7 @@ import LogoImg from '@assets/images/file_00000000f4b4820a8b474db8c6b906eb.png'
 import NavDropdown from './NavDropdown'
 import NavMenuItem from './NavMenuItem'
 import ThemeToggleButton from '@ui/ThemeToggleButton'
+import LanguageToggleButton from '@ui/LanguageToggleButton'
 import { useTheme } from '@context/ThemeContext'
 
 const START_ITEMS = ['Home', 'Skills']
@@ -189,6 +189,7 @@ const Navbar = () => {
         </Link>
 
         <div className="flex items-center gap-3">
+          <LanguageToggleButton  className="hidden md:flex" />
           <ThemeToggleButton className="hidden md:flex" />
           <button
             onClick={() => setMenuOpen((prev) => !prev)}
@@ -262,6 +263,7 @@ const Navbar = () => {
 
             {/* پایین: تم و دکمه شروع پروژه */}
             <div className="flex flex-col gap-4 border-t border-neutral-100 px-6 py-4 dark:border-neutral-900">
+              <LanguageToggleButton  className="md:hidden" />
               <div className="flex items-center justify-between">
                 <span className="text-[14.5px] font-medium text-neutral-500 dark:text-neutral-400">
                   {darkMode ? 'Dark mode' : 'Light mode'}
