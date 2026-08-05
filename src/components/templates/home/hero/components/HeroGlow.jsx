@@ -1,9 +1,13 @@
 import { motion } from "framer-motion";
+import { useTheme } from "@context/ThemeContext";
 
-const COLOR_GRADIENT =
+const COLOR_GRADIENT_DARK =
   "linear-gradient(120deg, #303030, #353535, #404040, #555555, #656565, #555555, #404040, #303030)";
 
-const GLOW_OFFSET_Y_MOBILE = -80;
+const COLOR_GRADIENT_LIGHT =
+  "linear-gradient(120deg, #fafafa, #f5f5f5, #f0f0f0, #f0f0f0, #f5f5f5, #fafafa)";
+
+const GLOW_OFFSET_Y_MOBILE = -100;
 const GLOW_OFFSET_Y_DESKTOP = -140;
 
 const getGlowPositionStyle = (offsetY) => ({
@@ -12,6 +16,9 @@ const getGlowPositionStyle = (offsetY) => ({
 });
 
 const HeroGlow = ({ isHovered }) => {
+  const { darkMode } = useTheme();
+  const COLOR_GRADIENT = darkMode ? COLOR_GRADIENT_DARK : COLOR_GRADIENT_LIGHT;
+
   const mobileGlowStyle = getGlowPositionStyle(GLOW_OFFSET_Y_MOBILE);
   const desktopGlowStyle = getGlowPositionStyle(GLOW_OFFSET_Y_DESKTOP);
 
@@ -24,7 +31,7 @@ const HeroGlow = ({ isHovered }) => {
       />
       {/* لایه پایه خاکستری: دسکتاپ */}
       <div
-        className="absolute left-1/2 -z-10 hidden w-[140%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-neutral-900/70 blur-[40px] md:block"
+        className="absolute left-1/2 -z-10 hidden w-[140%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-neutral-200 dark:bg-neutral-900/60 blur-[40px] md:block"
         style={desktopGlowStyle}
       />
 
@@ -49,7 +56,7 @@ const HeroGlow = ({ isHovered }) => {
 
       {/* دسکتاپ */}
       <motion.div
-        className="absolute left-1/2 -z-10 hidden w-[140%] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[40px] md:block"
+        className="absolute left-1/2 -z-10 hidden w-[140%] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[100px] md:block"
         style={{
           ...desktopGlowStyle,
           backgroundImage: COLOR_GRADIENT,

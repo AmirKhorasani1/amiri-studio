@@ -21,19 +21,21 @@ const StickyViewAllLink = ({
         <Link
           to={to}
           className="
-            group flex items-center gap-1 rounded-full
-            bg-neutral-600/45
-            px-6 py-3.5 text-[14.5px] md:text-[15.5px] font-medium text-neutral-200
+            group flex items-center gap-3 rounded-full
+            bg-neutral-600/55
+            p-1.5 ltr:pl-4 rtl:pr-4 text-[14.5px] md:text-[15.5px] font-medium text-neutral-200
             shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-sm
             transition-colors duration-200 active:scale-95 active:bg-white/30
             hover:text-white hover:border-neutral-700
           "
         >
           <span>{label}</span>
-          <MdKeyboardArrowRight
-            size={18}
-            className="transition-transform duration-300 group-hover:translate-x-0.5"
-          />
+          <div className="flex items-center justify-center pl-0.5 bg-white rounded-full w-10 h-10 text-black rtl:rotate-180">
+            <MdKeyboardArrowRight
+              size={23}
+              className="transition-transform duration-300 group-hover:translate-x-0.5"
+            />
+          </div>
         </Link>
       </motion.div>
     </div>

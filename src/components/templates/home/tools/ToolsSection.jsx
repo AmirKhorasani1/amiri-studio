@@ -5,29 +5,51 @@ import DevNotesCard from './components/DevNotes/DevNotesCard'
 import StillTimeCard from './components/StillTime/StillTimeCard'
 import SnippetVaultCard from './components/SnippetVault/SnippetVaultCard'
 import AnimationLab from './components/AnimationLab/AnimationLab'
+import { useLanguage } from '@context/LanguageContext'
+import { Link } from 'react-router-dom'
+
+const translations = {
+  en: {
+    title: 'Custom Developer Toolkit',
+    description:
+      'Every tool here started as a real problem during development. I built them to remove repetitive work, improve consistency, and make building interfaces faster.',
+    viewAll: 'View all tools',
+  },
+  fa: {
+    title: 'ابزارهای اختصاصی توسعه',
+    description:
+      'هر کدوم از این ابزارها از یه مشکل واقعی حین توسعه شروع شدن. من اونا رو ساختم تا کارهای تکراری رو حذف کنم، یکدستی رو بهتر کنم و ساخت رابط‌کاربری رو سریع‌تر کنم.',
+    viewAll: 'مشاهده همه ابزارها',
+  },
+}
 
 const ToolsSection = () => {
+  const { language } = useLanguage()
+  const t = translations[language]
+
   return (
-    <div className="relative flex flex-col gap-4 container">
+    <div className="relative flex flex-col gap-10 container">
       <SectionTitle
-        title="Built to Solve Real Problems"
-        description="Every tool here started as a real problem during development. I built them to remove repetitive work, improve consistency, and make building interfaces faster."
+        title={t.title}
+        description={t.description}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 *:cursor-pointer">
           <DevNotesCard />
-          <div className="hidden md:block">
+          <Link to="/tools/still-time">
             <StillTimeCard/>
-          </div>
+          </Link>
         </div>
         <div className="grid grid-cols-1 gap-4 *:cursor-pointer">
           <AnimationLab />
-          <SnippetVaultCard />
+          <Link to="/tools/snippet-vault">
+            <SnippetVaultCard />
+          </Link>
         </div>
       </div>
 
-      <StickyViewAllLink to="/tools" label="View all tools" />
+      <StickyViewAllLink to="/tools" label={t.viewAll} />
     </div>
   )
 }

@@ -23,16 +23,16 @@ const avatars = [
 
 const Toolbar = () => (
   <div className="flex items-center gap-3.5 rounded-full border border-neutral-700 bg-neutral-800 px-4 py-3 text-white sm:gap-4 sm:px-6">
-    <HiPhone size={21} className="shrink-0" />
+    <HiPhone size={21} className="shrink-0" aria-hidden="true" />
     <div className="relative shrink-0">
-      <BsChatFill size={21} />
+      <BsChatFill size={21} aria-hidden="true" />
       <span className="absolute -right-0.5 -top-0.5 h-1.5 w-1.5 rounded-full bg-blue-500" />
     </div>
 
     <span className="h-5 w-px shrink-0 bg-neutral-700" />
 
-    <SiGmail size={21} className="shrink-0" />
-    <FaGithub size={21} className="shrink-0" />
+    <SiGmail size={21} className="shrink-0" aria-hidden="true"/>
+    <FaGithub size={21} className="shrink-0" aria-hidden="true"/>
 
     <span className="h-5 w-px shrink-0 bg-neutral-700" />
 
@@ -47,9 +47,9 @@ const Toolbar = () => (
 
     <span className="h-5 w-px shrink-0 bg-neutral-700" />
 
-    <RiTelegram2Fill size={21} className="shrink-0" />
-    <FaInstagram size={21} className="shrink-0" />
-    <FaWhatsapp size={21} className="shrink-0" />
+    <RiTelegram2Fill size={21} className="shrink-0" aria-hidden="true" />
+    <FaInstagram size={21} className="shrink-0" aria-hidden="true" />
+    <FaWhatsapp size={21} className="shrink-0" aria-hidden="true" />
   </div>
 );
 

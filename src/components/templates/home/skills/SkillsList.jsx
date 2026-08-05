@@ -1,66 +1,158 @@
-import React from 'react';
+import React from "react";
+import { useLanguage } from "@context/LanguageContext";
+
+const translations = {
+  en: {
+    listItems: [
+      {
+        id: "01",
+        text: (
+          <>
+            Architecting scalable applications and solving complex frontend
+            challenges with{" "}
+            <strong className="text-white font-semibold">
+              React & Next.js
+            </strong>
+            .
+          </>
+        ),
+      },
+      {
+        id: "02",
+        text: (
+          <>
+            Writing robust, type-safe logic and managing complex data flows with{" "}
+            <strong className="text-white font-semibold">
+              TypeScript & JavaScript
+            </strong>
+            .
+          </>
+        ),
+      },
+      {
+        id: "03",
+        text: (
+          <>
+            Building responsive, pixel-perfect interfaces with{" "}
+            <strong className="text-white font-semibold">
+              Tailwind CSS
+            </strong>
+            .
+          </>
+        ),
+      },
+      {
+        id: "04",
+        text: (
+          <>
+            Managing scalable application state efficiently using{" "}
+            <strong className="text-white font-semibold">
+              Redux
+            </strong>
+            .
+          </>
+        ),
+      },
+      {
+        id: "05",
+        text: (
+          <>
+            Creating semantic, accessible, and SEO-friendly foundations with{" "}
+            <strong className="text-white font-semibold">
+              HTML & CSS
+            </strong>
+            .
+          </>
+        ),
+      },
+    ],
+  },
+
+  fa: {
+    listItems: [
+      {
+        id: "۰۱",
+        text: (
+          <>
+            طراحی و توسعه وب‌اپلیکیشن‌های مقیاس‌پذیر و حل چالش‌های فرانت‌اند با{" "}
+            <strong className="text-white font-semibold">
+              React و Next.js
+            </strong>
+            .
+          </>
+        ),
+      },
+      {
+        id: "۰۲",
+        text: (
+          <>
+            پیاده‌سازی منطق پایدار و مدیریت جریان‌های پیچیده داده با{" "}
+            <strong className="text-white font-semibold">
+              TypeScript و JavaScript
+            </strong>
+            .
+          </>
+        ),
+      },
+      {
+        id: "۰۳",
+        text: (
+          <>
+            تبدیل طراحی‌ها به رابط‌های کاربری سریع، واکنش‌گرا و Pixel Perfect با{" "}
+            <strong className="text-white font-semibold">
+              Tailwind CSS
+            </strong>
+            .
+          </>
+        ),
+      },
+      {
+        id: "۰۴",
+        text: (
+          <>
+            مدیریت State در پروژه‌های بزرگ و مقیاس‌پذیر با{" "}
+            <strong className="text-white font-semibold">
+              Redux
+            </strong>
+            .
+          </>
+        ),
+      },
+      {
+        id: "۰۵",
+        text: (
+          <>
+            ساخت ساختارهای استاندارد، Semantic و سازگار با موتورهای جستجو با{" "}
+            <strong className="text-white font-semibold">
+              HTML و CSS
+            </strong>
+            .
+          </>
+        ),
+      },
+    ],
+  },
+};
 
 const SkillsList = () => {
-  const listItems = [
-    {
-      id: '01',
-      text: (
-        <>
-          Architecting scalable applications and effortlessly solving complex frontend challenges with <strong className="text-white font-semibold">React & Next.js</strong>.
-        </>
-      ),
-    },
-    {
-      id: '02',
-      text: (
-        <>
-          Writing robust, type-safe logic and handling intricate data flows easily using <strong className="text-white font-semibold">TypeScript & JavaScript</strong>.
-        </>
-      ),
-    },
-    {
-      id: '03',
-      text: (
-        <>
-          Translating complex designs into high-performance, pixel-perfect responsive interfaces with <strong className="text-white font-semibold">Tailwind CSS</strong>.
-        </>
-      ),
-    },
-    {
-      id: '04',
-      text: (
-        <>
-          Managing complex application states efficiently across large-scale projects using <strong className="text-white font-semibold">Redux</strong>.
-        </>
-      ),
-    },
-    {
-      id: '05',
-      text: (
-        <>
-          Structuring accessible, semantic, and SEO-friendly web foundations via modern <strong className="text-white font-semibold">HTML & CSS</strong>.
-        </>
-      ),
-    }
-  ];
+  const { language } = useLanguage();
+  const { listItems } = translations[language];
 
   return (
-    // کانتینر اصلی با پس‌زمینه تیره و پدینگ مناسب
     <div className="w-full bg-black md:py-5">
-      <div className="flex flex-col gap-5 md:gap-10 max-w-4xl mx-auto">
+      <div className="mx-auto flex max-w-4xl flex-col gap-5 md:gap-10">
         {listItems.map((item) => (
-          <div key={item.id} className="flex items-start gap-5 md:gap-8 group cursor-default">
-            
-            {/* ستون اعداد - دقیقا مشابه عکس با رنگ طوسی مات */}
-            <span className="text-neutral-400 text-xl md:text-2xl pt-0.5 select-none transition-colors duration-300 group-hover:text-[#888]">
+          <div
+            key={item.id}
+            className="group flex cursor-default items-start gap-5 md:gap-8"
+          >
+            <span className="select-none pt-0.5 text-xl text-neutral-400 transition-colors duration-300 group-hover:text-[#888] md:text-2xl">
               {item.id}
             </span>
 
-            {/* ستون متن - با فونت خوانا و لاین‌هایت مناسب */}
-            <p className="text-neutral-200 text-[15.5px] md:text-lg leading-[1.65] md:leading-[1.7] tracking-wide font-light transition-colors duration-300 group-hover:text-[#EAEAEA]">
+            <p className="text-[15.5px] leading-[1.9] font-normal tracking-wide text-neutral-300 transition-colors duration-300 group-hover:text-neutral-100 md:text-lg">
               {item.text}
             </p>
-
           </div>
         ))}
       </div>

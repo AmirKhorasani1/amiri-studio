@@ -1,22 +1,41 @@
 import React from "react";
+import { useLanguage } from "@context/LanguageContext";
+
+const translations = {
+  en: {
+    title: "Snippet Vault",
+    description:
+      "Discover reusable snippets and copy production-ready code.",
+  },
+  fa: {
+    title: "کدهای آماده",
+    description:
+      "قطعه‌کدهای آماده را پیدا کنید و با یک کلیک از آن‌ها استفاده کنید.",
+  },
+};
 
 const SnippetVaultCard = () => {
+  const { language } = useLanguage();
+  const t = translations[language];
+
   return (
-    <div className="group relative h-[290px] w-full overflow-hidden rounded-lg border border-[#303030]">
+    <div className="group relative h-[270px] w-full overflow-hidden rounded-lg border border-[#303030]">
       {/* Text */}
-      <div className="absolute bottom-42 md:bottom-6 z-10 left-6">
-        <h1 className="text-[24px] font-medium tracking-[-0.04em] text-white sm:text-[26px]">
-          Snippet Vault
+      <div className="absolute bottom-44 md:bottom-6 z-10 left-6 text-left rtl:left-6 rtl:text-right leading-[1.05]">
+        <h1
+          className="text-[20px] font-medium text-white md:text-[25px] tracking-tighter"
+        >
+          {t.title}
         </h1>
 
-        <p className="mt-1.5 text-[14px] leading-[1.45] text-[#adadad] max-w-80 sm:text-[16px]">
-          Discover reusable snippets, speed up development, and copy
-          production-ready code.
+        <p className="mt-1.5 text-[14px] leading-[1.45] text-[#adadad] max-w-80 md:text-[16px]">
+          {t.description}
         </p>
       </div>
 
       {/* Terminal */}
       <div
+        dir="ltr"
         className="
           absolute -bottom-5 right-0 md:top-8 w-[64%]
           origin-bottom-right rounded-tl-xl border border-[#262626]
@@ -24,7 +43,7 @@ const SnippetVaultCard = () => {
           text-[#f5f5f5] transition-transform duration-500
           ease-[cubic-bezier(.22,1,.36,1)]
           group-hover:-rotate-2
-          sm:w-[55%] sm:p-4 md:text-[15px] md:leading-[1.75]
+          sm:w-[47%] sm:p-4 md:text-[15px] md:leading-[1.75]
         "
       >
         <p>

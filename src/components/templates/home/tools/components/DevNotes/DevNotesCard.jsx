@@ -1,6 +1,7 @@
 import React from "react";
 import { SiTicktick } from "react-icons/si";
 import { MdOutlineCancel } from "react-icons/md";
+import { useLanguage } from "@context/LanguageContext";
 
 const OktaIcon = () => (
   <svg viewBox="0 0 32 32" className="h-5 w-5" aria-hidden="true">
@@ -19,11 +20,31 @@ const OktaIcon = () => (
   </svg>
 );
 
-const noteTypes = [
-  { label: "Done", Icon: SiTicktick, width: 95, done: true },
-  { label: "In progress", Icon: OktaIcon, width: 145, done: false },
-  { label: "Cancelled", Icon: MdOutlineCancel, width: 125, done: false },
-];
+const noteTypesByLang = {
+  en: [
+    { label: "Done", Icon: SiTicktick, width: 95, done: true },
+    { label: "In progress", Icon: OktaIcon, width: 145, done: false },
+    { label: "Cancelled", Icon: MdOutlineCancel, width: 125, done: false },
+  ],
+  fa: [
+    { label: "انجام‌شده", Icon: SiTicktick, width: 110, done: true },
+    { label: "در حال انجام", Icon: OktaIcon, width: 150, done: false },
+    { label: "لغو شده", Icon: MdOutlineCancel, width: 110, done: false },
+  ],
+};
+
+const translations = {
+  en: {
+    title: "Dev Notes",
+    description:
+      "Capture ideas, organize tasks, and keep notes in one workspace.",
+  },
+  fa: {
+    title: "دفترچه یادداشت توسعه",
+    description:
+      "ایده‌ها، وظایف و یادداشت‌ها را در یک فضای کاری مدیریت کنید.",
+  },
+};
 
 const pillLayout = [
   { type: 0, left: 10, top: "0%" },
@@ -56,10 +77,14 @@ const pillLayout = [
 ];
 
 const DevNotesCard = () => {
+  const { language } = useLanguage();
+  const t = translations[language];
+  const noteTypes = noteTypesByLang[language];
+
   return (
     <div
       className="
-        group relative h-[290px] w-full overflow-hidden rounded-lg
+        group relative h-[270px] w-full overflow-hidden rounded-lg
         border border-[#303030] p-6
         transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)]
         hover:shadow-[0_22px_60px_rgba(0,0,0,0.7)]
@@ -76,14 +101,15 @@ const DevNotesCard = () => {
         }}
       />
 
-      <header className="relative z-10 max-w-[330px]">
-        <h1 className="text-[24px] font-medium tracking-[-0.05em] text-white transition-transform duration-500 group-hover:translate-x-0.5">
-          Dev Notes
+      <header className="relative z-10 max-w-[330px] text-left rtl:text-right leading-[1.05]">
+        <h1
+          className="text-[20px] font-medium text-white md:text-[25px] tracking-tighter"
+        >
+          {t.title}
         </h1>
 
-        <p className="mt-1.5 text-sm md:text-base leading-[1.55] text-[#929292]">
-          Capture ideas, organize tasks, and keep development notes in one
-          simple workspace.
+        <p className="mt-1.5 text-sm md:text-base leading-[1.55] text-[#929292] md:text-[16px]">
+          {t.description}
         </p>
       </header>
 
@@ -112,7 +138,10 @@ const DevNotesCard = () => {
               }}
             >
               <Icon />
-              <span className="whitespace-nowrap font-mono text-[15px] tracking-[-0.035em]">
+              <span
+                className="whitespace-nowrap text-[15px]"
+                style={{ letterSpacing: language === "fa" ? "normal" : "-0.035em" }}
+              >
                 {label}
               </span>
             </div>

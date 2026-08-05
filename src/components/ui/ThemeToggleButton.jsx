@@ -35,15 +35,15 @@ const ThemeToggleButton = ({ className = '' }) => {
               <motion.span
                 layoutId="theme-toggle-active"
                 transition={{ type: 'spring', stiffness: 500, damping: 32 }}
-                className="absolute inset-0 rounded-full bg-white shadow-sm dark:bg-neutral-800"
+                className="absolute inset-0 rounded-full bg-primary"
               />
             )}
             <Icon
               size={18}
               className={`relative z-10 transition-colors duration-200 ${
                 isActive
-                  ? 'text-black dark:text-white'
-                  : 'text-neutral-400 dark:text-neutral-500'
+                  ? 'text-black dark:text-neutral-300'
+                  : 'text-neutral-500'
               }`}
             />
           </button>

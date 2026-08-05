@@ -1,0 +1,217 @@
+@import "tailwindcss";
+@import "./fonts.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant rtl (&:where([dir="rtl"], [dir="rtl"] *));
+
+body {
+  font-family: "Geist", sans-serif;
+  @apply bg-neutral-100 text-black dark:bg-black dark:text-white;
+}
+
+html[dir="rtl"] body {
+  font-family: "Peyda", sans-serif;
+}
+
+@layer components {
+  .container {
+    @apply mx-auto w-full max-w-7xl px-5 md:px-6 lg:px-15;
+  }
+
+  .bg-primary {
+    @apply bg-neutral-100 text-black dark:bg-black dark:text-white active:bg-white/30 duration-300
+  }
+
+  .bg-secondary {
+    @apply bg-neutral-200 text-black dark:bg-neutral-900 dark:text-white
+  }
+
+  .text-secondary {
+    @apply text-neutral-700 dark:text-neutral-400
+  }
+
+  .border-primary {
+    @apply border border-neutral-300 dark:border-[#303030]
+  }
+
+  .border-b-primary {
+    @apply border-b border-neutral-300 dark:border-[#303030]
+  }
+
+
+  .btn-primary {
+    @apply rounded-full font-medium bg-neutral-900 dark:bg-neutral-200 hover:dark:bg-neutral-50 duration-300 px-4.5 py-2.5 text-sm md:text-[15.5px] text-white dark:text-black active:scale-95 cursor-pointer;
+  }
+
+  .btn-secondary {
+    @apply rounded-full font-medium bg-neutral-200 dark:bg-neutral-900 border border-neutral-300 dark:border-[#303030] duration-300 px-4.5 py-2.5 text-sm md:text-[15.5px] text-black dark:text-white active:scale-95 cursor-pointer;
+  }
+
+  .flex-row {
+    @apply flex items-center;
+  }
+
+  .flex-col-center {
+    @apply flex flex-col items-center;
+  }
+
+/*
+  Dev Notes — Toolbar
+*/
+
+  .dn-search-wrap {
+    @apply flex min-w-0 flex-1 items-center gap-2 rounded-full bg-neutral-800 border border-neutral-700 px-4 py-2.5 sm:max-w-xs;
+  }
+
+  .dn-search-input {
+    @apply w-full min-w-0 bg-transparent text-sm md:text-[15.5px] text-neutral-100 outline-none placeholder:text-neutral-300;
+  }
+
+  .dn-btn-new {
+    @apply flex shrink-0 items-center justify-center gap-1.5 rounded-full bg-white px-4 py-2.5 text-sm font-medium text-neutral-900 hover:bg-neutral-200 cursor-pointer;
+  }
+
+  .dn-tab {
+    @apply rounded-full px-4 py-2.5 text-sm font-medium cursor-pointer md:text-[15.5px];
+  }
+
+  .dn-tab-active {
+    @apply bg-neutral-800 border border-neutral-700 text-neutral-50;
+  }
+
+  .dn-tab-inactive {
+    @apply text-neutral-300 hover:text-neutral-200;
+  }
+
+  .dn-select-pill {
+    @apply hidden items-center gap-1.5 rounded-full bg-neutral-800 border border-neutral-700 px-3.5 py-2.5 md:flex;
+  }
+
+  .dn-select {
+    @apply bg-transparent text-sm text-neutral-100 outline-none md:text-[15.5px];
+  }
+
+  .dn-divider {
+    @apply hidden h-6 w-px bg-neutral-900 md:block;
+  }
+
+  .dn-icon-toggle {
+    @apply flex cursor-pointer items-center justify-center rounded-full p-2.5;
+  }
+
+  .dn-icon-toggle-active {
+    @apply bg-neutral-800 border border-neutral-700 text-neutral-50;
+  }
+
+  .dn-icon-toggle-inactive {
+    @apply text-neutral-300 hover:text-neutral-200 opacity-60;
+  }
+}
+
+.dn-note-card {
+  @apply flex cursor-pointer flex-col rounded-lg border border-[#303030] bg-neutral-950 p-5 hover:border-neutral-700 hover:scale-99 active:scale-99 hover:translate-y-0.5 duration-300;
+}
+
+.dn-editor-btn {
+  @apply flex cursor-pointer items-center justify-center rounded-md p-1.5 duration-200 hover:bg-neutral-800;
+}
+
+/* ============================================================
+ * Dev Notes — Note colors
+ * 10 selectable tints for note cards (picked in NoteModal, stored
+ * as note.color, applied on NoteCard as `dn-note-color-{id}`).
+ * Placed after .dn-note-card on purpose so these override its
+ * default background/border — everything else (padding, radius,
+ * cursor, layout) still comes from .dn-note-card.
+ * ============================================================ */
+
+.dn-note-color-red {
+  @apply bg-red-500/10 border-red-500/40 hover:bg-red-500/15 hover:border-red-500/60;
+}
+
+.dn-note-color-orange {
+  @apply bg-orange-500/10 border-orange-500/40 hover:bg-orange-500/15 hover:border-orange-500/60;
+}
+
+.dn-note-color-amber {
+  @apply bg-amber-500/10 border-amber-500/40 hover:bg-amber-500/15 hover:border-amber-500/60;
+}
+
+.dn-note-color-yellow {
+  @apply bg-yellow-500/10 border-yellow-500/40 hover:bg-yellow-500/15 hover:border-yellow-500/60;
+}
+
+.dn-note-color-green {
+  @apply bg-green-500/10 border-green-500/40 hover:bg-green-500/15 hover:border-green-500/60;
+}
+
+.dn-note-color-teal {
+  @apply bg-teal-500/10 border-teal-500/40 hover:bg-teal-500/15 hover:border-teal-500/60;
+}
+
+.dn-note-color-blue {
+  @apply bg-blue-500/10 border-blue-500/40 hover:bg-blue-500/15 hover:border-blue-500/60;
+}
+
+.dn-note-color-indigo {
+  @apply bg-indigo-500/10 border-indigo-500/40 hover:bg-indigo-500/15 hover:border-indigo-500/60;
+}
+
+.dn-note-color-purple {
+  @apply bg-purple-500/10 border-purple-500/40 hover:bg-purple-500/15 hover:border-purple-500/60;
+}
+
+.dn-note-color-pink {
+  @apply bg-pink-500/10 border-pink-500/40 hover:bg-pink-500/15 hover:border-pink-500/60;
+}
+
+
+/* --- Scrollbar Styling --- */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #282828 #000000;
+}
+
+::-webkit-scrollbar {
+  @apply w-2.5 h-2.5;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-[#343434] rounded-[5px];
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-[#1c1c1c] rounded-[5px] hover:bg-[#2b2b2b];
+}
+
+/* Hide scrollbar but keep scroll functionality */
+.no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* Typing indicator dots */
+@keyframes typing-dot {
+  0%, 60%, 100% {
+    transform: scale(0.7);
+    opacity: 0.4;
+  }
+  30% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+.typing-dot {
+  animation: typing-dot 1.1s ease-in-out infinite;
+}

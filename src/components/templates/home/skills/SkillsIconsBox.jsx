@@ -87,6 +87,8 @@ const SkillsIconsBox = () => {
               -ml-2.5 sm:-ml-3.5 md:-ml-5 first:ml-0"
           >
             <item.Icon 
+              aria-hidden="true"
+              focusable="false"
               size={item.iconSize} 
               className={`text-white transition-all duration-500 ease-out group-hover:text-white 
                 !w-7 !h-7 md:!w-[var(--icon-size)] md:!h-[var(--icon-size)] ${item.customAnim}`} 

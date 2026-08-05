@@ -8,7 +8,10 @@ function initSocket(server, allowedOrigins) {
     cors: {
       origin: allowedOrigins,
       methods: ["GET", "POST"],
+      credentials: true,
     },
+
+    transports: ["websocket", "polling"],
   });
 
   ioInstance.on("connection", (socket) => {
@@ -26,14 +29,11 @@ function initSocket(server, allowedOrigins) {
       try {
         jwt.verify(token, process.env.JWT_SECRET);
         socket.join("admin-room");
-      } catch (error) {
+      } catch {
         socket.emit("auth-error", "Unauthorized");
       }
     });
 
-    // --- Typing indicator ---
-    // socket.to(room) broadcasts to everyone in the room EXCEPT the sender,
-    // so the person typing never sees their own indicator echoed back.
     socket.on("typing", (conversationId) => {
       if (!conversationId) return;
       socket.to(conversationId).emit("typing", conversationId);
@@ -56,6 +56,7 @@ function getIO() {
   if (!ioInstance) {
     throw new Error("Socket.io has not been initialized");
   }
+
   return ioInstance;
 }
 

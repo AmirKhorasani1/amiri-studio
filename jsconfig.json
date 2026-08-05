@@ -17,6 +17,7 @@
       "@admin/*": ["src/components/templates/admin/*"],
       "@home/*": ["src/components/templates/home/*"],
       "@tools/*": ["src/components/templates/tools/*"],
+      "@dev-notes/*": ["src/components/templates/dev-notes/*"],
       "@ui/*": ["src/components/ui/*"],
 
       "@context/*": ["src/context/*"],

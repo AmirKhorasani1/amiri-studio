@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLanguage } from "@context/LanguageContext";
 
 const getCurrentTime = () => {
   const now = new Date();
@@ -9,8 +10,23 @@ const getCurrentTime = () => {
   ].join("");
 };
 
+const translations = {
+  en: {
+    title: "Still Time",
+    description:
+      "A distraction-free clock, timer, and stopwatch for focused work.",
+  },
+  fa: {
+    title: "استیل‌تایم",
+    description:
+      "ساعت، تایمر و کرنومتر برای کار متمرکز، بدون حواس‌پرتی.",
+  },
+};
+
 const StillTimeCard = () => {
   const [time, setTime] = useState(getCurrentTime);
+  const { language } = useLanguage();
+  const t = translations[language];
 
   useEffect(() => {
     const intervalId = window.setInterval(() => {
@@ -21,16 +37,18 @@ const StillTimeCard = () => {
   }, []);
 
   return (
-    <div className="group relative w-full h-[290px] md:h-full overflow-hidden rounded-lg border border-[#303030]">
+    <div className="group relative w-full h-[270px] md:h-full overflow-hidden rounded-lg border border-[#303030]">
       {/* Header */}
-      <div className="absolute left-6 right-6 top-6 z-10 flex items-start justify-between">
-        <div>
-          <h1 className="text-[24px] font-medium tracking-[-0.05em] text-white">
-            Still Time
+      <div className="absolute left-6 right-6 top-6 z-10 flex items-start justify-between rtl:flex-row-reverse">
+        <div className="text-left rtl:text-right">
+          <h1
+            className="text-[20px] font-medium text-white md:text-[25px] tracking-tighter leading-[1.05]"
+          >
+            {t.title}
           </h1>
 
-          <p className="mt-1.5 text-sm md:text-base leading-[1.45] text-[#a3a3a3]">
-            A distraction-free clock, timer, and stopwatch built for focused work sessions.
+          <p className="mt-1.5 text-sm md:text-base leading-[1.45] text-[#a3a3a3] md:text-[16px]">
+            {t.description}
           </p>
         </div>
       </div>
@@ -50,7 +68,7 @@ const StillTimeCard = () => {
               className={[
                 "absolute left-1/2 -translate-x-1/2 scale-x-[0.9] duration-300 group-hover:scale-101 group-hover:text-neutral-500 text-neutral-600",
                 "whitespace-nowrap text-[240px] md:text-[390px] font-bold leading-[0.76]",
-                index % 2 === 0 ? "top-0 md:top-[50px]" : "top-0 md:top-[128px]",
+                index % 2 === 0 ? "top-0 md:top-[70px]" : "top-0 md:top-[150px]",
               ].join(" ")}
             >
               {digit}

@@ -4,8 +4,10 @@ const NavMenuItem = ({ name, description, icon: Icon, onClick }) => (
   <button
     onClick={onClick}
     className="
-      group flex items-start gap-3 rounded-lg p-2 text-left
+      group flex w-full items-start gap-3 rounded-lg p-2 text-left
       duration-200
+      hover:bg-neutral-100 dark:hover:bg-neutral-900
+      rtl:text-right
     "
   >
     <span
@@ -21,7 +23,7 @@ const NavMenuItem = ({ name, description, icon: Icon, onClick }) => (
       <Icon size={22} />
     </span>
 
-    <span className="flex flex-col gap-1">
+    <span className="flex flex-col gap-0.5">
       <span className="text-[14.5px] md:text-[15px] font-semibold text-neutral-900 dark:text-white">
         {name}
       </span>

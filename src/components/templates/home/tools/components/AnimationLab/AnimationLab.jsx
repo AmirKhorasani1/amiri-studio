@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { useLanguage } from "@context/LanguageContext";
 
 const EASINGS = [
   {
@@ -31,6 +32,20 @@ const EASINGS = [
     path: "M5 43 C 24 43, 38 24, 43 5",
   },
 ];
+
+const translations = {
+  en: {
+    title: "Animation Lab",
+    description:
+      "Preview easing, timing, and motion for smoother interfaces.",
+  },
+
+  fa: {
+    title: "استودیوی انیمیشن",
+    description:
+      "پیش‌نمایش Easing، زمان‌بندی و حرکت برای رابط‌های کاربری روان‌تر.",
+  },
+};
 
 const CurveIcon = ({ path }) => (
   <svg viewBox="0 0 32 32" fill="none" className="h-4 w-4">
@@ -86,8 +101,11 @@ const EasingRow = ({ label, ease, path }) => {
 };
 
 const AnimationLabCard = () => {
+  const { language } = useLanguage();
+  const t = translations[language];
+
   return (
-    <div className="group relative isolate h-[290px] w-full overflow-hidden rounded-lg border border-[#303030]">
+    <div className="group relative isolate h-[270px] w-full overflow-hidden rounded-lg border border-[#303030]">
       {/* Rainbow glow — only visible on card hover */}
       <div
         aria-hidden="true"
@@ -100,27 +118,28 @@ const AnimationLabCard = () => {
         "
         style={{
           background:
-              "linear-gradient(120deg, #FCF400, #47E6A4, #05DBED, #007EFC, #E0E0E0,)",
+            "linear-gradient(120deg, #FCF400, #47E6A4, #05DBED, #007EFC, #E0E0E0)",
         }}
       />
 
       {/* Left content */}
-      <div className="absolute bottom-47 left-6 z-10 max-w-[320px] md:bottom-6">
-        <h1 className="text-[24px] font-medium tracking-[-0.05em] text-white sm:text-[26px] md:text-[27px]">
-          Animation Lab
+      <div className="absolute bottom-44 left-6 z-10 max-w-[320px] text-left rtl:right-6 rtl:left-auto rtl:text-right md:bottom-6 leading-[1.05]">
+        <h1
+          className="text-[20px] font-medium text-white md:text-[25px] tracking-tighter"
+        >
+          {t.title}
         </h1>
 
         <p className="mt-1.5 max-w-80 text-[14px] leading-[1.45] text-[#a3a3a3] md:text-[16px]">
-          Capture ideas, organize tasks, and keep development notes in one
-          simple workspace.
+          {t.description}
         </p>
       </div>
 
       {/* Passport visual → دموی خاکستری easing، روی موبایل به پایین کارت می‌چسبد */}
       <div
         className="
-          absolute -bottom-1 right-[6%] z-10 w-[64%]
-          rounded-tl-xl rounded-tr-lg border border-b-0 border-[#262626]
+          absolute -bottom-1 rtl:left-[6%] ltr:right-[6%] z-10 w-[71%]
+          rounded-t-xl border border-b-0 border-[#262626]
           bg-[#101010]
           md:bottom-0 md:top-12 md:w-[40.5%]
         "

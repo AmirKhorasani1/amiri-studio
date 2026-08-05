@@ -6,7 +6,7 @@ import { router } from "./router";
 import { ThemeProvider } from "./context/ThemeContext";
 import { LanguageProvider } from "./context/LanguageContext";
 
-import "./styles/index.css";
+import "./../public/css/index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

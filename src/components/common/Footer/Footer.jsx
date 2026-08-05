@@ -38,7 +38,7 @@ const FooterLink = ({ label, href = "#", isNew = false, external = false }) => (
 
 const FooterColumn = ({ title, links }) => (
   <div>
-    <h4 className="text-sm font-semibold text-white">{title}</h4>
+    <h1 className="text-sm font-semibold text-white">{title}</h1>
     <ul className="mt-4 flex flex-col gap-3">
       {links.map((link) => (
         <FooterLink key={link.label} {...link} />
