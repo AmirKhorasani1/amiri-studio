@@ -37,17 +37,17 @@ const StillTimeCard = () => {
   }, []);
 
   return (
-    <div className="group relative w-full h-[270px] md:h-full overflow-hidden rounded-lg border border-[#303030]">
+    <div className="group relative w-full h-[270px] md:h-full overflow-hidden rounded-lg border-primary">
       {/* Header */}
       <div className="absolute left-6 right-6 top-6 z-10 flex items-start justify-between rtl:flex-row-reverse">
         <div className="text-left rtl:text-right">
           <h1
-            className="text-[20px] font-medium text-white md:text-[25px] tracking-tighter leading-[1.05]"
+            className="text-[20px] font-medium text-black dark:text-white md:text-[25px] tracking-tighter leading-[1.05]"
           >
             {t.title}
           </h1>
 
-          <p className="mt-1.5 text-sm md:text-base leading-[1.45] text-[#a3a3a3] md:text-[16px]">
+          <p className="mt-1.5 text-sm md:text-base leading-[1.45] text-neutral-600 dark:text-neutral-400 md:text-[16px]">
             {t.description}
           </p>
         </div>
@@ -66,7 +66,7 @@ const StillTimeCard = () => {
           >
             <span
               className={[
-                "absolute left-1/2 -translate-x-1/2 scale-x-[0.9] duration-300 group-hover:scale-101 group-hover:text-neutral-500 text-neutral-600",
+                "absolute left-1/2 -translate-x-1/2 scale-x-[0.9] duration-300 group-hover:scale-101 group-hover:text-neutral-500 text-neutral-400 dark:text-neutral-600",
                 "whitespace-nowrap text-[240px] md:text-[390px] font-bold leading-[0.76]",
                 index % 2 === 0 ? "top-0 md:top-[70px]" : "top-0 md:top-[150px]",
               ].join(" ")}

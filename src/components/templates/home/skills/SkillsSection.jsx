@@ -29,7 +29,7 @@ const SkillsSection = () => {
         description={t.description}
       />
 
-      <div className="flex w-full flex-col-reverse items-start gap-0 md:flex-row md:gap-10">
+      <div className="flex w-full flex-col-reverse items-canter gap-0 md:flex-row md:gap-10">
         <div className="w-full md:w-1/2">
           <SkillsList />
         </div>

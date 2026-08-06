@@ -18,9 +18,6 @@ const SectionTitle = ({
 }) => {
   const { language } = useLanguage();
 
-  // چینش بر اساس align + جهت زبان تعیین می‌شه:
-  // align="center"  -> همیشه وسط‌چین (مستقل از زبان)
-  // align="left"    -> در انگلیسی از چپ، در فارسی خودکار از راست شروع می‌شه
   const alignClass =
     align === "center"
       ? "items-center text-center mx-auto"
@@ -56,7 +53,7 @@ const SectionTitle = ({
       )}
 
       <h2
-        className="max-w-2xl leading-[1.2] md:leading-[1.05] text-white text-[32px] md:text-[49px]"
+        className="max-w-2xl leading-[1.2] md:leading-[1.05] text-black dark:text-white text-[32px] md:text-[49px]"
         style={{
           letterSpacing: language === "fa" ? "normal" : "-0.03em",
           fontWeight: language === "fa" ? 600 : 480,
@@ -66,7 +63,7 @@ const SectionTitle = ({
       </h2>
 
       {description && (
-        <p className="text-[15px] md:text-[16px] text-neutral-400 font-normal leading-relaxed max-w-2xl">
+        <p className="text-[15px] md:text-[16px] text-neutral-600 dark:text-neutral-400 font-normal leading-relaxed max-w-2xl">
           {description}
         </p>
       )}

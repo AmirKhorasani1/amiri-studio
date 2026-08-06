@@ -85,7 +85,7 @@ const DevNotesCard = () => {
     <div
       className="
         group relative h-[270px] w-full overflow-hidden rounded-lg
-        border border-[#303030] p-6
+        border-primary p-6
         transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)]
         hover:shadow-[0_22px_60px_rgba(0,0,0,0.7)]
         md:h-full
@@ -103,12 +103,12 @@ const DevNotesCard = () => {
 
       <header className="relative z-10 max-w-[330px] text-left rtl:text-right leading-[1.05]">
         <h1
-          className="text-[20px] font-medium text-white md:text-[25px] tracking-tighter"
+          className="text-[20px] font-medium text-black dark:text-white md:text-[25px] tracking-tighter"
         >
           {t.title}
         </h1>
 
-        <p className="mt-1.5 text-sm md:text-base leading-[1.55] text-[#929292] md:text-[16px]">
+        <p className="mt-1.5 text-sm md:text-base leading-[1.55] text-neutral-600 dark:text-neutral-400 md:text-[16px]">
           {t.description}
         </p>
       </header>
@@ -149,7 +149,7 @@ const DevNotesCard = () => {
         })}
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-15 bg-gradient-to-t from-[#030303] to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-15 bg-gradient-to-t from-neutral-100 dark:from-[#030303] to-transparent" />
     </div>
   );
 };

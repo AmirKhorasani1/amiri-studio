@@ -59,7 +59,7 @@ const SkillsIconsBox = () => {
   ];
 
   return (
-    <div className="w-full md:w-1/2 relative h-[180px] md:h-[500px] flex items-center justify-center">
+    <div className="w-full md:w-1/2 relative h-[180px] md:h-[370px] flex items-center justify-center">
       
       <div 
         className="absolute inset-0 flex justify-evenly pointer-events-none -z-10"
@@ -69,7 +69,7 @@ const SkillsIconsBox = () => {
         }}
       >
         {[...Array(8)].map((_, i) => (
-          <div key={i} className="w-[1px] h-full bg-neutral-900"></div>
+          <div key={i} className="w-[1px] h-full bg-neutral-300 dark:bg-neutral-900"></div>
         ))}
       </div>
 
@@ -80,7 +80,7 @@ const SkillsIconsBox = () => {
             style={{ zIndex: item.zIndex }}
             className="group relative flex items-center justify-center 
               w-15 h-15 md:w-24.5 md:h-24.5
-              bg-neutral-950 border border-neutral-800 rounded-xl md:rounded-3xl cursor-pointer 
+              bg-white dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-800 rounded-xl md:rounded-3xl cursor-pointer 
               transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] 
               hover:-translate-y-4 hover:scale-[1.15] hover:z-[999] 
               hover:shadow-[0_15px_40px_rgba(100,100,100,0.45)] hover:bg-[#141414] hover:border-neutral-400/30 
@@ -90,7 +90,7 @@ const SkillsIconsBox = () => {
               aria-hidden="true"
               focusable="false"
               size={item.iconSize} 
-              className={`text-white transition-all duration-500 ease-out group-hover:text-white 
+              className={`text-black dark:text-white transition-all duration-500 ease-out group-hover:text-white 
                 !w-7 !h-7 md:!w-[var(--icon-size)] md:!h-[var(--icon-size)] ${item.customAnim}`} 
               style={{ '--icon-size': `${item.iconSize}px` }}
             />

@@ -1,11 +1,11 @@
 import React from 'react'
 import SectionTitle from '@ui/SectionTitle'
-import DevNotesCard from '@home/tools/components/DevNotes/DevNotesCard'
+import DevNotesCard from '@/components/templates/tools/dev-notes/DevNotesCard'
 import StillTimeCard from '@home/tools/components/StillTime/StillTimeCard'
-import AnimationLab from '@home/tools/components/AnimationLab/AnimationLab'
+import AnimationLab from '@/components/templates/tools/AnimationLab/AnimationLab'
 import SnippetVaultCard from '@home/tools/components/SnippetVault/SnippetVaultCard'
-import TypeScaleCard from '@home/tools/components/TypeScale/TypeScaleCard'
-import ColorCraftCard from '@home/tools/components/ColorCraft/ColorCraftCard'
+import TypeScaleCard from '@/components/templates/tools/TypeScale/TypeScaleCard'
+import ColorCraftCard from '@/components/templates/tools/ColorCraft/ColorCraftCard'
 
 const ToolsPage = () => {
   return (

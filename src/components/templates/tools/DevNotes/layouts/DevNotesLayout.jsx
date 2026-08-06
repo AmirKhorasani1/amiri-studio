@@ -1,5 +1,5 @@
 import { Outlet, ScrollRestoration } from 'react-router-dom'
-import Sidebar from '@dev-notes/components/common/Sidebar/Sidebar'
+import Sidebar from '../components/common/Sidebar/Sidebar'
 
 const DevNotesLayout = () => {
   return (

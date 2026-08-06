@@ -77,7 +77,7 @@ const EasingRow = ({ label, ease, path }) => {
       {/* مسیر و باکس متحرک */}
       <div className="relative h-4 flex-1">
         <div className="absolute left-0.5 right-0.5 top-1/2 h-px -translate-y-1/2 bg-neutral-700" />
-        <span className="absolute left-0 top-1/2 h-1 w-1 -translate-y-1/2 rounded-full border border-neutral-500 bg-neutral-800" />
+        <span className="absolute left-0 top-1/2 h-1 w-1 -translate-y-1/2 rounded-full bg-neutral-400 dark:bg-neutral-800" />
 
         <motion.div
           className="absolute top-1/2 -translate-y-1/2 rounded-full bg-neutral-100"
@@ -105,7 +105,7 @@ const AnimationLabCard = () => {
   const t = translations[language];
 
   return (
-    <div className="group relative isolate h-[270px] w-full overflow-hidden rounded-lg border border-[#303030]">
+    <div className="group relative isolate h-[270px] w-full overflow-hidden rounded-lg border-primary">
       {/* Rainbow glow — only visible on card hover */}
       <div
         aria-hidden="true"
@@ -125,12 +125,12 @@ const AnimationLabCard = () => {
       {/* Left content */}
       <div className="absolute bottom-44 left-6 z-10 max-w-[320px] text-left rtl:right-6 rtl:left-auto rtl:text-right md:bottom-6 leading-[1.05]">
         <h1
-          className="text-[20px] font-medium text-white md:text-[25px] tracking-tighter"
+          className="text-[20px] font-medium text-black dark:text-white md:text-[25px] tracking-tighter"
         >
           {t.title}
         </h1>
 
-        <p className="mt-1.5 max-w-80 text-[14px] leading-[1.45] text-[#a3a3a3] md:text-[16px]">
+        <p className="mt-1.5 max-w-80 text-[14px] leading-[1.45] text-neutral-600 dark:text-neutral-400 md:text-[16px]">
           {t.description}
         </p>
       </div>
@@ -139,9 +139,8 @@ const AnimationLabCard = () => {
       <div
         className="
           absolute -bottom-1 rtl:left-[6%] ltr:right-[6%] z-10 w-[71%]
-          rounded-t-xl border border-b-0 border-[#262626]
-          bg-[#101010]
-          md:bottom-0 md:top-12 md:w-[40.5%]
+          rounded-t-xl border border-b-0 border-neutral-300 dark:border-[#303030] 
+          bg-white dark:bg-[#101010] md:bottom-0 md:top-12 md:w-[40.5%]
         "
       >
         <div className="flex h-auto flex-col justify-center gap-4 p-5 md:h-full md:gap-6 md:px-5 md:py-0">

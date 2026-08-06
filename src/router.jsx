@@ -4,8 +4,8 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 // Layouts
 import MainLayout from "@components/Layouts/MainLayout";
 import DashboardLayout from "@components/Layouts/DashboardLayout";
-import DevNotesLayout from "@components/templates/dev-notes/layouts/DevNotesLayout";
-import StillTimeLayout from "@home/tools/components/StillTime/layouts/StillTimeLayout";
+import DevNotesLayout from "@tools/DevNotes/layouts/DevNotesLayout";
+import StillTimeLayout from "@tools/StillTime/layouts/StillTimeLayout";
 
 // Protected Route
 import ProtectedRoute from "@components/ProtectedRoute";
@@ -17,43 +17,43 @@ const DashboardPage = lazy(() => import("@pages/DashboardPage"));
 const AdminLogin = lazy(() => import("@pages/AdminLogin"));
 
 const SnippetVaultPage = lazy(() =>
-  import("@home/tools/components/SnippetVault/SnippetVaultPage")
+  import("@tools/SnippetVault/SnippetVaultPage")
 );
 
 const DevNotesHome = lazy(() =>
-  import("@templates/dev-notes/pages/Home/DevNotesHome")
+  import("@tools/DevNotes/pages/Home/DevNotesHome")
 );
 
 const NotesPage = lazy(() =>
-  import("@templates/dev-notes/pages/Notes/NotesPage")
+  import("@tools/DevNotes/pages/Notes/NotesPage")
 );
 
 const TasksPage = lazy(() =>
-  import("@templates/dev-notes/pages/Tasks/TasksPage")
+  import("@tools/DevNotes/pages/Tasks/TasksPage")
 );
 
 const ProjectsPage = lazy(() =>
-  import("@templates/dev-notes/pages/Projects/ProjectsPage")
+  import("@tools/DevNotes/pages/Projects/ProjectsPage")
 );
 
 const MeetingsPage = lazy(() =>
-  import("@templates/dev-notes/pages/Meetings/MeetingsPage")
+  import("@tools/DevNotes/pages/Meetings/MeetingsPage")
 );
 
 const TemplatesPage = lazy(() =>
-  import("@templates/dev-notes/pages/Templates/TemplatesPage")
+  import("@tools/DevNotes/pages/Templates/TemplatesPage")
 );
 
 const ClockPage = lazy(() =>
-  import("@home/tools/components/StillTime/pages/ClockPage")
+  import("@tools/StillTime/pages/ClockPage")
 );
 
 const TimerPage = lazy(() =>
-  import("@home/tools/components/StillTime/pages/TimerPage")
+  import("@tools/StillTime/pages/TimerPage")
 );
 
 const StopwatchPage = lazy(() =>
-  import("@home/tools/components/StillTime/pages/StopwatchPage")
+  import("@tools/StillTime/pages/StopwatchPage")
 );
 
 const Loader = (

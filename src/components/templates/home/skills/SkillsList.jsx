@@ -10,7 +10,7 @@ const translations = {
           <>
             Architecting scalable applications and solving complex frontend
             challenges with{" "}
-            <strong className="text-white font-semibold">
+            <strong className="text-black dark:text-white font-semibold">
               React & Next.js
             </strong>
             .
@@ -22,7 +22,7 @@ const translations = {
         text: (
           <>
             Writing robust, type-safe logic and managing complex data flows with{" "}
-            <strong className="text-white font-semibold">
+            <strong className="text-black dark:text-white font-semibold">
               TypeScript & JavaScript
             </strong>
             .
@@ -34,7 +34,7 @@ const translations = {
         text: (
           <>
             Building responsive, pixel-perfect interfaces with{" "}
-            <strong className="text-white font-semibold">
+            <strong className="text-black dark:text-white font-semibold">
               Tailwind CSS
             </strong>
             .
@@ -46,7 +46,7 @@ const translations = {
         text: (
           <>
             Managing scalable application state efficiently using{" "}
-            <strong className="text-white font-semibold">
+            <strong className="text-black dark:text-white font-semibold">
               Redux
             </strong>
             .
@@ -58,7 +58,7 @@ const translations = {
         text: (
           <>
             Creating semantic, accessible, and SEO-friendly foundations with{" "}
-            <strong className="text-white font-semibold">
+            <strong className="text-black dark:text-white font-semibold">
               HTML & CSS
             </strong>
             .
@@ -75,7 +75,7 @@ const translations = {
         text: (
           <>
             طراحی و توسعه وب‌اپلیکیشن‌های مقیاس‌پذیر و حل چالش‌های فرانت‌اند با{" "}
-            <strong className="text-white font-semibold">
+            <strong className="text-black dark:text-white font-semibold">
               React و Next.js
             </strong>
             .
@@ -87,7 +87,7 @@ const translations = {
         text: (
           <>
             پیاده‌سازی منطق پایدار و مدیریت جریان‌های پیچیده داده با{" "}
-            <strong className="text-white font-semibold">
+            <strong className="text-black dark:text-white font-semibold">
               TypeScript و JavaScript
             </strong>
             .
@@ -99,7 +99,7 @@ const translations = {
         text: (
           <>
             تبدیل طراحی‌ها به رابط‌های کاربری سریع، واکنش‌گرا و Pixel Perfect با{" "}
-            <strong className="text-white font-semibold">
+            <strong className="text-black dark:text-white font-semibold">
               Tailwind CSS
             </strong>
             .
@@ -111,7 +111,7 @@ const translations = {
         text: (
           <>
             مدیریت State در پروژه‌های بزرگ و مقیاس‌پذیر با{" "}
-            <strong className="text-white font-semibold">
+            <strong className="text-black dark:text-white font-semibold">
               Redux
             </strong>
             .
@@ -123,7 +123,7 @@ const translations = {
         text: (
           <>
             ساخت ساختارهای استاندارد، Semantic و سازگار با موتورهای جستجو با{" "}
-            <strong className="text-white font-semibold">
+            <strong className="text-black dark:text-white font-semibold">
               HTML و CSS
             </strong>
             .
@@ -139,18 +139,18 @@ const SkillsList = () => {
   const { listItems } = translations[language];
 
   return (
-    <div className="w-full bg-black md:py-5">
+    <div className="w-full md:py-5">
       <div className="mx-auto flex max-w-4xl flex-col gap-5 md:gap-10">
         {listItems.map((item) => (
           <div
             key={item.id}
             className="group flex cursor-default items-start gap-5 md:gap-8"
           >
-            <span className="select-none pt-0.5 text-xl text-neutral-400 transition-colors duration-300 group-hover:text-[#888] md:text-2xl">
+            <span className="select-none pt-0.5 text-xl text-secondary transition-colors duration-300 md:text-2xl">
               {item.id}
             </span>
 
-            <p className="text-[15.5px] leading-[1.9] font-normal tracking-wide text-neutral-300 transition-colors duration-300 group-hover:text-neutral-100 md:text-lg">
+            <p className="text-[15.5px] leading-[1.9] font-normal tracking-wide text-neutral-700 dark:text-neutral-300 transition-colors duration-300 md:text-lg">
               {item.text}
             </p>
           </div>
