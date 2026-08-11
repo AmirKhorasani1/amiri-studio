@@ -1,5 +1,6 @@
 import React from "react";
 import { useLanguage } from "@context/LanguageContext";
+import { Link } from "react-router-dom";
 
 const translations = {
   en: {
@@ -19,7 +20,7 @@ const SnippetVaultCard = () => {
   const t = translations[language];
 
   return (
-    <div className="group relative h-[270px] w-full overflow-hidden rounded-lg border-primary">
+    <Link to="/tools/snippet-vault" className="group relative h-[270px] w-full overflow-hidden rounded-lg border-primary">
       {/* Text */}
       <div className="absolute bottom-44 md:bottom-6 z-10 left-6 text-left rtl:left-6 rtl:text-right leading-[1.05]">
         <h1
@@ -77,7 +78,7 @@ const SnippetVaultCard = () => {
           className="rounded-xl bg-zinc-900 p-6"
         </p>
       </div>
-    </div>
+    </Link>
   );
 };
 

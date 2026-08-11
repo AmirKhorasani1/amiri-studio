@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLanguage } from "@context/LanguageContext";
+import { Link } from "react-router-dom";
 
 const getCurrentTime = () => {
   const now = new Date();
@@ -37,7 +38,7 @@ const StillTimeCard = () => {
   }, []);
 
   return (
-    <div className="group relative w-full h-[270px] md:h-full overflow-hidden rounded-lg border-primary">
+    <Link to="/tools/still-time" className="group relative w-full h-[270px] md:h-full overflow-hidden rounded-lg border-primary">
       {/* Header */}
       <div className="absolute left-6 right-6 top-6 z-10 flex items-start justify-between rtl:flex-row-reverse">
         <div className="text-left rtl:text-right">
@@ -76,7 +77,7 @@ const StillTimeCard = () => {
           </div>
         ))}
       </time>
-    </div>
+    </Link>
   );
 };
 

@@ -37,12 +37,12 @@ export default function NoteViewModal({ note, onClose, onEdit, onDelete, onToggl
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="fixed inset-0 z-40 flex items-center justify-center overflow-y-auto backdrop-blur-[2px] p-4 sm:items-center"
+      className="fixed inset-0 z-40 flex items-center justify-center overflow-y-auto bg-black/15 backdrop-blur-[2px] p-4 sm:items-center"
     >
       <motion.div
         onClick={(e) => e.stopPropagation()}
         variants={panelVariants}
-        className="w-full max-w-2xl rounded-lg border-primary bg-neutral-950"
+        className="w-full max-w-2xl rounded-lg border-primary bg-white dark:bg-neutral-950"
       >
         {/* Header */}
         <div className="flex items-center justify-between gap-3 border-b-primary px-5 py-3.5">
@@ -50,17 +50,17 @@ export default function NoteViewModal({ note, onClose, onEdit, onDelete, onToggl
             <span
               className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md"
               style={{
-                backgroundColor: colorMeta ? `${accent}22` : "rgba(255,255,255,0.06)",
+                backgroundColor: colorMeta ? `${accent}24` : "rgba(255,255,255,0.06)",
                 color: accent,
               }}
             >
               <StickyNote size={20} />
             </span>
             <div className="min-w-0">
-              <p className="truncate text-sm md:text-[15.5px] font-semibold text-neutral-100">
+              <p className="truncate text-sm md:text-[15.5px] font-semibold text-primary">
                 {note.title || t.untitled}
               </p>
-              <p className="text-xs text-neutral-500">
+              <p className="text-xs text-secondary">
                 {t.updated} {formatDateTime(note.updatedAt)}
               </p>
             </div>
@@ -69,19 +69,19 @@ export default function NoteViewModal({ note, onClose, onEdit, onDelete, onToggl
           <div className="flex shrink-0 items-center gap-1">
             <button
               onClick={() => onToggleFavorite(note)}
-              className={`dn-editor-btn ${note.favorite ? "text-amber-400" : "text-neutral-400 hover:text-neutral-100"}`}
+              className={`dn-editor-btn ${note.favorite ? "text-amber-400" : "text-secondary"}`}
               title={t.favorite}
             >
               <Star size={16} fill={note.favorite ? "currentColor" : "none"} />
             </button>
             <button
               onClick={() => onDelete(note)}
-              className="dn-editor-btn text-neutral-400 hover:text-red-400"
+              className="dn-editor-btn text-secondary hover:text-red-400"
               title={t.delete}
             >
               <Trash2 size={16} />
             </button>
-            <button onClick={onClose} className="dn-editor-btn text-neutral-400 hover:text-neutral-100">
+            <button onClick={onClose} className="dn-editor-btn text-secondary">
               <X size={18} />
             </button>
           </div>
@@ -90,17 +90,17 @@ export default function NoteViewModal({ note, onClose, onEdit, onDelete, onToggl
         {/* Body */}
         <div className="max-h-[60vh] overflow-y-auto px-5 py-4">
           {note.content ? (
-            <p className="whitespace-pre-wrap text-sm leading-relaxed text-neutral-200">
+            <p className="whitespace-pre-wrap text-sm font-medium leading-relaxed text-neutral-800 dark:text-neutral-200">
               {note.content}
             </p>
           ) : (
-            <p className="text-sm text-neutral-600">{t.emptyContent}</p>
+            <p className="text-sm text-secondary">{t.emptyContent}</p>
           )}
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between border-t border-[#303030] px-4 py-3">
-          <span className="text-xs text-neutral-500">
+        <div className="flex items-center justify-between border-t-primary px-4 py-3">
+          <span className="text-xs text-secondary">
             {t.created} {formatDateTime(note.createdAt)}
           </span>
           <button onClick={() => onEdit(note)} className="btn-primary flex items-center gap-1.5">

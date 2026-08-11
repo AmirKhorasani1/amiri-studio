@@ -53,23 +53,25 @@ export default function NoteModal({ mode, note, onClose, onSave, onDelete, onTog
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="fixed inset-0 z-40 flex items-center justify-center overflow-y-auto backdrop-blur-[2px] p-4 sm:items-center"
+      className="fixed inset-0 z-40 flex items-center justify-center overflow-y-auto bg-black/20 backdrop-blur-[2px] p-4 sm:items-center"
     >
       <motion.div
         onClick={(e) => e.stopPropagation()}
         variants={panelVariants}
-        className="w-full max-w-2xl rounded-lg border-primary bg-neutral-950"
+        className="w-full max-w-2xl rounded-lg border-primary bg-white dark:bg-neutral-950"
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b-primary px-5 py-3.5">
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-neutral-500">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-secondary">
             {isEdit ? (
               <>
-                <span>{t.created} {formatDateTime(note.createdAt)}</span>
-                <span>{t.updated} {formatDateTime(note.updatedAt)}</span>
+                <span className="font-medium">{t.created} {formatDateTime(note.createdAt)}</span>
+                <span className="font-medium">{t.updated} {formatDateTime(note.updatedAt)}</span>
               </>
             ) : (
-              <span className="text-sm md:text-[15.5px] font-semibold text-neutral-100">{t.newNote}</span>
+              <span className="text-sm md:text-[15.5px] font-semibold text-neutral-950 dark:text-neutral-100">
+                {t.newNote}
+              </span>
             )}
           </div>
 
@@ -78,21 +80,21 @@ export default function NoteModal({ mode, note, onClose, onSave, onDelete, onTog
               <>
                 <button
                   onClick={() => onToggleFavorite(note)}
-                  className={`dn-editor-btn ${note.favorite ? "text-amber-400" : "text-neutral-400 hover:text-neutral-100"}`}
+                  className={`dn-editor-btn ${note.favorite ? "text-amber-400" : "text-secondary"}`}
                   title={t.favorite}
                 >
                   <Star size={16} fill={note.favorite ? "currentColor" : "none"} />
                 </button>
                 <button
                   onClick={() => onDelete(note)}
-                  className="dn-editor-btn text-neutral-400 hover:text-red-400"
+                  className="dn-editor-btn text-secondary hover:text-red-400"
                   title={t.delete}
                 >
                   <Trash2 size={16} />
                 </button>
               </>
             )}
-            <button onClick={onClose} className="dn-editor-btn text-neutral-400 hover:text-neutral-100">
+            <button onClick={onClose} className="dn-editor-btn text-secondary">
               <X size={18} />
             </button>
           </div>
@@ -105,7 +107,7 @@ export default function NoteModal({ mode, note, onClose, onSave, onDelete, onTog
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder={t.titlePlaceholder}
-            className="border-b-primary bg-transparent pb-3 text-lg font-semibold text-neutral-100 outline-none placeholder:text-neutral-600"
+            className="border-b-primary bg-transparent pb-3 text-lg font-semibold text-neutral-950 dark:text-neutral-100 outline-none placeholder:text-neutral-600 dark:placeholder:text-neutral-300"
           />
 
           {/* Color picker */}
@@ -114,10 +116,13 @@ export default function NoteModal({ mode, note, onClose, onSave, onDelete, onTog
               type="button"
               onClick={() => setColor(null)}
               title={t.noColor}
-              className={`flex h-5 w-5 items-center justify-center rounded-full border border-neutral-700 text-neutral-500 duration-150 hover:border-neutral-500 hover:text-neutral-300 ${
-                color === null ? "ring-2 ring-neutral-400 ring-offset-2 ring-offset-neutral-950" : ""
+              className={`flex h-5 w-5 items-center justify-center rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 duration-150 hover:text-neutral-700 hover:dark:text-neutral-200 ${
+                color === null
+                  ? "ring-2 ring-neutral-400 dark:ring-neutral-500 ring-offset-2 ring-offset-white dark:ring-offset-neutral-950"
+                  : ""
               }`}
             >
+              <Ban size={12} />
             </button>
             {NOTE_COLORS.map((c) => (
               <button
@@ -127,7 +132,9 @@ export default function NoteModal({ mode, note, onClose, onSave, onDelete, onTog
                 title={c.id}
                 style={{ backgroundColor: c.hex }}
                 className={`h-5 w-5 rounded-full duration-150 hover:scale-110 ${
-                  color === c.id ? "ring-2 ring-white ring-offset-2 ring-offset-neutral-950" : ""
+                  color === c.id
+                    ? "ring-2 ring-black dark:ring-white ring-offset-2 ring-offset-white dark:ring-offset-neutral-950"
+                    : ""
                 }`}
               />
             ))}
@@ -146,16 +153,13 @@ export default function NoteModal({ mode, note, onClose, onSave, onDelete, onTog
             onChange={(e) => setContent(e.target.value)}
             placeholder={t.contentPlaceholder}
             rows={10}
-            className="resize-none bg-transparent text-sm leading-relaxed text-neutral-200 outline-none placeholder:text-neutral-600"
+            className="resize-none bg-transparent text-sm leading-relaxed text-neutral-950 dark:text-neutral-200 outline-none placeholder:text-neutral-600 dark:placeholder:text-neutral-300"
           />
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-2.5 border-t border-[#303030] px-4 py-3">
-          <button
-            onClick={onClose}
-            className="btn-secondary"
-          >
+        <div className="flex items-center justify-end gap-2.5 border-t-primary px-4 py-3">
+          <button onClick={onClose} className="btn-secondary">
             {t.cancel}
           </button>
           <button

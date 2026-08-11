@@ -20,6 +20,18 @@ const SnippetVaultPage = lazy(() =>
   import("@tools/SnippetVault/SnippetVaultPage")
 );
 
+const ColorCraftPage = lazy(() =>
+  import("@tools/ColorCraft/ColorCraftPage")
+);
+
+const TypeScalePage = lazy(() =>
+  import("@tools/TypeScale/TypeScalePage")
+);
+
+const AnimationLabPage = lazy(() =>
+  import("@tools/AnimationLab/AnimationLabPage")
+);
+
 const DevNotesHome = lazy(() =>
   import("@tools/DevNotes/pages/Home/DevNotesHome")
 );
@@ -91,6 +103,30 @@ export const router = createBrowserRouter([
           </Suspense>
         ),
       },
+      {
+        path: "tools/color-craft",
+        element: (
+          <Suspense fallback={Loader}>
+            <ColorCraftPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "tools/type-scale",
+        element: (
+          <Suspense fallback={Loader}>
+            <TypeScalePage />
+          </Suspense>
+        )
+      },
+      {
+        path: "tools/animation-lab",
+        element: (
+          <Suspense fallback={Loader}>
+            <AnimationLabPage />
+          </Suspense>
+        )
+      }
     ],
   },
 
@@ -123,7 +159,7 @@ export const router = createBrowserRouter([
   },
 
   {
-    path: "/dev-notes",
+    path: "/tools/dev-notes",
     element: <DevNotesLayout />,
     children: [
       {

@@ -162,28 +162,28 @@ export default function NotesApp() {
   }, [notes, filter, search]);
 
   return (
-    <div dir={dir} className="min-h-screen w-full text-white">
-      <div className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-25">
+    <div dir={dir} className="min-h-screen w-full text-black dark:text-white">
+      <div className="mx-auto flex max-w-6xl flex-col gap-4 md:gap-10 px-4 py-25">
         {/* Header */}
         <div className="flex flex-col gap-3.5 sm:flex-row sm:items-center sm:justify-between">
-          <div>
+          <div className="hidden md:block">
             <h1 className="text-2xl font-medium tracking-tight sm:text-3xl">
               {t.pageTitle}
             </h1>
             <div className="mt-1.5 flex items-center gap-3">
-              <p className="text-sm text-neutral-400">
+              <p className="text-sm text-secondary">
                 {notes.length} {t.notesCount}
               </p>
               <span className="h-1 w-1 rounded-full bg-neutral-600" />
-              <p className="text-sm text-neutral-400">
+              <p className="text-sm text-secondary">
                 {favoritesCount} {t.favoritesCount}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3.5">
+          <div className="flex items-center gap-3.5 -mt-3 md:mt-0">
             <div className="dn-search-wrap">
-              <Search size={15} className="shrink-0 text-neutral-300" />
+              <Search size={15} className="shrink-0 text-neutral-600 dark:text-neutral-300" />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -191,14 +191,18 @@ export default function NotesApp() {
                 className="dn-search-input"
               />
             </div>
-            <button onClick={() => setShowCreate(true)} className="dn-btn-new">
+            <button onClick={() => setShowCreate(true)} className="dn-btn-new hidden md:block">
               {t.newNote}
             </button>
           </div>
         </div>
 
+        <button onClick={() => setShowCreate(true)} className="fixed py-3.5 px-4.5 bottom-5 ltr:left-4 rtl:right-4 z-40 dn-btn-new md:hidden">
+          {t.newNote}
+        </button>
+
         {/* Favorites tabs */}
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-3 md:gap-5">
           <button
             onClick={() => setFilter("all")}
             className={`dn-tab ${filter === "all" ? "dn-tab-active" : "dn-tab-inactive"}`}

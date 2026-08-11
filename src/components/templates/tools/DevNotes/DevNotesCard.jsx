@@ -2,6 +2,7 @@ import React from "react";
 import { SiTicktick } from "react-icons/si";
 import { MdOutlineCancel } from "react-icons/md";
 import { useLanguage } from "@context/LanguageContext";
+import { Link } from "react-router-dom";
 
 const OktaIcon = () => (
   <svg viewBox="0 0 32 32" className="h-5 w-5" aria-hidden="true">
@@ -22,14 +23,14 @@ const OktaIcon = () => (
 
 const noteTypesByLang = {
   en: [
-    { label: "Done", Icon: SiTicktick, width: 95, done: true },
-    { label: "In progress", Icon: OktaIcon, width: 145, done: false },
-    { label: "Cancelled", Icon: MdOutlineCancel, width: 125, done: false },
+    { label: "Done", Icon: SiTicktick, done: true },
+    { label: "In progress", Icon: OktaIcon, done: false },
+    { label: "Cancelled", Icon: MdOutlineCancel, done: false },
   ],
   fa: [
-    { label: "انجام‌شده", Icon: SiTicktick, width: 110, done: true },
-    { label: "در حال انجام", Icon: OktaIcon, width: 150, done: false },
-    { label: "لغو شده", Icon: MdOutlineCancel, width: 110, done: false },
+    { label: "انجام‌شده", Icon: SiTicktick, done: true },
+    { label: "در حال انجام", Icon: OktaIcon, done: false },
+    { label: "لغو شده", Icon: MdOutlineCancel, done: false },
   ],
 };
 
@@ -82,7 +83,8 @@ const DevNotesCard = () => {
   const noteTypes = noteTypesByLang[language];
 
   return (
-    <div
+    <Link
+      to="/tools/dev-notes"
       className="
         group relative h-[270px] w-full overflow-hidden rounded-lg
         border-primary p-6
@@ -113,18 +115,23 @@ const DevNotesCard = () => {
         </p>
       </header>
 
+      {/* این بخش عمداً همیشه LTR نگه داشته می‌شود تا موزاییک pillها
+          مستقل از زبان صفحه ثابت بماند. متن فارسی داخل هر pill با
+          dir="auto" جدا مدیریت می‌شود و درست نمایش داده می‌شود. */}
       <div
         aria-label="DevNotes categories"
+        dir="ltr"
         className="absolute inset-x-0 bottom-0 top-[165px] z-10 overflow-hidden"
       >
         {pillLayout.map((pill, index) => {
-          const { label, Icon, width, done } = noteTypes[pill.type];
+          const { label, Icon, done } = noteTypes[pill.type];
 
           return (
             <div
               key={`${label}-${index}`}
+              dir="ltr"
               className={[
-                "absolute flex h-[42px] items-center gap-2.5 rounded-full px-3.5",
+                "absolute flex h-[42px] items-center gap-2.5 whitespace-nowrap rounded-full px-3.5",
                 "transition-all duration-300 ease-out",
                 "group-hover:scale-[1.035]",
                 done
@@ -132,16 +139,13 @@ const DevNotesCard = () => {
                   : "border border-[#282828] bg-[#050505] text-[#9d9d9d] group-hover:border-[#464545] group-hover:bg-[#0b0b0b] group-hover:text-[#e5e5e5] group-hover:shadow-[0_12px_26px_rgba(0,0,0,0.5)]",
               ].join(" ")}
               style={{
-                width,
+                width: "max-content",
                 left: pill.left,
                 top: pill.top,
               }}
             >
               <Icon />
-              <span
-                className="whitespace-nowrap text-[15px]"
-                style={{ letterSpacing: language === "fa" ? "normal" : "-0.035em" }}
-              >
+              <span className="text-[15px]" dir="auto">
                 {label}
               </span>
             </div>
@@ -150,7 +154,7 @@ const DevNotesCard = () => {
       </div>
 
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-15 bg-gradient-to-t from-neutral-100 dark:from-[#030303] to-transparent" />
-    </div>
+    </Link>
   );
 };
 

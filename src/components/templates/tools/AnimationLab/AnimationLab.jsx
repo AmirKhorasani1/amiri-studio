@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@context/LanguageContext";
+import { Link } from "react-router-dom";
 
 const EASINGS = [
   {
@@ -105,7 +106,7 @@ const AnimationLabCard = () => {
   const t = translations[language];
 
   return (
-    <div className="group relative isolate h-[270px] w-full overflow-hidden rounded-lg border-primary">
+    <Link to="/tools/animation-lab" className="group relative isolate h-[270px] w-full overflow-hidden rounded-lg border-primary">
       {/* Rainbow glow — only visible on card hover */}
       <div
         aria-hidden="true"
@@ -154,7 +155,7 @@ const AnimationLabCard = () => {
           ))}
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

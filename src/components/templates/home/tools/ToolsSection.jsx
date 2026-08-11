@@ -6,7 +6,6 @@ import StillTimeCard from '@tools/StillTime/StillTimeCard'
 import SnippetVaultCard from '@tools//SnippetVault/SnippetVaultCard'
 import AnimationLab from '@tools/AnimationLab/AnimationLab'
 import { useLanguage } from '@context/LanguageContext'
-import { Link } from 'react-router-dom'
 
 const translations = {
   en: {
@@ -37,15 +36,11 @@ const ToolsSection = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 *:cursor-pointer">
           <DevNotesCard />
-          <Link to="/tools/still-time">
-            <StillTimeCard/>
-          </Link>
+          <StillTimeCard/>
         </div>
         <div className="grid grid-cols-1 gap-4 *:cursor-pointer">
           <AnimationLab />
-          <Link to="/tools/snippet-vault">
-            <SnippetVaultCard />
-          </Link>
+          <SnippetVaultCard />
         </div>
       </div>
 

@@ -1,19 +1,35 @@
 import React from 'react'
 import SectionTitle from '@ui/SectionTitle'
-import DevNotesCard from '@/components/templates/tools/dev-notes/DevNotesCard'
-import StillTimeCard from '@home/tools/components/StillTime/StillTimeCard'
-import AnimationLab from '@/components/templates/tools/AnimationLab/AnimationLab'
-import SnippetVaultCard from '@home/tools/components/SnippetVault/SnippetVaultCard'
-import TypeScaleCard from '@/components/templates/tools/TypeScale/TypeScaleCard'
-import ColorCraftCard from '@/components/templates/tools/ColorCraft/ColorCraftCard'
+import DevNotesCard from '@tools/DevNotes/DevNotesCard'
+import StillTimeCard from '@tools/StillTime/StillTimeCard'
+import AnimationLab from '@tools/AnimationLab/AnimationLab'
+import SnippetVaultCard from '@tools/SnippetVault/SnippetVaultCard'
+import TypeScaleCard from '@tools/TypeScale/TypeScaleCard'
+import ColorCraftCard from '@tools/ColorCraft/ColorCraftCard'
+import { useLanguage } from '@context/LanguageContext'
+
+const translations = {
+  en: {
+    title: 'Custom Developer Toolkit',
+    description:
+      'Every tool here started as a real problem during development. I built them to remove repetitive work, improve consistency, and make building interfaces faster.',
+    viewAll: 'View all tools',
+  },
+  fa: {
+    title: 'ابزارهای اختصاصی توسعه',
+    description:
+      'هر کدوم از این ابزارها از یه مشکل واقعی حین توسعه شروع شدن. من اونا رو ساختم تا کارهای تکراری رو حذف کنم، یکدستی رو بهتر کنم و ساخت رابط‌کاربری رو سریع‌تر کنم.',
+    viewAll: 'مشاهده همه ابزارها',
+  },
+}
 
 const ToolsPage = () => {
+  const { language } = useLanguage()
+  const t = translations[language]
+
   return (
-    <div className="flex flex-col gap-5 px-5 md:px-25 pt-25">
-      <SectionTitle
-        title="Built to Solve Real Problems"
-        description="Every tool here started as a real problem during development. I built them to remove repetitive work, improve consistency, and make building interfaces faster."
-      />
+    <div className="flex flex-col gap-5 px-5 md:px-25 pt-25" dir={t.dir} lang={language}>
+      <SectionTitle title={t.title} description={t.description} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 *:cursor-pointer">

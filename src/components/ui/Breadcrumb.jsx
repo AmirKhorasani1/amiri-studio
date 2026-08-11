@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 
 const DEFAULT_SEPARATOR = '/'
-const ITEM_CLASSES = 'text-xs font-medium text-neutral-400'
+const ITEM_CLASSES = 'text-xs font-medium text-secondary'
 
 export function Breadcrumb({ items = [], separator = DEFAULT_SEPARATOR, className = '' }) {
   if (items.length === 0) return null
@@ -14,9 +14,9 @@ export function Breadcrumb({ items = [], separator = DEFAULT_SEPARATOR, classNam
           const isCurrent = isLastItem || !item.to
 
           return (
-            <li key={item.to ?? item.label} className="flex items-center gap-2 mb-3">
+            <li key={item.to ?? item.label} className="flex items-center gap-2 mb-5">
               {index > 0 && (
-                <span className="select-none text-neutral-600" aria-hidden="true">
+                <span className="select-none text-secondary opacity-70" aria-hidden="true">
                   {separator}
                 </span>
               )}
@@ -26,7 +26,7 @@ export function Breadcrumb({ items = [], separator = DEFAULT_SEPARATOR, classNam
                   {item.label}
                 </span>
               ) : (
-                <Link to={item.to} className={`${ITEM_CLASSES} transition-colors hover:text-neutral-200`}>
+                <Link to={item.to} className={`${ITEM_CLASSES} transition-colors hover:text-neutral-900 hover:dark:text-neutral-200`}>
                   {item.label}
                 </Link>
               )}

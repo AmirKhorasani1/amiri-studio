@@ -14,22 +14,21 @@ export default function NoteCard({ note, onOpen, onToggleFavorite, onDelete, t }
     >
       {/* Color accent stripe */}
       <span
-        className="absolute inset-y-0 left-0 w-[3px]"
+        className="absolute inset-y-0 ltr:left-0 rtl:right-0 w-[3px]"
         style={{ backgroundColor: colorMeta ? accent : "transparent" }}
       />
 
       <div className="flex items-start justify-between gap-2 pb-1">
         <div className="flex min-w-0 items-center gap-2.5">
           <span
-            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md"
-            style={{
-              backgroundColor: colorMeta ? `${accent}22` : "rgba(255,255,255,0.06)",
-              color: colorMeta ? accent : "#a3a3a3",
-            }}
+            className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-md ${
+              !colorMeta ? "bg-neutral-200 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400" : ""
+            }`}
+            style={colorMeta ? { backgroundColor: `${accent}22`, color: accent } : undefined}
           >
             <StickyNote size={16} />
           </span>
-          <p className="min-w-0 truncate text-sm md:text-[15.5px] font-medium text-neutral-100">
+          <p className="min-w-0 truncate text-sm md:text-[15.5px] font-medium text-neutral-950 dark:text-neutral-100">
             {note.title || t.untitled}
           </p>
         </div>
@@ -40,7 +39,7 @@ export default function NoteCard({ note, onOpen, onToggleFavorite, onDelete, t }
               e.stopPropagation();
               onDelete(note);
             }}
-            className="dn-editor-btn text-neutral-500 opacity-0 transition-opacity hover:text-red-400 group-hover:opacity-100"
+            className="dn-editor-btn text-secondary opacity-0 transition-opacity hover:text-red-400 group-hover:opacity-100"
             title={t.delete}
           >
             <Trash2 size={16} />
@@ -53,7 +52,7 @@ export default function NoteCard({ note, onOpen, onToggleFavorite, onDelete, t }
             className={`dn-editor-btn transition-opacity ${
               note.favorite
                 ? "text-amber-400 opacity-100"
-                : "text-neutral-500 opacity-0 hover:text-neutral-200 group-hover:opacity-100"
+                : "text-secondary opacity-0 hover:text-neutral-700 hover:dark:text-neutral-200 group-hover:opacity-100"
             }`}
             title={t.favorite}
           >
@@ -62,11 +61,11 @@ export default function NoteCard({ note, onOpen, onToggleFavorite, onDelete, t }
         </div>
       </div>
 
-      <p className="mt-1.5 line-clamp-3 min-h-[3.6em] text-[13px] text-neutral-400">
+      <p className="mt-1.5 line-clamp-3 min-h-[3em] text-sm font-medium text-secondary">
         {note.content ? truncate(note.content, 160) : t.emptyContent}
       </p>
 
-      <p className="mt-3 text-xs font-medium text-neutral-500">
+      <p className="mt-3 text-xs font-medium text-secondary">
         {t.updated} {formatDateTime(note.updatedAt)}
       </p>
     </div>

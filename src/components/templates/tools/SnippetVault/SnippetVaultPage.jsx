@@ -69,7 +69,7 @@ export default function SnippetVaultPage() {
   }, [snippets, search, language, category, favorites])
 
   return (
-    <div dir={dir} className="flex min-h-screen flex-col gap-6 bg-black px-5 md:p-25">
+    <div dir={dir} className="flex min-h-screen flex-col gap-6 container">
       <div>
         <Breadcrumb
           items={[

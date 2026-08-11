@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useLanguage } from '@context/LanguageContext'
 import LogoImg from '@assets/images/logodark.svg'
+import { HiOutlineMenuAlt4 } from 'react-icons/hi'
+import ThemeToggleButton from '@/components/ui/ThemeToggleButton'
+import LanguageToggleButton from '@/components/ui/LanguageToggleButton'
 
 const ICONS = {
   home: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0eWxlPSJvcGFjaXR5OjE7Ij48cGF0aCBkPSJtMjIgMTAuNWwtOS4xMTctNy42NzhhMS4zNyAxLjM3IDAgMCAwLTEuNzY1IDBMMiAxMC41Ii8+PHBhdGggZD0iTTIwLjUgOS41VjE2YzAgMi4zNDYgMCAzLjUxOC0uNjIgNC4zMjZhMyAzIDAgMCAxLS41NTQuNTU0Yy0uODA4LjYyLTEuOTguNjItNC4zMjYuNjJWMTdjMC0xLjQxNCAwLTIuMTIxLS40NC0yLjU2QzE0LjEyMiAxNCAxMy40MTUgMTQgMTIgMTRzLTIuMTIxIDAtMi41Ni40NEM5IDE0Ljg3OCA5IDE1LjU4NSA5IDE3djQuNWMtMi4zNDYgMC0zLjUxOCAwLTQuMzI2LS42MmEzIDMgMCAwIDEtLjU1NC0uNTU0Yy0uNjItLjgwOC0uNjItMS45OC0uNjItNC4zMjZWOS41Ii8+PC9zdmc+',
@@ -35,6 +38,8 @@ const translations = {
     userRole: 'Developer',
     collapse: 'Collapse sidebar',
     expand: 'Expand sidebar',
+    openMenu: 'Open menu',
+    closeMenu: 'Close menu',
   },
   fa: {
     brand: 'دِوناتس',
@@ -52,34 +57,37 @@ const translations = {
     userRole: 'توسعه‌دهنده',
     collapse: 'جمع کردن نوار کناری',
     expand: 'باز کردن نوار کناری',
+    openMenu: 'باز کردن منو',
+    closeMenu: 'بستن منو',
   },
 }
 
 const GroupLabel = ({ children, collapsed }) => {
   if (collapsed) return null
   return (
-    <p className="px-2.5 pt-7 pb-1 text-sm md:text-[15px] font-medium tracking-tighter text-neutral-100">
+    <p className="px-2.5 pt-7 pb-1 text-sm md:text-[15px] font-medium tracking-tighter text-black dark:text-neutral-100">
       {children}
     </p>
   )
 }
 
-const SidebarItem = ({ to, icon, label, end = false, collapsed }) => (
+const SidebarItem = ({ to, icon, label, end = false, collapsed, onNavigate }) => (
   <NavLink
     to={to}
     end={end}
     title={collapsed ? label : undefined}
+    onClick={onNavigate}
     className={({ isActive }) =>
       [
         'group flex items-center rounded-lg px-3 py-2.5 transition-colors',
-        collapsed ? 'gap-1.5 justify-center flex-col text-[11px] font-medium pb-2 pt-3' : 'gap-2 text-sm md:text-[15.5px] ',
+        collapsed ? 'md:gap-1.5 md:justify-center md:flex-col md:text-[11px] md:font-medium md:pb-2 md:pt-3 gap-2 text-sm' : 'gap-2 text-[15.5px] ',
         isActive
-          ? 'bg-neutral-800 text-neutral-100'
-          : 'text-white hover:bg-neutral-800/60',
+          ? 'bg-neutral-200 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100'
+          : 'text-black dark:text-white hover:bg-neutral-200/60 hover:dark:bg-neutral-800/60',
       ].join(' ')
     }
   >
-    <img src={icon} alt="" className="h-[21px] w-[21px] shrink-0 object-contain" />
+    <img src={icon} alt="" className="h-[21px] w-[21px] shrink-0 object-contain invert dark:invert-0" />
     <span className="truncate">{label}</span>
   </NavLink>
 )
@@ -93,84 +101,132 @@ const DevNotesSidebar = () => {
   const t = translations[language]
   const dir = language === 'fa' ? 'rtl' : 'ltr'
   const [collapsed, setCollapsed] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
 
   const toggleIcon = collapsed
     ? (dir === 'rtl' ? ICONS.expandLtr : ICONS.expandRtl)
     : (dir === 'rtl' ? ICONS.collapseLtr : ICONS.collapseRtl)
 
   return (
-    <aside
-      dir={dir}
-      className={[
-        'fixed flex h-screen flex-col justify-between border-neutral-900 text-primary',
-        dir === 'rtl' ? 'border-l' : 'border-r',
-        collapsed ? 'w-21' : 'w-70',
-        'transition-[width] duration-200',
-      ].join(' ')}
-    >
-      {/* Top: brand + nav */}
-      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-2 pt-4">
-        {/* Brand */}
-        <div className={`mb-6 flex items-center gap-3 px-2 ${collapsed ? 'justify-center' : 'justify-between'}`}>
-          <div>
-            <img width={23} src={LogoImg} alt='logo' />
+    <>
+      {/* Mobile top-right menu button (hidden on desktop) */}
+      <button
+        type="button"
+        onClick={() => setMobileOpen(true)}
+        title={t.openMenu}
+        aria-label={t.openMenu}
+        className="fixed right-4 top-5 z-40 text-primary bg-white dark:bg-neutral-800 p-2 rounded-full md:hidden shadow-[0px_0px_20px_#dcdcdc] dark:shadow-none"
+      >
+        <HiOutlineMenuAlt4 size={24}/>
+      </button>
+
+      {/* Mobile backdrop */}
+      <div
+        onClick={() => setMobileOpen(false)}
+        className={[
+          'fixed inset-0 z-40 bg-black/20 transition-opacity duration-500 md:hidden',
+          mobileOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0',
+        ].join(' ')}
+      />
+
+      <aside
+        dir={dir}
+        className={[
+          'fixed top-0 z-50 flex h-screen flex-col justify-between text-primary',
+          'border-neutral-200 dark:border-neutral-900',
+          'transition-[transform,width] duration-500 ease-out',
+          // Mobile: ~1/3 width, docked to the right, semi-transparent gray bg, slides in from the right
+          'rtl:right-0 ltr:left-0 w-2/3 border-l bg-neutral-100 dark:bg-black',
+          mobileOpen ? 'translate-x-0' : 'translate-x-full',
+          // Desktop overrides: always visible, docked per language direction, collapsible width, solid bg restored
+          'md:translate-x-0 md:bg-white md:dark:bg-black md:backdrop-blur-none',
+          dir === 'rtl'
+            ? 'md:right-0 md:left-auto md:border-l md:border-r-0'
+            : 'md:left-0 md:right-auto md:border-r md:border-l-0',
+          collapsed ? 'md:w-21' : 'md:w-70',
+        ].join(' ')}
+      >
+        {/* Top: brand + nav */}
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-2 pt-4">
+          {/* Brand */}
+          <div className={`mb-6 flex items-center gap-3 px-2 justify-between ${collapsed ? 'md:justify-center' : ''}`}>
+            <div>
+              <img width={23} src={LogoImg} alt="logo" />
+            </div>
+
+            {/* Desktop collapse/expand toggle */}
+            <button
+              type="button"
+              onClick={() => setCollapsed((c) => !c)}
+              title={collapsed ? t.expand : t.collapse}
+              className="ml-auto hidden shrink-0 rounded-md p-1.5 text-neutral-400 hover:bg-neutral-700 hover:text-white md:inline-flex"
+            >
+              <img src={toggleIcon} alt="" className="h-6 w-6 object-contain invert dark:invert-0" />
+            </button>
+
+            {/* Mobile close button */}
+            <button
+              type="button"
+              onClick={() => setMobileOpen(false)}
+              title={t.closeMenu}
+              aria-label={t.closeMenu}
+              className="mr-auto flex shrink-0 text-primary bg-white dark:bg-black p-2 rounded-full shadow-[0px_0px_20px_#dcdcdc]e md:hidden"
+            >
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </button>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setCollapsed((c) => !c)}
-            title={collapsed ? t.expand : t.collapse}
-            className="ml-auto shrink-0 rounded-md p-1.5 text-neutral-400 hover:bg-neutral-700 hover:text-white"
-          >
-            <img src={toggleIcon} alt="" className="h-6 w-6 object-contain" />
-          </button>
+          {/* Ungrouped: Home */}
+          <nav className="flex flex-col gap-0.5">
+            <SidebarItem
+              to="/dev-notes"
+              end
+              icon={ICONS.home}
+              label={t.home}
+              collapsed={collapsed}
+              onNavigate={() => setMobileOpen(false)}
+            />
+          </nav>
+
+          {/* Workspace group */}
+          <GroupLabel collapsed={collapsed}>{t.workspaceGroup}</GroupLabel>
+          <nav className="flex flex-col gap-1">
+            <SidebarItem to="notes" icon={ICONS.notes} label={t.notes} collapsed={collapsed} onNavigate={() => setMobileOpen(false)} />
+            <SidebarItem to="tasks" icon={ICONS.tasks} label={t.tasks} collapsed={collapsed} onNavigate={() => setMobileOpen(false)} />
+            <SidebarItem to="projects" icon={ICONS.projects} label={t.projects} collapsed={collapsed} onNavigate={() => setMobileOpen(false)} />
+            <SidebarItem to="meetings" icon={ICONS.meetings} label={t.meetings} collapsed={collapsed} onNavigate={() => setMobileOpen(false)} />
+            <SidebarItem to="calendar" icon={ICONS.calendar} label={t.calendar} collapsed={collapsed} onNavigate={() => setMobileOpen(false)} />
+          </nav>
+
+          {/* Library group */}
+          <GroupLabel collapsed={collapsed}>{t.libraryGroup}</GroupLabel>
+          <nav className="flex flex-col gap-1">
+            <SidebarItem to="templates" icon={ICONS.templates} label={t.templates} collapsed={collapsed} onNavigate={() => setMobileOpen(false)} />
+            <SidebarItem to="trash" icon={ICONS.trash} label={t.trashLabel} collapsed={collapsed} onNavigate={() => setMobileOpen(false)} />
+          </nav>
         </div>
 
-        {/* Ungrouped: Home */}
-        <nav className="flex flex-col gap-0.5">
-          <SidebarItem
-            to="/dev-notes"
-            end
-            icon={ICONS.home}
-            label={t.home}
-            collapsed={collapsed}
-          />
-        </nav>
+        <div className="flex items-center gap-3 p-4">
+          <ThemeToggleButton />
+          <LanguageToggleButton />
+        </div>
 
-        {/* Workspace group */}
-        <GroupLabel collapsed={collapsed}>{t.workspaceGroup}</GroupLabel>
-        <nav className="flex flex-col gap-1">
-          <SidebarItem to="/dev-notes/notes" icon={ICONS.notes} label={t.notes} collapsed={collapsed} />
-          <SidebarItem to="/dev-notes/tasks" icon={ICONS.tasks} label={t.tasks} collapsed={collapsed} />
-          <SidebarItem to="/dev-notes/projects" icon={ICONS.projects} label={t.projects} collapsed={collapsed} />
-          <SidebarItem to="/dev-notes/meetings" icon={ICONS.meetings} label={t.meetings} collapsed={collapsed} />
-          <SidebarItem to="/dev-notes/calendar" icon={ICONS.calendar} label={t.calendar} collapsed={collapsed} />
-        </nav>
-
-        {/* Library group */}
-        <GroupLabel collapsed={collapsed}>{t.libraryGroup}</GroupLabel>
-        <nav className="flex flex-col gap-1">
-          <SidebarItem to="/dev-notes/templates" icon={ICONS.templates} label={t.templates} collapsed={collapsed} />
-          <SidebarItem to="/dev-notes/trash" icon={ICONS.trash} label={t.trashLabel} collapsed={collapsed} />
-        </nav>
-
-      </div>
-
-      {/* Footer: user + collapse toggle */}
-      <div className="border-t border-neutral-800 p-2">
-        <div className={`flex items-center gap-2 rounded-lg px-2 py-2 hover:bg-neutral-800/60 ${collapsed ? 'justify-center' : ''}`}>
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-neutral-700 text-xs font-semibold text-white">
-            AK
-          </div>
-          {!collapsed && (
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-white">Amir Khorasani</p>
+        {/* Footer: user */}
+        <div className="border-t border-neutral-200 dark:border-neutral-800 p-2">
+          <div className={`flex items-center gap-2 rounded-lg px-2 py-2 hover:bg-neutral-200/60 hover:dark:bg-neutral-800/60 ${collapsed ? 'md:justify-center' : ''}`}>
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-neutral-700 text-xs font-semibold text-white">
+              AK
+            </div>
+            <div className={`min-w-0 flex-1 ${collapsed ? 'md:hidden' : ''}`}>
+              <p className="truncate text-sm font-medium text-black dark:text-white">Amir Khorasani</p>
               <p className="truncate text-xs text-neutral-500">{t.userRole}</p>
             </div>
-          )}
+          </div>
         </div>
-      </div>
-    </aside>
+      </aside>
+    </>
   )
 }
 
