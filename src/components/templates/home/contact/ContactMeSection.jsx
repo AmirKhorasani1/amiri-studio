@@ -1,147 +1,148 @@
-import React from "react";
-import { HiPhone } from "react-icons/hi2";
-import { BsChatFill } from "react-icons/bs";
-import { SiGmail } from "react-icons/si";
-import { FaGithub } from "react-icons/fa";
+import React, { useEffect, useRef, useState } from "react";
+import { FaGithub, FaWhatsapp } from "react-icons/fa";
+import { AiFillInstagram } from "react-icons/ai";
 import { RiTelegram2Fill } from "react-icons/ri";
-import { FaInstagram } from "react-icons/fa";
-import { FaWhatsapp } from "react-icons/fa6";
+import { SiGmail } from "react-icons/si";
+import { HiOutlineArrowSmRight } from "react-icons/hi";
+import { Phone } from "lucide-react";
+import { useLanguage } from "@context/LanguageContext";
+import SectionTitle from "@ui/SectionTitle";
 
-const badges = [
-  { label: "Comments", color: "bg-blue-600" },
-  { label: "CMS Drafts", color: "bg-purple-600" },
-  { label: "Accessibility", color: "bg-emerald-600" },
-  { label: "Share", color: "bg-pink-600" },
-  { label: "Feature Flags", color: "bg-teal-600" },
-  { label: "Collaborators", color: "bg-amber-500" },
-  { label: "Layout Shift", color: "bg-red-500" },
+const translations = {
+  en: {
+    title: "Ready to get started?",
+    description: "Have a project to build, improve, or take to the next level? Let’s talk about it.",
+    chat: "Start a conversation",
+    cards: {
+      github: { label: "GitHub", meta: "@yourusername" },
+      email: { label: "Email", meta: "you@example.com" },
+      phone: { label: "Phone", meta: "+98 913 963 4709" },
+      instagram: { label: "Instagram", meta: "@yourusername" },
+      telegram: { label: "Telegram", meta: "@yourusername" },
+      whatsapp: { label: "WhatsApp", meta: "+98 913 963 4709" },
+    },
+  },
+  fa: {
+    title: "آماده‌اید شروع کنیم؟",
+    description: "پروژه‌ای برای ساخت، توسعه یا بهبود دارید؟ بیایید درباره‌اش صحبت کنیم.",
+    chat: "شروع گفتگو",
+    cards: {
+      github: { label: "گیت‌هاب", meta: "@yourusername" },
+      email: { label: "ایمیل", meta: "you@example.com" },
+      phone: { label: "تماس تلفنی", meta: "+98 913 963 4709" },
+      instagram: { label: "اینستاگرام", meta: "@yourusername" },
+      telegram: { label: "تلگرام", meta: "@yourusername" },
+      whatsapp: { label: "واتساپ", meta: "+98 913 963 4709" },
+    },
+  },
+};
+
+const CARD_ITEMS = [
+  { id: "github", Icon: FaGithub, href: "https://github.com/yourusername" },
+  { id: "email", Icon: SiGmail, href: "mailto:you@example.com" },
+  { id: "phone", Icon: Phone, href: "tel:09139634709" },
+  { id: "instagram", Icon: AiFillInstagram, href: "https://instagram.com/yourusername" },
+  { id: "telegram", Icon: RiTelegram2Fill, href: "https://t.me/yourusername" },
+  { id: "whatsapp", Icon: FaWhatsapp, href: "https://wa.me/989139634709" },
 ];
 
-const avatars = [
-  { ring: "ring-orange-500", bg: "bg-orange-400" },
-];
+// Fires once when the grid enters the viewport, used to stagger the card animation
+const useInView = (threshold = 0.15) => {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
 
-const Toolbar = () => (
-  <div className="flex items-center gap-3.5 rounded-full border border-neutral-700 bg-neutral-800 px-4 py-3 text-white sm:gap-4 sm:px-6">
-    <HiPhone size={21} className="shrink-0" aria-hidden="true" />
-    <div className="relative shrink-0">
-      <BsChatFill size={21} aria-hidden="true" />
-      <span className="absolute -right-0.5 -top-0.5 h-1.5 w-1.5 rounded-full bg-blue-500" />
-    </div>
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [threshold]);
 
-    <span className="h-5 w-px shrink-0 bg-neutral-700" />
+  return [ref, inView];
+};
 
-    <SiGmail size={21} className="shrink-0" aria-hidden="true"/>
-    <FaGithub size={21} className="shrink-0" aria-hidden="true"/>
+const ContactCard = ({ Icon, copy, href, isRTL, index, inView }) => {
+  const isExternal = href.startsWith("http");
+  const row = Math.floor(index / 3); // stagger delay per row (3 cols on md+)
 
-    <span className="h-5 w-px shrink-0 bg-neutral-700" />
-
-    <div className="flex shrink-0 -space-x-2">
-      {avatars.map((a, i) => (
-        <span
-          key={i}
-          className={`h-7 w-7 rounded-full ${a.bg} ring-2 ${a.ring} ring-offset-2 ring-offset-[#0d0d0d]`}
-        />
-      ))}
-    </div>
-
-    <span className="h-5 w-px shrink-0 bg-neutral-700" />
-
-    <RiTelegram2Fill size={21} className="shrink-0" aria-hidden="true" />
-    <FaInstagram size={21} className="shrink-0" aria-hidden="true" />
-    <FaWhatsapp size={21} className="shrink-0" aria-hidden="true" />
-  </div>
-);
-
-const Badge = ({ label, color, className = "" }) => (
-  <span
-    className={`whitespace-nowrap rounded-lg ${color} px-2 py-1.5 text-xs md:text-sm font-medium text-white ${className}`}
-  >
-    {label}
-  </span>
-);
-
-const DeploymentHero = () => {
   return (
-    <section className="relative overflow-hidden mx-auto w-full max-w-7xl mt-10">
-      {/* Grid background */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-70"
-        style={{
-          backgroundImage:
-            "linear-gradient(to right, rgba(255,255,255,0.2) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.2) 1px, transparent 1px)",
-          backgroundSize: "55px 55px",
-          maskImage:
-            "radial-gradient(ellipse 80% 60% at 50% 20%, black 40%, transparent 100%)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse 80% 60% at 50% 20%, black 40%, transparent 100%)",
-        }}
+    <a
+      href={href}
+      target={isExternal ? "_blank" : undefined}
+      rel={isExternal ? "noopener noreferrer" : undefined}
+      style={{ transitionDelay: inView ? `${row * 120 + (index % 3) * 60}ms` : "0ms" }}
+      className={`group flex justify-between rounded-full bg-neutral-100 p-2 backdrop-blur-3xl transition-all duration-700 ease-out hover:bg-neutral-200 dark:bg-neutral-800/80 dark:hover:bg-neutral-800 ${
+        inView ? "translate-y-0 opacity-100" : "translate-y-10 opacity-0"
+      }`}
+    >
+      <div className="flex items-center gap-3">
+        <div className="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-neutral-200 dark:bg-neutral-700">
+          <Icon className="size-6 text-neutral-500 transition-colors duration-300 group-hover:text-neutral-950 dark:text-neutral-400 dark:group-hover:text-white" />
+        </div>
+        <div className="flex min-w-0 flex-col">
+          <span className="text-[15px] font-medium text-neutral-950 dark:text-white">{copy.label}</span>
+          <span className="truncate text-xs text-neutral-500 dark:text-neutral-500">{copy.meta}</span>
+        </div>
+      </div>
+
+      <HiOutlineArrowSmRight
+        className={`h-11.5 w-11.5 shrink-0 self-center rounded-full bg-neutral-200 p-2.5 text-neutral-500 transition-transform duration-300 dark:bg-neutral-800 dark:text-neutral-400 ${
+          isRTL ? "rotate-180 group-hover:-translate-x-1" : "group-hover:translate-x-1"
+        }`}
       />
+    </a>
+  );
+};
 
-      <div className="relative mx-auto px-4 pb-24 pt-16 sm:px-6 sm:pt-20 lg:px-8">
-        {/* ===== Desktop / tablet: absolute floating layout ===== */}
-        <div className="relative mx-auto hidden h-[260px] max-w-4xl md:block">
-          <Badge label="Comments" color="bg-blue-600" className="absolute left-[5%] top-[8%]" />
-          <Badge label="CMS Drafts" color="bg-purple-600" className="absolute left-[28%] top-0" />
-          <Badge label="Accessibility" color="bg-emerald-600" className="absolute left-[52%] top-0" />
-          <Badge label="Share" color="bg-pink-600" className="absolute right-[3%] top-[8%]" />
+const ContactSection = ({ onOpenChat }) => {
+  const { language } = useLanguage();
+  const t = translations[language] ?? translations.en;
+  const isRTL = language === "fa";
+  const [gridRef, inView] = useInView();
 
-          <div className="absolute left-1/2 top-[22%] -translate-x-1/2">
-            <Toolbar />
-          </div>
+  return (
+    <section dir={isRTL ? "rtl" : "ltr"} className="relative w-full overflow-hidden py-35">
+      <div className="pointer-events-none absolute inset-0 -z-10 container">
+        <img
+          className="h-full w-full invert dark:invert-0 object-cover opacity-15 brightness-75 dark:opacity-20 dark:brightness-30"
+          src="src/assets/images/vecteezy_world-map-template-with-continents-north-and-south-america_5420386-1.jpg"
+          alt=""
+        />
+      </div>
 
-          <Badge label="Feature Flags" color="bg-teal-600" className="absolute left-[6%] top-[64%]" />
-          <Badge label="Collaborators" color="bg-amber-500" className="absolute left-[38%] top-[66%]" />
-          <Badge label="Layout Shift" color="bg-red-500" className="absolute right-[8%] top-[63%]" />
-        </div>
+      <div className="container relative z-10 flex w-full flex-col gap-15">
+        <div>
+          <SectionTitle title={t.title} description={t.description} />
 
-        {/* ===== Mobile: stacked, wrapped layout ===== */}
-        <div className="mx-auto flex max-w-md flex-col items-center gap-6 md:hidden">
-          <div className="flex flex-wrap items-center justify-center gap-6">
-            <Badge label="Telegram" color="bg-blue-600" className="-rotate-6"/>
-            <Badge label="Github" color="bg-purple-600" className="mb-5"/>
-            <Badge label="WhatsApp" color="bg-emerald-600" className="mb-5"/>
-            <Badge label="Instagram" color="bg-pink-600" className="rotate-6"/>
-          </div>
-
-          <div className="w-full overflow-x-auto my-2">
-            <div className="flex w-max min-w-full justify-center">
-              <Toolbar />
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-6">
-            <Badge label="Phone number" color="bg-teal-600" className="rotate-5"/>
-            <Badge label="Email" color="bg-red-500" className="mt-5"/>
-            <Badge label="Message me" color="bg-amber-500" className="-rotate-6"/>
+          <div className="mt-8 flex justify-center">
+            <button
+              type="button"
+              onClick={onOpenChat}
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-neutral-950 px-5 py-3 text-sm font-medium text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-200"
+            >
+              {t.chat}
+              <HiOutlineArrowSmRight size={18} className={isRTL ? "rotate-180" : ""} />
+            </button>
           </div>
         </div>
 
-        {/* ===== Heading + copy ===== */}
-        <div className="relative mx-auto mt-16 max-w-2xl text-center md:mt-10">
-          <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl md:text-5xl">
-            Contact Me
-          </h1>
-
-          <p className="mt-6 text-base text-neutral-400 sm:text-lg">
-            Traditional deployment tools weren&apos;t built for frontend development.
-            <br className="hidden sm:block" />
-            Get the <span className="font-semibold text-neutral-200">DX Platform</span> that has
-            teams shipping faster with higher quality.
-          </p>
-
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <button className="w-full gap-2 rounded-full bg-white px-5 py-3 text-sm font-medium text-black transition hover:bg-neutral-200 sm:w-auto">
-              Text me
-            </button>
-            <button className="w-full rounded-full border border-neutral-700 px-5 py-3 text-sm font-medium text-white transition hover:bg-neutral-900 sm:w-auto">
-              Call me
-            </button>
-          </div>
+        <div ref={gridRef} className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-4.5">
+          {CARD_ITEMS.map(({ id, Icon, href }, index) => (
+            <ContactCard key={id} index={index} inView={inView} Icon={Icon} href={href} copy={t.cards[id]} isRTL={isRTL} />
+          ))}
         </div>
       </div>
     </section>
   );
 };
 
-export default DeploymentHero;
+export default ContactSection;

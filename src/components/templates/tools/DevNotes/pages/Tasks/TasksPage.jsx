@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect } from "react";
+import { AnimatePresence } from "framer-motion";
 
 import { uid, todayISO } from "./utils/helpers";
 import { initialTasks } from "./utils/Seeddata";
@@ -157,31 +158,11 @@ export default function TaskManagerApp() {
     return list;
   }, [tasks, statusFilter, search, sortBy]);
 
-  return (
-    <div className="min-h-screen w-full text-white">
-      <style>{`
-        .field-input {
-          background: transparent;
-          outline: none;
-          border: 1px solid rgb(38 38 38);
-          border-radius: 0.5rem;
-          padding: 0.4rem 0.6rem;
-          font-size: 0.8rem;
-          color: rgb(229 229 229);
-        }
-        .field-input:focus {
-          border-color: rgb(82 82 82);
-        }
-        select.field-input option {
-          background: rgb(10 10 10);
-        }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-thumb { background: rgb(38 38 38); border-radius: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-      `}</style>
-
-      <div className="max-w-6xl mx-auto px-4 py-25 flex flex-col gap-10">
-        {/* Toolbar */}
+return (
+    <div className="min-h-screen w-full text-black dark:text-white">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-17 md:py-25">
+        
+        {/* Toolbar Component Preserved Here */}
         <Toolbar
           title="My Tasks"
           taskCount={tasks.length}
@@ -199,37 +180,57 @@ export default function TaskManagerApp() {
           onNewTask={() => setShowNewTask(true)}
         />
 
-        {/* Content */}
-        {view === "list" ? (
-          <ListView
-            tasks={visibleTasks}
-            groupBy={groupBy}
-            collapsedGroups={collapsedGroups}
-            toggleGroup={toggleGroup}
-            {...cardHandlers}
-          />
+        {/* Content Area */}
+        {visibleTasks.length > 0 ? (
+          <div className="w-full">
+            {view === "list" ? (
+              <ListView
+                tasks={visibleTasks}
+                groupBy={groupBy}
+                collapsedGroups={collapsedGroups}
+                toggleGroup={toggleGroup}
+                {...cardHandlers}
+              />
+            ) : (
+              <BoardView
+                tasks={visibleTasks}
+                onNewTask={() => setShowNewTask(true)}
+                {...cardHandlers}
+              />
+            )}
+          </div>
         ) : (
-          <BoardView
-            tasks={visibleTasks}
-            onNewTask={() => setShowNewTask(true)}
-            {...cardHandlers}
-          />
+          <div className="rounded-xl border border-dashed border-neutral-300 dark:border-neutral-800 py-16 text-center text-sm text-secondary">
+            {tasks.length === 0 
+              ? "No tasks yet — create your first one." 
+              : "No tasks match your filters."}
+          </div>
         )}
       </div>
 
-      {activeTask && (
-        <SidePanel
-          task={tasks.find((t) => t.id === activeTask.id) ?? null}
-          onClose={() => setActiveTask(null)}
-          onChange={updateTask}
-          onDelete={(t) => deleteTask(t)}
-          onDuplicate={(t) => duplicateTask(t)}
-        />
-      )}
+      {/* Modals with Framer Motion AnimatePresence */}
+      <AnimatePresence>
+        {activeTask && (
+          <SidePanel
+            key="side-panel"
+            task={tasks.find((t) => t.id === activeTask.id) ?? null}
+            onClose={() => setActiveTask(null)}
+            onChange={updateTask}
+            onDelete={(t) => deleteTask(t)}
+            onDuplicate={(t) => duplicateTask(t)}
+          />
+        )}
+      </AnimatePresence>
 
-      {showNewTask && (
-        <NewTaskModal onClose={() => setShowNewTask(false)} onCreate={createTask} />
-      )}
+      <AnimatePresence>
+        {showNewTask && (
+          <NewTaskModal
+            key="new-task-modal"
+            onClose={() => setShowNewTask(false)}
+            onCreate={createTask}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -161,12 +161,13 @@ export default function NotesApp() {
     );
   }, [notes, filter, search]);
 
-  return (
+return (
     <div dir={dir} className="min-h-screen w-full text-black dark:text-white">
-      <div className="mx-auto flex max-w-6xl flex-col gap-4 md:gap-10 px-4 py-25">
-        {/* Header */}
-        <div className="flex flex-col gap-3.5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="hidden md:block">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-17 md:py-25 pb-24 md:pb-25">
+        
+        {/* Header / Toolbar Row */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="hidden sm:block">
             <h1 className="text-2xl font-medium tracking-tight sm:text-3xl">
               {t.pageTitle}
             </h1>
@@ -174,16 +175,17 @@ export default function NotesApp() {
               <p className="text-sm text-secondary">
                 {notes.length} {t.notesCount}
               </p>
-              <span className="h-1 w-1 rounded-full bg-neutral-600" />
+              <span className="h-1 w-1 rounded-full bg-neutral-400 dark:bg-neutral-600" />
               <p className="text-sm text-secondary">
                 {favoritesCount} {t.favoritesCount}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3.5 -mt-3 md:mt-0">
-            <div className="dn-search-wrap">
-              <Search size={15} className="shrink-0 text-neutral-600 dark:text-neutral-300" />
+          {/* Desktop Search & New Note Button */}
+          <div className="hidden md:flex items-center gap-3.5">
+            <div className="dn-search-wrap shadow-sm">
+              <Search size={18} className="shrink-0 text-neutral-500 dark:text-neutral-400" />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -191,35 +193,53 @@ export default function NotesApp() {
                 className="dn-search-input"
               />
             </div>
-            <button onClick={() => setShowCreate(true)} className="dn-btn-new hidden md:block">
+            <button onClick={() => setShowCreate(true)} className="dn-btn-new shrink-0">
               {t.newNote}
             </button>
           </div>
+
+          {/* Mobile Floating Action Button (+) */}
+          <button
+            type="button"
+            onClick={() => setShowCreate(true)}
+            className="md:hidden fixed right-3.5 top-5.5 z-40 bg-white dark:bg-neutral-700/70 backdrop-blur-xl p-2 rounded-full active:scale-95 duration-300"
+          >
+            <img className="invert dark:invert-0" width={29} height={29} alt="Add" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0eWxlPSJvcGFjaXR5OjE7Ij48cGF0aCBmaWxsPSJub25lIiAgICAgZD0iTTEyLjAwMSA1djE0LjAwMm03LjAwMS03SDUiLz48L3N2Zz4=" />
+          </button>
+
+          {/* Mobile Bottom Search Bar */}
+          <div className="md:hidden fixed bottom-5.5 right-0 left-0 w-full px-5 z-30">
+            <div className="dn-search-wrap shadow-lg">
+              <Search size={20} className="shrink-0 text-secondary" />
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={t.searchPlaceholder}
+                className="dn-search-input"
+              />
+            </div>
+          </div>
         </div>
 
-        <button onClick={() => setShowCreate(true)} className="fixed py-3.5 px-4.5 bottom-5 ltr:left-4 rtl:right-4 z-40 dn-btn-new md:hidden">
-          {t.newNote}
-        </button>
-
-        {/* Favorites tabs */}
-        <div className="flex items-center gap-3 md:gap-5">
+        {/* Filters Row (All & Favorites) */}
+        <div className="flex items-center gap-2 overflow-x-auto hide-scrollbar w-full pb-1">
           <button
             onClick={() => setFilter("all")}
-            className={`dn-tab ${filter === "all" ? "dn-tab-active" : "dn-tab-inactive"}`}
+            className={`dn-tab shrink-0 whitespace-nowrap ${filter === "all" ? "dn-tab-active" : "dn-tab-inactive"}`}
           >
             {t.all}
           </button>
           <button
             onClick={() => setFilter("favorites")}
-            className={`dn-tab ${filter === "favorites" ? "dn-tab-active" : "dn-tab-inactive"}`}
+            className={`dn-tab shrink-0 whitespace-nowrap ${filter === "favorites" ? "dn-tab-active" : "dn-tab-inactive"}`}
           >
             {t.favoritesTab}
           </button>
         </div>
 
-        {/* Notes grid */}
+        {/* Notes Grid */}
         {visibleNotes.length > 0 ? (
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 w-full">
             {visibleNotes.map((note) => (
               <NoteCard
                 key={note.id}
@@ -232,13 +252,13 @@ export default function NotesApp() {
             ))}
           </div>
         ) : (
-          <div className="rounded-xl border border-dashed border-neutral-800 py-16 text-center text-sm text-neutral-600">
+          <div className="rounded-xl border border-dashed border-neutral-300 dark:border-neutral-800 py-16 text-center text-sm text-secondary">
             {notes.length === 0 ? t.emptyState : t.emptyStateFiltered}
           </div>
         )}
       </div>
 
-      {/* Create modal */}
+      {/* Create Modal */}
       <AnimatePresence>
         {showCreate && (
           <NoteModal
@@ -252,7 +272,7 @@ export default function NotesApp() {
         )}
       </AnimatePresence>
 
-      {/* Read-only detail modal, opened from card click */}
+      {/* Read-only Detail Modal */}
       <AnimatePresence>
         {viewingNote && !editingNote && (
           <NoteViewModal
@@ -267,7 +287,7 @@ export default function NotesApp() {
         )}
       </AnimatePresence>
 
-      {/* Full editor modal, opened via the Edit button */}
+      {/* Full Editor Modal */}
       <AnimatePresence>
         {editingNote && (
           <NoteModal

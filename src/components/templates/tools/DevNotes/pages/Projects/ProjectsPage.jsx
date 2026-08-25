@@ -3,10 +3,11 @@ import { AnimatePresence } from "framer-motion";
 import { Search, X } from "lucide-react";
 import { useLanguage } from "@context/LanguageContext";
 import { uid, nowISO, loadProjects, saveProjects } from "./utils/projectStorage";
-import { PROJECT_COLORS } from "./utils/projectConstants";
+import { PROJECT_COLORS, PROJECT_STATUSES, PROJECT_SORTS } from "./utils/projectConstants";
 import ProjectCard from "./components/ProjectCard";
 import ProjectModal from "./components/ProjectModal";
 import ProjectDetailModal from "./components/ProjectDetailModal";
+import { IoIosAdd } from "react-icons/io";
 
 const translations = {
   en: {
@@ -34,6 +35,23 @@ const translations = {
     all: "All",
     emptyState: "No projects yet — create your first one.",
     emptyStateFiltered: "No projects match your filters.",
+    status: "Status",
+    statusLabels: {
+      planning: "Planning",
+      active: "Active",
+      completed: "Completed",
+      archived: "Archived",
+    },
+    techStack: "Tech Stack",
+    techStackPlaceholder: "Type and press Enter",
+    sortLabel: "Sort",
+    sortOptions: {
+      updated: "Recently Updated",
+      created: "Recently Created",
+      name: "Name A–Z",
+    },
+    archive: "Archive",
+    unarchive: "Restore",
   },
   fa: {
     pageTitle: "پروژه‌ها",
@@ -60,6 +78,23 @@ const translations = {
     all: "همه",
     emptyState: "هنوز پروژه‌ای نیست — اولین پروژه‌ات رو بساز.",
     emptyStateFiltered: "پروژه‌ای مطابق فیلترها پیدا نشد.",
+    status: "وضعیت",
+    statusLabels: {
+      planning: "برنامه‌ریزی",
+      active: "فعال",
+      completed: "تکمیل‌شده",
+      archived: "بایگانی‌شده",
+    },
+    techStack: "تکنولوژی‌ها",
+    techStackPlaceholder: "بنویس و Enter بزن",
+    sortLabel: "مرتب‌سازی",
+    sortOptions: {
+      updated: "آخرین بروزرسانی",
+      created: "تاریخ ایجاد",
+      name: "نام (الف تا ی)",
+    },
+    archive: "بایگانی",
+    unarchive: "بازگردانی",
   },
 };
 
@@ -70,9 +105,11 @@ export default function ProjectsPage() {
 
   const [projects, setProjects] = useState(loadProjects);
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState(null);
   const [colorFilter, setColorFilter] = useState(null);
+  const [sortBy, setSortBy] = useState("updated");
   const [viewingId, setViewingId] = useState(null);
-  const [editingProject, setEditingProject] = useState(null); // meta edit
+  const [editingProject, setEditingProject] = useState(null);
   const [showCreate, setShowCreate] = useState(false);
 
   useEffect(() => {
@@ -83,9 +120,11 @@ export default function ProjectsPage() {
     const project = {
       id: uid(),
       name: fields.name,
+      description: fields.description ?? "",
       color: fields.color,
       icon: fields.icon,
-      description: "",
+      status: fields.status ?? "active",
+      techStack: fields.techStack ?? [],
       tasks: [],
       createdAt: nowISO(),
       updatedAt: nowISO(),
@@ -99,6 +138,12 @@ export default function ProjectsPage() {
       prev.map((p) => (p.id === id ? { ...p, ...fields, updatedAt: nowISO() } : p))
     );
     setEditingProject(null);
+  }, []);
+
+  const updateStatus = useCallback((id, status) => {
+    setProjects((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, status, updatedAt: nowISO() } : p))
+    );
   }, []);
 
   const deleteProject = useCallback((project) => {
@@ -119,7 +164,10 @@ export default function ProjectsPage() {
         p.id === projectId
           ? {
               ...p,
-              tasks: [...p.tasks, { id: uid(), text, done: false, createdAt: nowISO() }],
+              tasks: [
+                ...p.tasks,
+                { id: uid(), text, done: false, createdAt: nowISO(), updatedAt: nowISO() },
+              ],
               updatedAt: nowISO(),
             }
           : p
@@ -134,7 +182,9 @@ export default function ProjectsPage() {
           ? {
               ...p,
               tasks: p.tasks.map((task) =>
-                task.id === taskId ? { ...task, done: !task.done } : task
+                task.id === taskId
+                  ? { ...task, done: !task.done, updatedAt: nowISO() }
+                  : task
               ),
               updatedAt: nowISO(),
             }
@@ -160,6 +210,9 @@ export default function ProjectsPage() {
   const visibleProjects = useMemo(() => {
     let list = projects;
 
+    if (statusFilter) {
+      list = list.filter((p) => p.status === statusFilter);
+    }
     if (colorFilter) {
       list = list.filter((p) => p.color === colorFilter);
     }
@@ -168,30 +221,39 @@ export default function ProjectsPage() {
       list = list.filter(
         (p) =>
           p.name.toLowerCase().includes(q) ||
-          (p.description ?? "").toLowerCase().includes(q)
+          (p.description ?? "").toLowerCase().includes(q) ||
+          (p.techStack ?? []).some((tech) => tech.toLowerCase().includes(q))
       );
     }
 
-    return [...list].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-  }, [projects, search, colorFilter]);
+    const sorted = [...list];
+    if (sortBy === "name") {
+      sorted.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortBy === "created") {
+      sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    } else {
+      sorted.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+    }
+    return sorted;
+  }, [projects, search, statusFilter, colorFilter, sortBy]);
 
   const viewingProject = projects.find((p) => p.id === viewingId) ?? null;
 
   return (
     <div dir={dir} className="min-h-screen w-full text-black dark:text-white">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-25">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-17 md:py-25">
         {/* Header */}
         <div className="flex flex-col gap-3.5 sm:flex-row sm:items-center sm:justify-between">
-          <div>
+          <div className="hidden md:block">
             <h1 className="text-2xl font-medium tracking-tight sm:text-3xl">{t.pageTitle}</h1>
             <p className="mt-1.5 text-sm text-secondary">
               {projects.length} {t.projectsCount}
             </p>
           </div>
 
-          <div className="flex items-center gap-3.5">
+          <div className="hidden md:flex items-center gap-3.5">
             <div className="dn-search-wrap">
-              <Search size={15} className="shrink-0 text-neutral-600 dark:text-neutral-300" />
+              <Search size={20} className="shrink-0 text-neutral-600 dark:text-neutral-300" />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -203,16 +265,49 @@ export default function ProjectsPage() {
               {t.newProject}
             </button>
           </div>
+
+          <button
+            type="button"
+            onClick={() => setShowCreate(true)}
+            className="md:hidden fixed right-3.5 top-5.5 z-40 bg-white dark:bg-neutral-700/70 backdrop-blur-xl p-2 rounded-full active:scale-95 duration-300"
+          >
+            <img className="invert dark:invert-0" width={29} height={29} alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0eWxlPSJvcGFjaXR5OjE7Ij48cGF0aCBmaWxsPSJub25lIiAgICAgZD0iTTEyLjAwMSA1djE0LjAwMm03LjAwMS03SDUiLz48L3N2Zz4=" />
+          </button>
+
+          <div className="fixed bottom-5.5 right-0 left-0 w-full px-5">
+            <div className="dn-search-wrap">
+              <Search size={20} className="shrink-0 text-secondary" />
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={t.searchPlaceholder}
+                className="dn-search-input"
+              />
+            </div>
+          </div>
         </div>
 
-        {/* Color filter */}
-        <div className="flex flex-wrap items-center gap-2">
+        {/* Status tabs + Sort */}
+        <div className="flex gap-2 md:gap-3 sm:items-center overflow-x-scroll hide-scrollbar w-full">
           <button
-            onClick={() => setColorFilter(null)}
-            className={`dn-tab ${colorFilter === null ? "dn-tab-active" : "dn-tab-inactive"}`}
+            onClick={() => setStatusFilter(null)}
+            className={`dn-tab ${statusFilter === null ? "dn-tab-active" : "dn-tab-inactive"}`}
           >
             {t.all}
           </button>
+          {PROJECT_STATUSES.map((s) => (
+            <button
+              key={s.id}
+              onClick={() => setStatusFilter((prev) => (prev === s.id ? null : s.id))}
+              className={`dn-tab ${statusFilter === s.id ? "dn-tab-active" : "dn-tab-inactive"}`}
+            >
+              {t.statusLabels[s.id]}
+            </button>
+          ))}
+        </div>
+
+        {/* Color filter */}
+        <div className="flex items-center gap-2">
           {PROJECT_COLORS.map((c) => (
             <button
               key={c.id}
@@ -247,6 +342,7 @@ export default function ProjectsPage() {
                 onOpen={(p) => setViewingId(p.id)}
                 onDelete={deleteProject}
                 t={t}
+                lang={language}
               />
             ))}
           </div>
@@ -281,6 +377,7 @@ export default function ProjectsPage() {
             onEdit={startEditing}
             onDelete={deleteProject}
             onUpdateDescription={updateDescription}
+            onUpdateStatus={updateStatus}
             onAddTask={addTask}
             onToggleTask={toggleTask}
             onDeleteTask={deleteTask}

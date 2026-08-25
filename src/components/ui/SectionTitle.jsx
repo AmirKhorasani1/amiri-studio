@@ -21,7 +21,7 @@ const SectionTitle = ({
   const alignClass =
     align === "center"
       ? "items-center text-center mx-auto"
-      : "text-left items-start rtl:text-right";
+      : "text-center items-center";
 
   const renderTitle = () => {
     if (!highlight || !title.includes(highlight)) return title;
@@ -44,7 +44,7 @@ const SectionTitle = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.4 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`flex flex-col gap-3 ${alignClass}`}
+      className={`flex flex-col gap-3 md:gap-4.5 ${alignClass}`}
     >
       {eyebrow && (
         <span className="text-sm font-medium tracking-wide text-neutral-500">
@@ -53,7 +53,7 @@ const SectionTitle = ({
       )}
 
       <h2
-        className="max-w-2xl leading-[1.2] md:leading-[1.05] text-black dark:text-white text-[32px] md:text-[49px]"
+        className="max-w-2xl rtl:leading-[1.3] ltr:leading-[1.2] md:rtl:leading-[1.3] md:ltr:leading-[1.05] text-black dark:text-white rtl:text-[30px] ltr:text-[32px] md:ltr:text-[38px]  md:rtl:text-[38px]"
         style={{
           letterSpacing: language === "fa" ? "normal" : "-0.03em",
           fontWeight: language === "fa" ? 600 : 480,
@@ -63,7 +63,7 @@ const SectionTitle = ({
       </h2>
 
       {description && (
-        <p className="text-[15px] md:text-[16px] text-neutral-600 dark:text-neutral-400 font-normal leading-relaxed max-w-2xl">
+        <p className="text-[15px] md:text-[17px] text-neutral-600 dark:text-neutral-500 font-normal leading-relaxed max-w-2xl">
           {description}
         </p>
       )}

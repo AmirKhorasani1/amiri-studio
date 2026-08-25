@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { Copy, Check, Play, Pause, RotateCcw } from "lucide-react";
 import { useLanguage } from "@context/LanguageContext";
-import { DraggableRuler, MiniSlider, Chip, BezierEditor } from "./AnimationAlabControls";
+import { DraggableRuler, MiniSlider, Chip, BezierEditor } from "./components/AnimationAlabControls";
 import {
   TYPES,
   TYPE_CONTROLS,
@@ -144,7 +144,7 @@ ${steps.map((s) => {
       `}</style>
 
       {/* Header */}
-      <div className="mb-8 text-left rtl:text-right">
+      <div className="mb-8 mt-3 text-left rtl:text-right">
         <h1 className="text-[22px] font-medium tracking-tight text-black dark:text-white md:text-[26px]">
           {t.title}
         </h1>

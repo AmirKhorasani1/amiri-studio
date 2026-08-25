@@ -1,26 +1,60 @@
-// ChatButton.jsx
 import React, { useState, useEffect, useCallback } from "react";
-import { HiMiniChatBubbleOvalLeftEllipsis } from "react-icons/hi2";
 import ChatModal from "@home/chat/ChatModal";
 import ChatHeader from "@home/chat/components/ChatHeader";
 import ChatProfile from "@home/chat/components/ChatProfile";
-import { HiChatBubbleOvalLeft } from "react-icons/hi2";
+import { HiOutlineChatBubbleOvalLeft } from "react-icons/hi2";
+import { useLanguage } from "@context/LanguageContext";
 
-const ChatButton = ({
-  title = "Talk to me",
-  subtitle = "Usually replies within a day",
-  avatarUrl,
-  bio,
-  email,
-  phone,
-  children,
-}) => {
+const translations = {
+  en: {
+    title: "Amir Khorasani",
+    subtitle: "Available for work",
+    start: "Start chat",
+    closeProfile: "Close profile",
+  },
+  fa: {
+    title: "امیر خراسانی",
+    subtitle: "آماده همکاری",
+    start: "شروع گفتگو",
+    closeProfile: "بستن پروفایل",
+  },
+};
+
+const ChatButton = ({ avatarUrl, bio, email, phone, children }) => {
+  const { language } = useLanguage();
+  const t = translations[language] ?? translations.en;
+  const isRTL = language === "fa";
+
   const [isOpen, setIsOpen] = useState(false);
-  const [view, setView] = useState("chat");
+  const [showProfile, setShowProfile] = useState(false);
+  const [profileVisible, setProfileVisible] = useState(false);
 
-  const openModal = () => setIsOpen(true);
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const openProfile = () => {
+    setShowProfile(true);
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setProfileVisible(true);
+      });
+    });
+  };
+
+  const closeProfile = useCallback(() => {
+    setProfileVisible(false);
+
+    setTimeout(() => {
+      setShowProfile(false);
+    }, 350);
+  }, []);
 
   const closeModal = useCallback(() => {
+    setShowProfile(false);
+    setProfileVisible(false);
+
     if (window.history.state?.chatModal) {
       window.history.back();
     } else {
@@ -33,16 +67,23 @@ const ChatButton = ({
 
     window.history.pushState({ chatModal: true }, "");
 
-    const handlePopState = () => setIsOpen(false);
+    const handlePopState = () => {
+      setIsOpen(false);
+      setShowProfile(false);
+      setProfileVisible(false);
+    };
+
     window.addEventListener("popstate", handlePopState);
 
-    return () => window.removeEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
   }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) {
-      const timeout = setTimeout(() => setView("chat"), 450);
-      return () => clearTimeout(timeout);
+      setShowProfile(false);
+      setProfileVisible(false);
     }
   }, [isOpen]);
 
@@ -51,67 +92,89 @@ const ChatButton = ({
       {!isOpen && (
         <button
           onClick={openModal}
-          aria-label="Start chat"
+          aria-label={t.start}
           className="
-            fixed bottom-2 right-5 z-[10000]
-            flex w-12.5 h-12.5 md:h-16 md:w-16 items-center justify-center
-            rounded-full border-0
-            cursor-pointer
-            bg-white text-black
+            fixed bottom-2 z-[10000]
+            flex h-12 w-fit items-center justify-center gap-2
+            rounded-full border-0 px-4
+            bg-neutral-950 text-white
             shadow-[0_6px_20px_rgba(0,0,0,0.25)]
             transition-all duration-300
-            hover:-translate-y-0.5
-            hover:scale-110
             hover:shadow-[0_10px_28px_rgba(0,0,0,0.35)]
             active:scale-95
+            dark:bg-white dark:text-black
+            md:bottom-4.5
+            ltr:left-4.5 rtl:right-4.5
           "
         >
-          <span className="flex transition-transform duration-300 hover:-rotate-[8deg] hover:scale-105">
-            <HiMiniChatBubbleOvalLeftEllipsis size={33} />
-          </span>
+          <HiOutlineChatBubbleOvalLeft size={24} />
+          <span className="text-[15px] font-medium">{t.start}</span>
         </button>
       )}
 
-      <ChatModal isOpen={isOpen} onClose={closeModal}>
+      <ChatModal
+        isOpen={isOpen}
+        onClose={closeModal}
+        isRTL={isRTL}
+      >
         <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden">
           <ChatHeader
-            title={title}
-            subtitle={subtitle}
+            title={t.title}
+            subtitle={t.subtitle}
             avatarUrl={avatarUrl}
             onClose={closeModal}
-            onProfileClick={() => setView("profile")}
+            onProfileClick={openProfile}
           />
 
           <div className="relative min-h-0 flex-1">
-            {/* لایه چت */}
-            <div
-              className={`absolute inset-0 flex min-h-0 flex-col transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                view === "chat"
-                  ? "translate-x-0 opacity-100"
-                  : "pointer-events-none -translate-x-3 opacity-0"
-              }`}
-            >
+            {/* Chat */}
+            <div className="absolute inset-0 flex min-h-0 flex-col">
               {children}
             </div>
 
-            {/* لایه پروفایل */}
-            <div
-              className={`absolute inset-0 flex min-h-0 flex-col transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                view === "profile"
-                  ? "translate-x-0 opacity-100"
-                  : "pointer-events-none translate-x-3 opacity-0"
-              }`}
-            >
-              <ChatProfile
-                avatarUrl={avatarUrl}
-                name={title}
-                subtitle={subtitle}
-                bio={bio}
-                email={email}
-                phone={phone}
-                onBack={() => setView("chat")}
-              />
-            </div>
+            {/* Profile */}
+            {showProfile && (
+              <div className="absolute inset-0 z-50">
+                {/* Backdrop */}
+                <button
+                  type="button"
+                  aria-label={t.closeProfile}
+                  onClick={closeProfile}
+                  className={`
+                    absolute inset-0 duration-350
+                    ${
+                      profileVisible
+                        ? "opacity-100"
+                        : "pointer-events-none opacity-0"
+                    }
+                  `}
+                />
+
+                {/* Profile */}
+                <div
+                  className={`
+                    absolute inset-x-0 top-0 z-10
+                    transition-all duration-350
+                    ease-[cubic-bezier(0.16,1,0.3,1)]
+                    ${
+                      profileVisible
+                        ? "translate-y-0 opacity-100"
+                        : "-translate-y-6 opacity-0"
+                    }
+                  `}
+                >
+                  <ChatProfile
+                    avatarUrl={avatarUrl}
+                    name={t.title}
+                    subtitle={t.subtitle}
+                    bio={bio}
+                    email={email}
+                    phone={phone}
+                    onBack={closeProfile}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </ChatModal>

@@ -1,159 +1,142 @@
 import React from "react";
-import { SiTicktick } from "react-icons/si";
-import { MdOutlineCancel } from "react-icons/md";
+import { FiCheck } from "react-icons/fi";
+import { HiOutlineArrowSmRight } from "react-icons/hi";
 import { useLanguage } from "@context/LanguageContext";
 import { Link } from "react-router-dom";
-
-const OktaIcon = () => (
-  <svg viewBox="0 0 32 32" className="h-5 w-5" aria-hidden="true">
-    <g stroke="currentColor" strokeWidth="3" strokeLinecap="round">
-      {Array.from({ length: 12 }).map((_, index) => (
-        <line
-          key={index}
-          x1="16"
-          y1="2.5"
-          x2="16"
-          y2="8"
-          transform={`rotate(${index * 30} 16 16)`}
-        />
-      ))}
-    </g>
-  </svg>
-);
-
-const noteTypesByLang = {
-  en: [
-    { label: "Done", Icon: SiTicktick, done: true },
-    { label: "In progress", Icon: OktaIcon, done: false },
-    { label: "Cancelled", Icon: MdOutlineCancel, done: false },
-  ],
-  fa: [
-    { label: "انجام‌شده", Icon: SiTicktick, done: true },
-    { label: "در حال انجام", Icon: OktaIcon, done: false },
-    { label: "لغو شده", Icon: MdOutlineCancel, done: false },
-  ],
-};
 
 const translations = {
   en: {
     title: "Dev Notes",
     description:
-      "Capture ideas, organize tasks, and keep notes in one workspace.",
+      "Capture ideas, track tasks, and keep development notes in one workspace.",
+    progressLabel: "This sprint",
+    action: "Explore",
   },
   fa: {
-    title: "دفترچه یادداشت توسعه",
+    title: "یادداشت‌های توسعه",
     description:
-      "ایده‌ها، وظایف و یادداشت‌ها را در یک فضای کاری مدیریت کنید.",
+      "ایده‌ها، وظایف و یادداشت‌های توسعه را در یک فضای کاری مدیریت کنید.",
+    progressLabel: "اسپرینت جاری",
+    action: "مشاهده",
   },
 };
 
-const pillLayout = [
-  { type: 0, left: 10, top: "0%" },
-  { type: 1, left: 117, top: "0%" },
-  { type: 2, left: 275, top: "0%" },
-
-  { type: 2, left: -45, top: "14.4%" },
-  { type: 1, left: 95, top: "14.4%" },
-  { type: 0, left: 255, top: "14.4%" },
-
-  { type: 2, left: -10, top: "28.8%" },
-  { type: 1, left: 130, top: "28.8%" },
-  { type: 0, left: 290, top: "28.8%" },
-
-  { type: 0, left: -20, top: "43.2%" },
-  { type: 2, left: 90, top: "43.2%" },
-  { type: 1, left: 230, top: "43.2%" },
-
-  { type: 1, left: 9, top: "57.6%" },
-  { type: 0, left: 168, top: "57.6%" },
-  { type: 2, left: 277, top: "57.6%" },
-
-  { type: 2, left: -36, top: "72%" },
-  { type: 1, left: 107, top: "72%" },
-  { type: 0, left: 270, top: "72%" },
-
-  { type: 0, left: -60, top: "86.4%" },
-  { type: 2, left: 55, top: "86.4%" },
-  { type: 1, left: 200, top: "86.4%" },
-];
+const tasksByLang = {
+  en: [
+    { text: "Fix authentication bug", done: true },
+    { text: "Write API documentation", done: false },
+  ],
+  fa: [
+    { text: "رفع باگ احراز هویت", done: true },
+    { text: "نوشتن مستندات API", done: false },
+  ],
+};
 
 const DevNotesCard = () => {
   const { language } = useLanguage();
   const t = translations[language];
-  const noteTypes = noteTypesByLang[language];
+  const tasks = tasksByLang[language];
+
+  const donePct = Math.round(
+    (tasks.filter((task) => task.done).length / tasks.length) * 100
+  );
+
+  const isRTL = language === "fa";
 
   return (
     <Link
       to="/tools/dev-notes"
-      className="
-        group relative h-[270px] w-full overflow-hidden rounded-lg
-        border-primary p-6
-        transition-all duration-500 ease-[cubic-bezier(.22,1,.36,1)]
-        hover:shadow-[0_22px_60px_rgba(0,0,0,0.7)]
-        md:h-full
-      "
+      dir={isRTL ? "rtl" : "ltr"}
+      className="group relative flex h-[350px] w-full flex-col overflow-hidden rounded-4xl bg-neutral-200/65 hover:bg-neutral-200/80 transition-all dark:bg-neutral-800/80 dark:hover:bg-neutral-800/90 duration-300 md:h-[370px]"
     >
-      {/* Soft card glow on hover */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-28 -top-32 h-80 w-80 rounded-full opacity-0 blur-3xl transition-opacity duration-700 group-hover:opacity-100"
-        style={{
-          background:
-            "radial-gradient(circle, rgba(255,255,255,0.13) 0%, rgba(255,255,255,0.035) 38%, transparent 72%)",
-        }}
-      />
+      <span
+        className={`pointer-events-none absolute top-5 z-30 flex items-center gap-1.5 rounded-full bg-black px-3 py-2 text-xs font-medium text-white opacity-0 shadow-sm transition-all duration-300 group-hover:pointer-events-auto group-hover:opacity-100 dark:bg-white dark:text-black ${
+          isRTL ? "left-5" : "right-5"
+        }`}
+      >
+        {t.action}
 
-      <header className="relative z-10 max-w-[330px] text-left rtl:text-right leading-[1.05]">
-        <h1
-          className="text-[20px] font-medium text-black dark:text-white md:text-[25px] tracking-tighter"
-        >
+        <HiOutlineArrowSmRight
+          size={17}
+          className={isRTL ? "rotate-180" : ""}
+          aria-hidden="true"
+        />
+      </span>
+
+      <header className="relative z-10 p-6 text-start md:p-8">
+        <h1 className="text-xl font-medium tracking-tight text-black dark:text-white md:text-[23px]">
           {t.title}
         </h1>
 
-        <p className="mt-1.5 text-sm md:text-base leading-[1.55] text-neutral-600 dark:text-neutral-400 md:text-[16px]">
+        <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400 sm:text-base">
           {t.description}
         </p>
       </header>
 
-      {/* این بخش عمداً همیشه LTR نگه داشته می‌شود تا موزاییک pillها
-          مستقل از زبان صفحه ثابت بماند. متن فارسی داخل هر pill با
-          dir="auto" جدا مدیریت می‌شود و درست نمایش داده می‌شود. */}
-      <div
-        aria-label="DevNotes categories"
-        dir="ltr"
-        className="absolute inset-x-0 bottom-0 top-[165px] z-10 overflow-hidden"
-      >
-        {pillLayout.map((pill, index) => {
-          const { label, Icon, done } = noteTypes[pill.type];
+      <div className="relative z-10 mx-6 mt-0 flex-1 md:mx-8">
+        <div
+          className={`absolute -top-3 z-20 rounded-full border border-neutral-300 bg-white px-3 py-1.5 text-[11px] font-medium text-neutral-700 shadow-sm dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-200 ${
+            isRTL
+              ? "left-2 -rotate-[3deg]"
+              : "right-2 rotate-[3deg]"
+          }`}
+        >
+          {tasks[1].text}
+        </div>
 
-          return (
+        <div className="flex h-full flex-col justify-center gap-2.5 rounded-2xl border border-dashed border-neutral-300 bg-neutral-100/60 p-4 md:p-5 dark:border-neutral-700 dark:bg-white/[0.02]">
+          {tasks.map((task, index) => (
             <div
-              key={`${label}-${index}`}
-              dir="ltr"
-              className={[
-                "absolute flex h-[42px] items-center gap-2.5 whitespace-nowrap rounded-full px-3.5",
-                "transition-all duration-300 ease-out",
-                "group-hover:scale-[1.035]",
-                done
-                  ? "border border-white bg-white font-medium text-black shadow-[0_8px_24px_rgba(255,255,255,0.16)] hover:bg-[#e7e7e7] hover:shadow-[0_12px_30px_rgba(255,255,255,0.25)]"
-                  : "border border-[#282828] bg-[#050505] text-[#9d9d9d] group-hover:border-[#464545] group-hover:bg-[#0b0b0b] group-hover:text-[#e5e5e5] group-hover:shadow-[0_12px_26px_rgba(0,0,0,0.5)]",
-              ].join(" ")}
-              style={{
-                width: "max-content",
-                left: pill.left,
-                top: pill.top,
-              }}
+              key={index}
+              className="flex items-center gap-2.5"
             >
-              <Icon />
-              <span className="text-[15px]" dir="auto">
-                {label}
+              <span
+                className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors ${
+                  task.done
+                    ? "border-black bg-black dark:border-white dark:bg-white"
+                    : "border-neutral-400 bg-transparent dark:border-neutral-600"
+                }`}
+              >
+                {task.done && (
+                  <FiCheck
+                    className="h-3 w-3 text-white dark:text-black"
+                    strokeWidth={3}
+                  />
+                )}
+              </span>
+
+              <span
+                className={`truncate text-sm ${
+                  task.done
+                    ? "text-neutral-400 line-through dark:text-neutral-600"
+                    : "text-neutral-700 dark:text-neutral-300"
+                }`}
+              >
+                {task.text}
               </span>
             </div>
-          );
-        })}
+          ))}
+        </div>
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-15 bg-gradient-to-t from-neutral-100 dark:from-[#030303] to-transparent" />
+      <div className="relative z-10 mx-6 mb-6 mt-4 rounded-2xl border border-neutral-300 bg-white p-4 md:mx-8 md:mb-8 md:p-5 dark:border-neutral-800 dark:bg-neutral-800/60">
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-neutral-700 dark:text-neutral-200">
+            {t.progressLabel}
+          </span>
+
+          <span className="text-sm font-semibold text-black dark:text-white">
+            {donePct}%
+          </span>
+        </div>
+
+        <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
+          <div
+            className="h-full rounded-full bg-black transition-all duration-500 dark:bg-white"
+            style={{ width: `${donePct}%` }}
+          />
+        </div>
+      </div>
     </Link>
   );
 };

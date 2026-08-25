@@ -2,13 +2,50 @@ const Conversation = require("../models/Conversation");
 const { getIO } = require("../socket/socket");
 
 // POST /api/conversations
+// اگه قبلاً مکالمه‌ای با همین شماره وجود داشته باشه، همون رو (با تاریخچه‌ی
+// کامل پیام‌ها) برمی‌گردونه به‌جای اینکه یه مکالمه‌ی خالی جدید بسازه. این
+// دقیقاً همون چیزیه که باعث می‌شه اگه localStorage سمت کاربر پاک بشه ولی
+// دوباره همون شماره رو وارد کنه، بره سراغ همون چت قبلی‌ش.
 const createConversation = async (req, res) => {
   try {
     const { fullName, phone, email, company } = req.body;
 
-    const conversation = await Conversation.create({
+    if (!phone || !phone.trim()) {
+      return res.status(400).json({ success: false, error: "شماره موبایل الزامی است" });
+    }
+
+    const normalizedPhone = phone.trim();
+
+    let conversation = await Conversation.findOne({ phone: normalizedPhone });
+
+    if (conversation) {
+      // همون آدم دوباره برگشته — تاریخچه رو دست نمی‌زنیم، فقط اگه اطلاعات
+      // تماسش (اسم/ایمیل/شرکت) تغییر کرده بود، آپدیتش می‌کنیم.
+      let hasChanges = false;
+
+      if (fullName && fullName.trim() && fullName.trim() !== conversation.fullName) {
+        conversation.fullName = fullName.trim();
+        hasChanges = true;
+      }
+      if (email && email.trim() && email.trim() !== conversation.email) {
+        conversation.email = email.trim();
+        hasChanges = true;
+      }
+      if (company && company.trim() && company.trim() !== conversation.company) {
+        conversation.company = company.trim();
+        hasChanges = true;
+      }
+
+      if (hasChanges) {
+        await conversation.save();
+      }
+
+      return res.status(200).json({ success: true, data: conversation, reused: true });
+    }
+
+    conversation = await Conversation.create({
       fullName,
-      phone,
+      phone: normalizedPhone,
       email,
       company,
     });
@@ -16,7 +53,7 @@ const createConversation = async (req, res) => {
     // به داشبوردهای بازِ ادمین اطلاع بده که مکالمه جدید اومد
     getIO().to("admin-room").emit("new-conversation", conversation);
 
-    res.status(201).json({ success: true, data: conversation });
+    res.status(201).json({ success: true, data: conversation, reused: false });
   } catch (error) {
     if (error.name === "ValidationError") {
       const messages = Object.values(error.errors).map((e) => e.message);

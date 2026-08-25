@@ -109,7 +109,7 @@ function TimeWheel({ label, value, maximum, disabled, onChange }) {
       onKeyDown={handleKeyDown}
       whileHover={disabled || reduceMotion ? undefined : { scale: 1.025 }}
       className={[
-        'relative flex w-40 select-none flex-col items-center justify-center',
+        'relative flex w-20 sm:w-28 md:w-40 select-none flex-col items-center justify-center',
         'outline-none focus-visible:ring-2 focus-visible:ring-blue-500/80 focus-visible:ring-offset-4 focus-visible:ring-offset-black',
         disabled ? 'cursor-default' : 'cursor-ns-resize',
       ].join(' ')}
@@ -120,7 +120,7 @@ function TimeWheel({ label, value, maximum, disabled, onChange }) {
 
         return (
           <motion.div
-            key={String(offset) + '-' + String(displayedValue)}
+            key={offset}
             layout
             transition={{
               type: reduceMotion ? 'tween' : 'spring',
@@ -128,10 +128,10 @@ function TimeWheel({ label, value, maximum, disabled, onChange }) {
               damping: 30,
             }}
             className={[
-              'flex h-[4rem] items-center justify-center font-light leading-none transition-colors',
+              'flex h-10 sm:h-14 md:h-[4rem] items-center justify-center font-light leading-none transition-colors',
               isCurrent
-                ? 'z-10 text-9xl tracking-[-0.09em]'
-                : 'text-6xl tracking-[-0.08em]',
+                ? 'z-10 text-4xl sm:text-6xl md:text-9xl tracking-[-0.09em]'
+                : 'text-2xl sm:text-4xl md:text-6xl tracking-[-0.08em]',
               WHEEL_ROW_STYLES[offset],
             ].join(' ')}
           >
@@ -161,7 +161,7 @@ function TimeSeparator() {
   return (
     <span
       aria-hidden="true"
-      className="z-20 -mt-2 text-9xl font-light text-white"
+      className="z-20 -mt-1 sm:-mt-1.5 md:-mt-2 text-4xl sm:text-6xl md:text-9xl font-light text-white"
     >
       :
     </span>
@@ -177,7 +177,7 @@ function PresetButton({ seconds, isSelected, disabled, onSelect }) {
       whileHover={disabled ? undefined : { borderColor: 'rgba(255,255,255,0.28)' }}
       whileTap={disabled ? undefined : { scale: 0.97 }}
       className={[
-        'border px-2 py-4 text-center font-semibold transition-colors rounded-full',
+        'border px-2 py-3 sm:py-4 text-center text-sm sm:text-base font-semibold transition-colors rounded-full whitespace-nowrap',
         isSelected
           ? 'border-white/[0.14] bg-white/[0.14] text-white'
           : 'border-white/[0.17] bg-transparent text-white/[0.62] hover:text-white',
@@ -266,19 +266,19 @@ export default function TimerPage() {
 
   return (
     <main className="h-screen overflow-x-hidden bg-black text-white">
-      <section className="relative mx-auto flex h-screen w-full max-w-5xl flex-col px-5 pb-12 pt-12 sm:px-10 sm:pb-16 sm:pt-20">
+      <section className="relative mx-auto flex h-screen w-full max-w-5xl flex-col px-4 pb-8 pt-25 sm:pb-16 sm:pt-20">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0"
         />
 
-        <div className="relative z-10 flex flex-1 flex-col">
+        <div className="relative z-10 flex flex-1 flex-col gap-8 sm:gap-10">
           <div
-            className="relative mx-auto flex w-full max-w-4xl items-center justify-center gap-3.5"
+            className="relative mx-auto flex w-full max-w-4xl items-center justify-center gap-1.5 sm:gap-2.5 md:gap-3.5"
             aria-label={'Timer set to ' + formatTime(remainingSeconds)}
           >
-            <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-24 bg-gradient-to-b from-black via-black/55 to-transparent sm:h-32" />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-24 bg-gradient-to-t from-black via-black/55 to-transparent sm:h-32" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-16 sm:h-24 md:h-32 bg-gradient-to-b from-black via-black/55 to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-16 sm:h-24 md:h-32 bg-gradient-to-t from-black via-black/55 to-transparent" />
 
             <TimeWheel
               label="Hours"
@@ -305,7 +305,7 @@ export default function TimerPage() {
             />
           </div>
 
-          <div className="mx-auto grid w-full max-w-xl grid-cols-3 gap-3">
+          <div className="mx-auto grid w-full max-w-xl grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3 px-2 sm:px-0">
             {PRESETS.map((seconds) => (
               <PresetButton
                 key={seconds}
@@ -317,7 +317,7 @@ export default function TimerPage() {
             ))}
           </div>
 
-          <div className="mt-auto flex items-center justify-center gap-4">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 w-full max-w-xl mx-auto px-2 sm:px-0">
             <motion.button
               type="button"
               disabled={selectedSeconds === 0}
@@ -335,7 +335,7 @@ export default function TimerPage() {
                   ? { duration: 1.8, repeat: Infinity, ease: 'easeInOut' }
                   : { type: 'spring', stiffness: 360, damping: 24 }
               }
-              className="inline-flex min-w-56 items-center justify-center gap-3 rounded-full bg-[#2d2d30] px-10 py-5 text-base font-semibold text-white transition-colors disabled:cursor-not-allowed disabled:opacity-40 sm:min-w-72 sm:px-14 sm:py-6 sm:text-lg"
+              className="inline-flex w-full sm:w-auto sm:min-w-56 md:min-w-72 items-center justify-center gap-3 rounded-full bg-[#2d2d30] px-8 py-4 text-base font-semibold text-white transition-colors disabled:cursor-not-allowed disabled:opacity-40 sm:px-14 sm:py-6 sm:text-lg"
             >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.span
@@ -361,7 +361,7 @@ export default function TimerPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={reduceMotion ? undefined : { opacity: 0, y: 12 }}
                   whileTap={{ scale: 0.97 }}
-                  className="inline-flex min-w-56 items-center justify-center gap-3 rounded-full bg-neutral-950 border-primary px-10 py-5 text-base font-semibold text-white transition-colors disabled:cursor-not-allowed disabled:opacity-40 sm:min-w-72 sm:px-14 sm:py-6 sm:text-lg"
+                  className="inline-flex w-full sm:w-auto sm:min-w-56 md:min-w-72 items-center justify-center gap-3 rounded-full bg-neutral-950 border border-white/10 px-8 py-4 text-base font-semibold text-white transition-colors disabled:cursor-not-allowed disabled:opacity-40 sm:px-14 sm:py-6 sm:text-lg"
                 >
                   <ResetIcon />
                   Reset

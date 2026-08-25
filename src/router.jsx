@@ -48,8 +48,8 @@ const ProjectsPage = lazy(() =>
   import("@tools/DevNotes/pages/Projects/ProjectsPage")
 );
 
-const MeetingsPage = lazy(() =>
-  import("@tools/DevNotes/pages/Meetings/MeetingsPage")
+const ProgressPage = lazy(() =>
+  import("@/components/templates/tools/DevNotes/pages/Progress/ProgressPage")
 );
 
 const TemplatesPage = lazy(() =>
@@ -195,10 +195,10 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "meetings",
+        path: "progress",
         element: (
           <Suspense fallback={Loader}>
-            <MeetingsPage />
+            <ProgressPage />
           </Suspense>
         ),
       },

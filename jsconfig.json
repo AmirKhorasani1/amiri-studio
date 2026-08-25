@@ -9,6 +9,9 @@
 
       "@api/*": ["src/api/*"],
       "@assets/*": ["src/assets/*"],
+      "@data/*": ["src/data/*"],
+      "@animation/*": ["src/animation/*"],
+      "@hooks/*": ["src/hooks/*"],
 
       "@components/*": ["src/components/*"],
       "@common/*": ["src/components/common/*"],

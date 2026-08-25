@@ -69,4 +69,6 @@ conversationSchema.index({ lastMessageAt: -1 });
 
 conversationSchema.index({ status: 1 });
 
+conversationSchema.index({ phone: 1 });
+
 module.exports = mongoose.model("Conversation", conversationSchema);

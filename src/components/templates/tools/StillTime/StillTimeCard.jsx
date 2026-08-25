@@ -40,7 +40,7 @@ const StillTimeCard = () => {
   return (
     <Link to="/tools/still-time" className="group relative w-full h-[270px] md:h-full overflow-hidden rounded-lg border-primary">
       {/* Header */}
-      <div className="absolute left-6 right-6 top-6 z-10 flex items-start justify-between rtl:flex-row-reverse">
+      <div className="absolute rtl:right-6 ltr:left-6 top-6 z-10 flex items-start justify-between rtl:flex-row-reverse">
         <div className="text-left rtl:text-right">
           <h1
             className="text-[20px] font-medium text-black dark:text-white md:text-[25px] tracking-tighter leading-[1.05]"
@@ -67,8 +67,8 @@ const StillTimeCard = () => {
           >
             <span
               className={[
-                "absolute left-1/2 -translate-x-1/2 scale-x-[0.9] duration-300 group-hover:scale-101 group-hover:text-neutral-500 text-neutral-400 dark:text-neutral-600",
-                "whitespace-nowrap text-[240px] md:text-[390px] font-bold leading-[0.76]",
+                "absolute left-1/2 -translate-x-1/2 scale-x-[0.9] duration-300 group-hover:text-neutral-500/90 text-neutral-400 dark:text-neutral-600",
+                "whitespace-nowrap text-[200px] md:text-[350px] font-bold leading-[0.76]",
                 index % 2 === 0 ? "top-0 md:top-[70px]" : "top-0 md:top-[150px]",
               ].join(" ")}
             >

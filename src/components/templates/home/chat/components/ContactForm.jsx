@@ -1,42 +1,118 @@
 import { useState } from "react";
+import { useLanguage } from "@context/LanguageContext";
+
+const translations = {
+  en: {
+    heading: "Before we start chatting",
+    description: "Share a few quick details so I can get back to you faster",
+    fullName: "Full name *",
+    fullNamePlaceholder: "e.g. John Smith",
+    phone: "Phone number *",
+    phonePlaceholder: "09139634709",
+    email: "Email (optional)",
+    emailPlaceholder: "you@example.com",
+    company: "Company (optional)",
+    companyPlaceholder: "Your company name",
+    errors: {
+      fullNameRequired: "Please enter your full name",
+      phoneRequired: "Please enter your phone number",
+      phoneInvalid: "Enter a valid mobile number starting with 09 (11 digits)",
+      emailInvalid: "Enter a valid email address",
+    },
+    submit: "Start chat",
+    submitting: "Starting...",
+  },
+  fa: {
+    heading: "قبل از شروع گفتگو",
+    description: "چند اطلاعات کوتاه بگذارید تا سریع‌تر بتوانم باهاتون در ارتباط باشم",
+    fullName: "نام و نام‌خانوادگی *",
+    fullNamePlaceholder: "مثلاً علی محمدی",
+    phone: "شماره تماس *",
+    phonePlaceholder: "09139634709",
+    email: "ایمیل (اختیاری)",
+    emailPlaceholder: "you@example.com",
+    company: "شرکت (اختیاری)",
+    companyPlaceholder: "نام شرکت شما",
+    errors: {
+      fullNameRequired: "لطفاً نام و نام‌خانوادگی خود را وارد کنید",
+      phoneRequired: "لطفاً شماره موبایل خود را وارد کنید",
+      phoneInvalid: "شماره موبایل باید با 09 شروع شود و ۱۱ رقم باشد",
+      emailInvalid: "ایمیل واردشده معتبر نیست",
+    },
+    submit: "شروع گفتگو",
+    submitting: "در حال شروع...",
+  },
+};
+
+// Iranian mobile: starts with 09, exactly 11 digits, digits only
+const PHONE_REGEX = /^09\d{9}$/;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const ContactForm = ({ onSubmit, loading }) => {
+  const { language } = useLanguage();
+  const t = translations[language] ?? translations.en;
+  const isRTL = language === "fa";
+
   const [form, setForm] = useState({
     fullName: "",
     phone: "",
     email: "",
     company: "",
   });
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  const validate = () => {
+    const nextErrors = {};
+
+    if (!form.fullName.trim()) {
+      nextErrors.fullName = t.errors.fullNameRequired;
+    }
+
+    const phone = form.phone.trim();
+    if (!phone) {
+      nextErrors.phone = t.errors.phoneRequired;
+    } else if (!PHONE_REGEX.test(phone)) {
+      nextErrors.phone = t.errors.phoneInvalid;
+    }
+
+    if (form.email.trim() && !EMAIL_REGEX.test(form.email.trim())) {
+      nextErrors.email = t.errors.emailInvalid;
+    }
+
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (!form.fullName.trim() || !form.phone.trim()) {
-      setError("Name and phone number are required");
-      return;
-    }
-
-    setError("");
+    if (!validate()) return;
     onSubmit(form);
   };
 
+  const inputClass = (field) =>
+    `rounded-full bg-neutral-800/80 p-3.5 text-sm text-white placeholder:text-neutral-600 outline-none
+     transition-colors focus:border-white border ${
+       errors[field] ? "border-rose-500" : "border-transparent"
+     }`;
+
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 pt-18">
+    <form dir={isRTL ? "rtl" : "ltr"} onSubmit={handleSubmit} noValidate className="flex flex-col gap-5.5 pt-18">
       <div>
-        <h3 className="text-base font-semibold text-white">Before we start chatting</h3>
-        <p className="mt-1 text-xs leading-relaxed text-neutral-400">
-          Share a few quick details so I can get back to you faster
-        </p>
+        <h3 className="text-base font-semibold text-white">{t.heading}</h3>
+        <p className="mt-1 text-[13px] leading-relaxed text-neutral-400">{t.description}</p>
       </div>
 
       <div className="flex flex-col gap-2">
-        <label htmlFor="fullName" className="text-xs text-neutral-300">
-          Full name *
+        <label htmlFor="fullName" className="text-xs md:text-[13px] text-neutral-300">
+          {t.fullName}
         </label>
         <input
           id="fullName"
@@ -44,35 +120,37 @@ const ContactForm = ({ onSubmit, loading }) => {
           type="text"
           value={form.fullName}
           onChange={handleChange}
-          placeholder="e.g. John Smith"
+          placeholder={t.fullNamePlaceholder}
           autoComplete="name"
-          className="rounded-full border border-neutral-800 bg-neutral-900 px-3.5 py-3 text-sm text-white
-          placeholder:text-neutral-600 outline-none transition-colors
-          focus:border-white"
+          aria-invalid={!!errors.fullName}
+          className={inputClass("fullName")}
         />
+        {errors.fullName && <p className="text-xs text-rose-500">{errors.fullName}</p>}
       </div>
 
       <div className="flex flex-col gap-2">
-        <label htmlFor="phone" className="text-xs text-neutral-300">
-          Phone number *
+        <label htmlFor="phone" className="text-xs md:text-[13px] text-neutral-300">
+          {t.phone}
         </label>
         <input
           id="phone"
           name="phone"
           type="tel"
+          inputMode="numeric"
           value={form.phone}
           onChange={handleChange}
-          placeholder="+1 555 000 0000"
+          placeholder={t.phonePlaceholder}
           autoComplete="tel"
-          className="rounded-full border border-neutral-800 bg-neutral-900 px-3.5 py-3 text-sm text-white
-          placeholder:text-neutral-600 outline-none transition-colors
-          focus:border-white"
+          maxLength={11}
+          aria-invalid={!!errors.phone}
+          className={inputClass("phone")}
         />
+        {errors.phone && <p className="text-xs text-rose-500">{errors.phone}</p>}
       </div>
 
       <div className="flex flex-col gap-2">
-        <label htmlFor="email" className="text-xs text-neutral-300">
-          Email (optional)
+        <label htmlFor="email" className="text-xs md:text-[13px] text-neutral-300">
+          {t.email}
         </label>
         <input
           id="email"
@@ -80,17 +158,17 @@ const ContactForm = ({ onSubmit, loading }) => {
           type="email"
           value={form.email}
           onChange={handleChange}
-          placeholder="you@example.com"
+          placeholder={t.emailPlaceholder}
           autoComplete="email"
-          className="rounded-full border border-neutral-800 bg-neutral-900 px-3.5 py-3 text-sm text-white
-          placeholder:text-neutral-600 outline-none transition-colors
-        focus:border-white"
+          aria-invalid={!!errors.email}
+          className={inputClass("email")}
         />
+        {errors.email && <p className="text-xs text-rose-500">{errors.email}</p>}
       </div>
 
       <div className="flex flex-col gap-2">
-        <label htmlFor="company" className="text-xs text-neutral-300">
-          Company (optional)
+        <label htmlFor="company" className="text-xs md:text-[13px] text-neutral-300">
+          {t.company}
         </label>
         <input
           id="company"
@@ -98,14 +176,10 @@ const ContactForm = ({ onSubmit, loading }) => {
           type="text"
           value={form.company}
           onChange={handleChange}
-          placeholder="Your company name"
-          className="rounded-full border border-neutral-800 bg-neutral-900 px-3.5 py-3 text-sm text-white
-            placeholder:text-neutral-600 outline-none transition-colors
-          focus:border-white"
+          placeholder={t.companyPlaceholder}
+          className={inputClass("company")}
         />
       </div>
-
-      {error && <p className="text-xs text-red-400">{error}</p>}
 
       <button
         type="submit"
@@ -114,7 +188,7 @@ const ContactForm = ({ onSubmit, loading }) => {
         transition-colors hover:bg-neutral-200
         disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {loading ? "Starting..." : "Start chat"}
+        {loading ? t.submitting : t.submit}
       </button>
     </form>
   );

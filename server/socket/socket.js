@@ -18,7 +18,9 @@ function initSocket(server, allowedOrigins) {
     console.log("🔌 Client connected:", socket.id);
 
     socket.on("join-conversation", (conversationId) => {
+      console.log("📥 join-conversation received:", conversationId, "from socket:", socket.id);
       socket.join(conversationId);
+      console.log("   rooms this socket is now in:", [...socket.rooms]);
     });
 
     socket.on("leave-conversation", (conversationId) => {
@@ -29,6 +31,7 @@ function initSocket(server, allowedOrigins) {
       try {
         jwt.verify(token, process.env.JWT_SECRET);
         socket.join("admin-room");
+        console.log("👑 socket", socket.id, "joined admin-room");
       } catch {
         socket.emit("auth-error", "Unauthorized");
       }

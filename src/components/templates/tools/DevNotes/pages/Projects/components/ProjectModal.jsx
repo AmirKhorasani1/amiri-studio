@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
-import { PROJECT_COLORS, PROJECT_ICONS } from "../utils/projectConstants";
+import { PROJECT_COLORS, PROJECT_ICONS, PROJECT_STATUSES } from "../utils/projectConstants";
 
 const overlayVariants = {
   hidden: { opacity: 0 },
@@ -29,18 +29,40 @@ export default function ProjectModal({ mode, project, onClose, onSave, t }) {
   const isEdit = mode === "edit";
 
   const [name, setName] = useState(project?.name ?? "");
+  const [description, setDescription] = useState(project?.description ?? "");
   const [color, setColor] = useState(project?.color ?? PROJECT_COLORS[0].id);
   const [icon, setIcon] = useState(project?.icon ?? PROJECT_ICONS[0].id);
+  const [status, setStatus] = useState(project?.status ?? "active");
+  const [techStack, setTechStack] = useState(project?.techStack ?? []);
+  const [techInput, setTechInput] = useState("");
 
   useEffect(() => {
     setName(project?.name ?? "");
+    setDescription(project?.description ?? "");
     setColor(project?.color ?? PROJECT_COLORS[0].id);
     setIcon(project?.icon ?? PROJECT_ICONS[0].id);
+    setStatus(project?.status ?? "active");
+    setTechStack(project?.techStack ?? []);
+    setTechInput("");
   }, [project]);
+
+  const addTech = () => {
+    const value = techInput.trim();
+    if (!value || techStack.includes(value)) {
+      setTechInput("");
+      return;
+    }
+    setTechStack((prev) => [...prev, value]);
+    setTechInput("");
+  };
+
+  const removeTech = (value) => {
+    setTechStack((prev) => prev.filter((tech) => tech !== value));
+  };
 
   const submit = () => {
     if (!name.trim()) return;
-    onSave({ name: name.trim(), color, icon });
+    onSave({ name: name.trim(), description, color, icon, status, techStack });
   };
 
   return (
@@ -68,7 +90,7 @@ export default function ProjectModal({ mode, project, onClose, onSave, t }) {
         </div>
 
         {/* Body */}
-        <div className="flex flex-col gap-4 px-5 py-4">
+        <div className="flex max-h-[70vh] flex-col gap-4 overflow-y-auto px-5 py-4">
           <input
             autoFocus
             value={name}
@@ -76,6 +98,74 @@ export default function ProjectModal({ mode, project, onClose, onSave, t }) {
             placeholder={t.namePlaceholder}
             className="border-b-primary bg-transparent pb-3 text-base font-semibold text-neutral-950 dark:text-neutral-100 outline-none placeholder:text-neutral-600 dark:placeholder:text-neutral-300"
           />
+
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder={t.descriptionPlaceholder}
+            rows={2}
+            className="w-full resize-none rounded-md bg-neutral-100 dark:bg-neutral-900 px-3 py-2.5 text-sm leading-relaxed text-neutral-950 dark:text-neutral-200 outline-none placeholder:text-neutral-600 dark:placeholder:text-neutral-400"
+          />
+
+          {/* Status */}
+          <div>
+            <p className="mb-2 text-xs font-medium text-secondary">{t.status}</p>
+            <div className="flex flex-wrap gap-1.5">
+              {PROJECT_STATUSES.map((s) => (
+                <button
+                  key={s.id}
+                  type="button"
+                  onClick={() => setStatus(s.id)}
+                  className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium duration-150 ${
+                    status === s.id
+                      ? "bg-black text-white dark:bg-white dark:text-black"
+                      : "bg-neutral-200 text-neutral-600 hover:bg-neutral-300 dark:bg-neutral-800 dark:text-neutral-400 hover:dark:bg-neutral-700"
+                  }`}
+                >
+                  <span
+                    className="h-1.5 w-1.5 rounded-full"
+                    style={{ backgroundColor: status === s.id ? "currentColor" : s.hex }}
+                  />
+                  {t.statusLabels[s.id]}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Tech stack — type + Enter → chip */}
+          <div>
+            <p className="mb-2 text-xs font-medium text-secondary">{t.techStack}</p>
+            <div className="flex flex-wrap items-center gap-1.5 rounded-md bg-neutral-100 dark:bg-neutral-900 px-2 py-2">
+              {techStack.map((tech) => (
+                <span
+                  key={tech}
+                  className="flex items-center gap-1 rounded-full bg-neutral-200 dark:bg-neutral-800 px-2.5 py-1 text-xs text-neutral-700 dark:text-neutral-300"
+                >
+                  {tech}
+                  <button
+                    type="button"
+                    onClick={() => removeTech(tech)}
+                    className="text-secondary hover:text-red-400"
+                  >
+                    <X size={11} />
+                  </button>
+                </span>
+              ))}
+              <input
+                value={techInput}
+                onChange={(e) => setTechInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addTech();
+                  }
+                }}
+                onBlur={addTech}
+                placeholder={t.techStackPlaceholder}
+                className="min-w-[100px] flex-1 bg-transparent px-1 py-1 text-xs text-neutral-950 outline-none placeholder:text-neutral-500 dark:text-neutral-200"
+              />
+            </div>
+          </div>
 
           {/* Color picker */}
           <div>

@@ -2,7 +2,7 @@ import React from 'react'
 import SectionTitle from '@ui/SectionTitle'
 import DevNotesCard from '@tools/DevNotes/DevNotesCard'
 import StillTimeCard from '@tools/StillTime/StillTimeCard'
-import AnimationLab from '@tools/AnimationLab/AnimationLab'
+import AnimationLab from '@/components/templates/tools/AnimationLab/AnimationLabCard'
 import SnippetVaultCard from '@tools/SnippetVault/SnippetVaultCard'
 import TypeScaleCard from '@tools/TypeScale/TypeScaleCard'
 import ColorCraftCard from '@tools/ColorCraft/ColorCraftCard'
@@ -32,9 +32,8 @@ const ToolsPage = () => {
       <SectionTitle title={t.title} description={t.description} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 *:cursor-pointer">
+        <div className="grid grid-cols-1 *:cursor-pointer">
           <DevNotesCard />
-          <StillTimeCard />
         </div>
         <div className="grid grid-cols-1 gap-5 *:cursor-pointer">
           <AnimationLab />

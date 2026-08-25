@@ -41,3 +41,15 @@ export const PROJECT_ICONS = [
   { id: "coffee", Icon: Coffee },
   { id: "grad", Icon: GraduationCap },
 ];
+
+// وضعیت پروژه — flow پیشنهادی: planning -> active -> completed -> archived
+// ولی کاربر می‌تونه دستی هم بین اینا جابجا بشه
+export const PROJECT_STATUSES = [
+  { id: "planning", hex: "#a3a3a3" },
+  { id: "active", hex: "#22c55e" },
+  { id: "completed", hex: "#3b82f6" },
+  { id: "archived", hex: "#737373" },
+];
+
+// حالت‌های Sort لیست پروژه‌ها
+export const PROJECT_SORTS = ["updated", "created", "name"];

@@ -1,4 +1,3 @@
-// ChatWindow.jsx
 import React, { useEffect, useRef, useState } from "react";
 import {
   HiMagnifyingGlass,
@@ -16,57 +15,95 @@ import { getInitial, getColor, formatTime } from "./utils/formatConversation";
 
 const ChatWindow = ({ conversation, onBack }) => {
   const [isVisitorTyping, setIsVisitorTyping] = useState(false);
+  const [localConversation, setLocalConversation] = useState(conversation);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [conversation?.messages, isVisitorTyping]);
+    setLocalConversation(conversation);
+  }, [conversation]);
 
-  // Join the conversation room so real-time events (messages, typing)
-  // for the currently open chat reach this admin session.
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [localConversation?.messages, isVisitorTyping]);
+
   useEffect(() => {
     if (!conversation?._id) return;
 
-    socket.emit("join-conversation", conversation._id);
-    setIsVisitorTyping(false); // reset when switching conversations
+    const conversationId = conversation._id;
 
-    const handleTyping = (conversationId) => {
-      if (conversationId === conversation._id) setIsVisitorTyping(true);
+    const joinConversation = () => {
+      console.log("📥 Joining conversation:", conversationId);
+      socket.emit("join-conversation", conversationId);
     };
 
-    const handleStopTyping = (conversationId) => {
-      if (conversationId === conversation._id) setIsVisitorTyping(false);
+    if (socket.connected) {
+      joinConversation();
+    } else {
+      socket.once("connect", joinConversation);
+      socket.connect();
+    }
+
+    setIsVisitorTyping(false);
+
+    const handleNewMessage = (updatedConversation) => {
+      if (updatedConversation?._id !== conversationId) return;
+
+      setLocalConversation(updatedConversation);
+      setIsVisitorTyping(false);
     };
 
+    const handleTyping = (id) => {
+      if (id === conversationId) {
+        setIsVisitorTyping(true);
+      }
+    };
+
+    const handleStopTyping = (id) => {
+      if (id === conversationId) {
+        setIsVisitorTyping(false);
+      }
+    };
+
+    socket.on("new-message", handleNewMessage);
     socket.on("typing", handleTyping);
     socket.on("stop-typing", handleStopTyping);
 
     return () => {
-      socket.emit("leave-conversation", conversation._id);
+      socket.off("connect", joinConversation);
+      socket.emit("leave-conversation", conversationId);
+      socket.off("new-message", handleNewMessage);
       socket.off("typing", handleTyping);
       socket.off("stop-typing", handleStopTyping);
     };
   }, [conversation?._id]);
 
   const handleSend = async (text) => {
-    if (!conversation?._id) return;
+    if (!localConversation?._id || !text.trim()) return;
+
     try {
-      await sendMessage(conversation._id, text, "admin");
+      await sendMessage(
+        localConversation._id,
+        text,
+        "admin"
+      );
     } catch (err) {
       console.error("Failed to send message:", err);
     }
   };
 
-  if (!conversation) {
+  if (!localConversation) {
     return (
       <div className="hidden flex-1 items-center justify-center bg-neutral-950 lg:flex">
-        <p className="text-sm text-neutral-500">Select a conversation to start</p>
+        <p className="text-sm text-neutral-500">
+          Select a conversation to start
+        </p>
       </div>
     );
   }
 
   return (
     <div className="flex h-full flex-1 flex-col bg-neutral-950">
+      {/* Header */}
       <div className="flex items-center gap-3 border-b border-neutral-800 px-4 py-3">
         <button
           onClick={onBack}
@@ -78,58 +115,87 @@ const ChatWindow = ({ conversation, onBack }) => {
 
         <div
           className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold text-white ${getColor(
-            conversation._id
+            localConversation._id
           )}`}
         >
-          {getInitial(conversation.fullName)}
+          {getInitial(localConversation.fullName)}
         </div>
 
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-semibold text-white">
-            {conversation.fullName}
+            {localConversation.fullName}
           </p>
+
           <p className="truncate text-xs text-neutral-500">
-            {isVisitorTyping ? "typing…" : conversation.phone}
+            {isVisitorTyping
+              ? "typing…"
+              : localConversation.phone}
           </p>
         </div>
 
-        <StatusDropdown conversationId={conversation._id} status={conversation.status} />
+        <StatusDropdown
+          conversationId={localConversation._id}
+          status={localConversation.status}
+        />
 
         <div className="flex items-center gap-1">
-          <button className="flex h-9 w-9 items-center justify-center rounded-full text-neutral-300 hover:bg-neutral-900">
+          <button
+            aria-label="Search"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-neutral-300 hover:bg-neutral-900"
+          >
             <HiMagnifyingGlass size={18} />
           </button>
-          <button className="flex h-9 w-9 items-center justify-center rounded-full text-neutral-300 hover:bg-neutral-900">
+
+          <button
+            aria-label="Call"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-neutral-300 hover:bg-neutral-900"
+          >
             <HiPhone size={18} />
           </button>
-          <button className="flex h-9 w-9 items-center justify-center rounded-full text-neutral-300 hover:bg-neutral-900">
+
+          <button
+            aria-label="More"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-neutral-300 hover:bg-neutral-900"
+          >
             <HiEllipsisVertical size={18} />
           </button>
         </div>
       </div>
 
+      {/* Messages */}
       <div className="flex-1 space-y-2 overflow-y-auto px-4 py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {conversation.messages.length === 0 ? (
-          <p className="mt-10 text-center text-sm text-neutral-500">No messages yet</p>
+        {localConversation.messages.length === 0 ? (
+          <p className="mt-10 text-center text-sm text-neutral-500">
+            No messages yet
+          </p>
         ) : (
-          conversation.messages.map((m) => (
+          localConversation.messages.map((message) => (
             <MessageBubble
-              key={m._id}
+              key={message._id}
               message={{
-                id: m._id,
-                sender: m.sender === "admin" ? "me" : "them",
+                id: message._id,
+                sender:
+                  message.sender === "admin"
+                    ? "me"
+                    : "them",
                 type: "text",
-                content: m.text,
-                time: formatTime(m.createdAt),
+                content: message.text,
+                time: formatTime(message.createdAt),
               }}
             />
           ))
         )}
+
         {isVisitorTyping && <TypingIndicator />}
+
         <div ref={messagesEndRef} />
       </div>
 
-      <MessageInput onSend={handleSend} conversationId={conversation._id} />
+      {/* Input */}
+      <MessageInput
+        onSend={handleSend}
+        conversationId={localConversation._id}
+      />
     </div>
   );
 };
