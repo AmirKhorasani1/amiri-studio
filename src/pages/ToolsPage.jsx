@@ -1,56 +1,102 @@
-import React from 'react'
-import SectionTitle from '@ui/SectionTitle'
-import DevNotesCard from '@tools/DevNotes/DevNotesCard'
-import StillTimeCard from '@tools/StillTime/StillTimeCard'
-import AnimationLab from '@/components/templates/tools/AnimationLab/AnimationLabCard'
-import SnippetVaultCard from '@tools/SnippetVault/SnippetVaultCard'
-import TypeScaleCard from '@tools/TypeScale/TypeScaleCard'
-import ColorCraftCard from '@tools/ColorCraft/ColorCraftCard'
-import { useLanguage } from '@context/LanguageContext'
+import React from "react";
+import SectionTitle from "@ui/SectionTitle";
+import AnimationLab from "@/components/templates/tools/AnimationLab/AnimationLabCard";
+import DevNotesCard from "@tools/DevNotes/DevNotesCard";
+import SnippetVaultCard from "@tools/SnippetVault/SnippetVaultCard";
+import TypeScaleCard from "@tools/TypeScale/TypeScaleCard";
+import ColorCraftCard from "@tools/ColorCraft/ColorCraftCard";
+import { useLanguage } from "@context/LanguageContext";
+import RegexLabCard from "@tools/RegexLab/RegexLabCard";
+import UiBuilderCard from "@/components/templates/tools/UIBuilder/UiBuilderCard";
+import { Breadcrumb } from "@/components/ui/Breadcrumb";
 
 const translations = {
   en: {
-    title: 'Custom Developer Toolkit',
+    title: "Custom Developer Toolkit",
     description:
-      'Every tool here started as a real problem during development. I built them to remove repetitive work, improve consistency, and make building interfaces faster.',
-    viewAll: 'View all tools',
+      "A collection of tools I built to make frontend development faster, more consistent, and easier to iterate on.",
+    breadcrumbHome: "Home",
+    breadcrumbTools: "Tools",
   },
+
   fa: {
-    title: 'ابزارهای اختصاصی توسعه',
+    title: "ابزارهای اختصاصی توسعه",
     description:
-      'هر کدوم از این ابزارها از یه مشکل واقعی حین توسعه شروع شدن. من اونا رو ساختم تا کارهای تکراری رو حذف کنم، یکدستی رو بهتر کنم و ساخت رابط‌کاربری رو سریع‌تر کنم.',
-    viewAll: 'مشاهده همه ابزارها',
+      "مجموعه‌ای از ابزارهایی که برای سریع‌تر شدن توسعه فرانت‌اند، حفظ یکدستی و ساده‌تر شدن فرایند ساخت رابط‌های کاربری ساخته‌ام.",
+    breadcrumbHome: "خانه",
+    breadcrumbTools: "ابزارها",
   },
-}
+};
 
 const ToolsPage = () => {
-  const { language } = useLanguage()
-  const t = translations[language]
+  const { language } = useLanguage();
+  const t = translations[language];
+  const isRTL = language === "fa";
 
   return (
-    <div className="flex flex-col gap-5 px-5 md:px-25 pt-25" dir={t.dir} lang={language}>
-      <SectionTitle title={t.title} description={t.description} />
+    <main
+      dir={isRTL ? "rtl" : "ltr"}
+      lang={language}
+      className="container relative flex flex-col gap-8 py-37 md:gap-10"
+    >
+      {/* Page Header */}
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
+          <SectionTitle
+            title={t.title}
+            description={t.description}
+          />
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div className="grid grid-cols-1 *:cursor-pointer">
-          <DevNotesCard />
-        </div>
-        <div className="grid grid-cols-1 gap-5 *:cursor-pointer">
-          <AnimationLab />
-          <SnippetVaultCard />
-        </div>
+        <Breadcrumb
+          items={[
+            { label: t.breadcrumbHome, to: "/" },
+            { label: t.breadcrumbTools, to: "/tools" },
+          ]}
+        />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 *:cursor-pointer">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 *:cursor-pointer">
-          <TypeScaleCard />
-          <ColorCraftCard />
+      {/* Toolkit */}
+      <div className="grid grid-cols-1 gap-4">
+        {/* Row 1 */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3 [&>*]:cursor-pointer">
+          <div className="min-w-0">
+            <AnimationLab />
+          </div>
+
+          <div className="min-w-0">
+            <DevNotesCard />
+          </div>
+
+          <div className="min-w-0">
+            <SnippetVaultCard />
+          </div>
         </div>
-        <div className="border border-neutral-800 rounded-lg">
+
+        {/* Row 2 */}
+        <div className="flex w-full flex-col gap-4 md:flex-row [&>*]:cursor-pointer">
+          <div className="w-full min-w-0 md:w-3/5">
+            <ColorCraftCard />
+          </div>
+
+          <div className="w-full min-w-0 md:w-2/5">
+            <TypeScaleCard />
+          </div>
+        </div>
+
+        {/* Row 3 */}
+        <div className="flex w-full flex-col gap-4 md:flex-row [&>*]:cursor-pointer">
+          <div className="w-full min-w-0 md:w-2/5">
+            <UiBuilderCard />
+          </div>
+
+          <div className="w-full min-w-0 md:w-3/5">
+            <RegexLabCard />
+          </div>
         </div>
       </div>
-    </div>
-  )
-}
+    </main>
+  );
+};
 
-export default ToolsPage
+export default ToolsPage;

@@ -81,7 +81,7 @@ const Swatch = ({ hex, level, t, onCopy }) => {
 };
 
 const ColorFamilyCard = ({ family, t, onCopy }) => (
-  <div className="overflow-hidden rounded-lg border-primary">
+  <div className="overflow-hidden rounded-2xl bg-neutral-200/65 dark:bg-neutral-800/80">
     <div className="flex items-center justify-between border-b-primary px-3 py-2">
       <div>
         <p className="text-[13px] font-semibold tracking-wide text-primary">

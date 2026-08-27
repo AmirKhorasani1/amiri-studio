@@ -32,6 +32,14 @@ const AnimationLabPage = lazy(() =>
   import("@tools/AnimationLab/AnimationLabPage")
 );
 
+const RegexLabPage = lazy(() =>
+  import("@tools/RegexLab/pages/RegexLabPage")
+);
+
+const UiBuilderPage = lazy(() => 
+  import("@/components/templates/tools/UIBuilder/UiBuilderPage")
+);
+
 const DevNotesHome = lazy(() =>
   import("@tools/DevNotes/pages/Home/DevNotesHome")
 );
@@ -124,6 +132,22 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={Loader}>
             <AnimationLabPage />
+          </Suspense>
+        )
+      },
+      {
+        path: "tools/regex-lab",
+        element: (
+          <Suspense fallback={Loader}>
+            <RegexLabPage />
+          </Suspense>
+        )
+      },
+      {
+        path: "tools/ui-builder",
+        element: (
+          <Suspense fallback={Loader}>
+            <UiBuilderPage />
           </Suspense>
         )
       }

@@ -1,5 +1,5 @@
 import React from "react";
-import AnimationLabStudio from "./AnimationLabStudio";
+import AnimationLabStudio from "./components/AnimationLabStudio";
 
 const AnimationLabPage = () => {
   return <AnimationLabStudio />;

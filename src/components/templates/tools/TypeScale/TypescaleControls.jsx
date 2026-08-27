@@ -1,44 +1,48 @@
 import { useState, useRef, useCallback, useMemo } from "react";
 
-/* ---------------------------------------------------------------------- */
-/*  Pixel ruler — draggable base-size control                              */
-/*  Always kept dir="ltr": it's a physical/numeric control, so low value   */
-/*  stays on the left and high value on the right regardless of language.  */
-/* ---------------------------------------------------------------------- */
+const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
 
 export function PixelRuler({ value, min = 8, max = 72, onChange }) {
   const trackRef = useRef(null);
   const [dragging, setDragging] = useState(false);
 
-  const updateFromClientX = useCallback(
-    (clientX) => {
-      const rect = trackRef.current.getBoundingClientRect();
-      const pct = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
-      onChange(Math.round(min + pct * (max - min)));
-    },
-    [min, max, onChange]
-  );
+  const update = useCallback((clientX) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const rect = track.getBoundingClientRect();
+    if (!rect.width) return;
+    const pct = clamp((clientX - rect.left) / rect.width, 0, 1);
+    onChange(Math.round(min + pct * (max - min)));
+  }, [min, max, onChange]);
 
-  const onPointerDown = (e) => {
+  const handleDown = useCallback((e) => {
     setDragging(true);
-    e.currentTarget.setPointerCapture(e.pointerId);
-    updateFromClientX(e.clientX);
-  };
-  const onPointerMove = (e) => dragging && updateFromClientX(e.clientX);
-  const onPointerUp = (e) => {
-    setDragging(false);
-    e.currentTarget.releasePointerCapture(e.pointerId);
-  };
-  const onKeyDown = (e) => {
-    if (e.key === "ArrowRight" || e.key === "ArrowUp") onChange(Math.min(max, value + 1));
-    if (e.key === "ArrowLeft" || e.key === "ArrowDown") onChange(Math.max(min, value - 1));
-  };
+    e.currentTarget.setPointerCapture?.(e.pointerId);
+    update(e.clientX);
+  }, [update]);
 
-  const ticks = useMemo(() => {
-    const arr = [];
-    for (let v = min; v <= max; v++) arr.push(v);
-    return arr;
-  }, [min, max]);
+  const handleMove = useCallback((e) => {
+    if (dragging) update(e.clientX);
+  }, [dragging, update]);
+
+  const handleUp = useCallback((e) => {
+    setDragging(false);
+    if (e.currentTarget.hasPointerCapture?.(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
+  }, []);
+
+  const handleKeyDown = useCallback((e) => {
+    if (!["ArrowRight", "ArrowUp", "ArrowLeft", "ArrowDown"].includes(e.key)) return;
+    e.preventDefault();
+    const dir = e.key === "ArrowRight" || e.key === "ArrowUp" ? 1 : -1;
+    onChange(clamp(value + dir, min, max));
+  }, [value, min, max, onChange]);
+
+  const ticks = useMemo(
+    () => Array.from({ length: max - min + 1 }, (_, i) => min + i),
+    [min, max]
+  );
 
   return (
     <div
@@ -49,29 +53,31 @@ export function PixelRuler({ value, min = 8, max = 72, onChange }) {
       aria-valuemin={min}
       aria-valuemax={max}
       aria-valuenow={value}
-      onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={onPointerUp}
-      onKeyDown={onKeyDown}
-      className="relative flex h-10 items-end justify-between gap-px px-0.5 outline-none cursor-ew-resize select-none touch-none"
+      onPointerDown={handleDown}
+      onPointerMove={handleMove}
+      onPointerUp={handleUp}
+      onPointerCancel={handleUp}
+      onKeyDown={handleKeyDown}
+      className={`relative flex h-10 cursor-ew-resize select-none touch-none items-end justify-between gap-px px-0.5 outline-none ${dragging ? "cursor-grabbing" : ""}`}
     >
       {ticks.map((v) => {
-        const isMajor = v % 10 === 0;
-        const isActive = v === value;
+        const major = v % 10 === 0;
+        const active = v === value;
+
         return (
           <span
             key={v}
             className={
-              isActive
+              active
                 ? "relative w-1 bg-black dark:bg-white"
-                : isMajor
-                ? "w-px bg-neutral-300 dark:bg-neutral-700"
-                : "w-px bg-neutral-200 dark:bg-neutral-800"
+                : major
+                  ? "w-px bg-neutral-300 dark:bg-neutral-700"
+                  : "w-px bg-neutral-200 dark:bg-neutral-800"
             }
-            style={{ height: isActive ? 28 : isMajor ? 18 : 10 }}
+            style={{ height: active ? 28 : major ? 18 : 10 }}
           >
-            {isActive && (
-              <span className="absolute top-0 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-black dark:bg-white shadow-[0_0_8px_2px_rgba(0,0,0,0.25)] dark:shadow-[0_0_8px_2px_rgba(255,255,255,0.35)]" />
+            {active && (
+              <span className="absolute left-1/2 top-0 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-black shadow-[0_0_8px_2px_rgba(0,0,0,0.25)] dark:bg-white dark:shadow-[0_0_8px_2px_rgba(255,255,255,0.35)]" />
             )}
           </span>
         );
@@ -80,18 +86,13 @@ export function PixelRuler({ value, min = 8, max = 72, onChange }) {
   );
 }
 
-/* ---------------------------------------------------------------------- */
-/*  Mini range slider (weight / leading / tracking)                        */
-/* ---------------------------------------------------------------------- */
-
 export function MiniSlider({ label, value, min, max, step, unit = "", onChange }) {
   return (
-    <label className="block">
-      <span className="mb-1.5 flex items-center justify-between">
-        <span className="text-xs text-secondary">{label}</span>
-        <span dir="ltr" className="text-xs tabular-nums text-black dark:text-neutral-200">
-          {value}
-          {unit}
+    <label className="block min-w-0">
+      <span className="mb-1.5 flex items-center justify-between gap-3">
+        <span className="min-w-0 truncate text-xs text-secondary">{label}</span>
+        <span dir="ltr" className="shrink-0 text-xs tabular-nums text-black dark:text-neutral-200">
+          {value}{unit}
         </span>
       </span>
       <input
@@ -100,34 +101,28 @@ export function MiniSlider({ label, value, min, max, step, unit = "", onChange }
         max={max}
         step={step}
         value={value}
-        onChange={(e) => onChange(parseFloat(e.target.value))}
-        className="ts-range h-[2px] w-full cursor-pointer appearance-none rounded-full bg-neutral-300 dark:bg-neutral-800 accent-black dark:accent-white"
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="ts-range h-[2px] w-full cursor-pointer appearance-none rounded-full bg-neutral-300 accent-black dark:bg-neutral-800 dark:accent-white"
       />
     </label>
   );
 }
-
-/* ---------------------------------------------------------------------- */
-/*  Pill / chip selector button                                            */
-/* ---------------------------------------------------------------------- */
 
 export function Chip({ active, onClick, children, sub }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={
-        "rounded-full px-3.5 py-1.5 text-[13px] transition-colors cursor-pointer " +
-        (active
-          ? "bg-black dark:bg-neutral-100 font-medium text-white dark:text-black"
-          : "border-primary text-secondary hover:text-black dark:hover:text-white")
-      }
+      aria-pressed={active}
+      className={`cursor-pointer rounded-full px-3.5 py-1.5 text-[13px] transition-colors duration-200 ${
+        active
+          ? "bg-black font-medium text-white dark:bg-neutral-100 dark:text-black"
+          : "border-primary text-secondary hover:text-black dark:hover:text-white"
+      }`}
     >
       {children}
       {sub !== undefined && (
-        <span dir="ltr" className="ml-1.5 tabular-nums opacity-60">
-          {sub}
-        </span>
+        <span dir="ltr" className="ml-1.5 tabular-nums opacity-60">{sub}</span>
       )}
     </button>
   );

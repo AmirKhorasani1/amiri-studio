@@ -47,7 +47,7 @@ const FontScaleCard = () => {
 
   return (
     <Link
-      to="/tools/font-scale"
+      to="/tools/type-scale"
       dir={isRtl ? "rtl" : "ltr"}
       className="group relative flex h-[370px] w-full flex-col overflow-hidden rounded-4xl bg-neutral-200/65 hover:bg-neutral-200/80 transition-all dark:bg-neutral-800/80 dark:hover:bg-neutral-800/90 duration-300"
     >

@@ -8,7 +8,7 @@ export function Breadcrumb({ items = [], separator = DEFAULT_SEPARATOR, classNam
 
   return (
     <nav aria-label="Breadcrumb" className={className}>
-      <ol className="flex flex-wrap items-center gap-2">
+      <ol className="flex flex-wrap items-center justify-center gap-2">
         {items.map((item, index) => {
           const isLastItem = index === items.length - 1
           const isCurrent = isLastItem || !item.to

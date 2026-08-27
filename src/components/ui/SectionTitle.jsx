@@ -44,7 +44,7 @@ const SectionTitle = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.4 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className={`flex flex-col gap-3 md:gap-4.5 ${alignClass}`}
+      className={`flex flex-col gap-3 ${alignClass}`}
     >
       {eyebrow && (
         <span className="text-sm font-medium tracking-wide text-neutral-500">

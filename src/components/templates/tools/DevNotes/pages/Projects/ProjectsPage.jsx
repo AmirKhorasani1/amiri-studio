@@ -241,7 +241,7 @@ export default function ProjectsPage() {
 
   return (
     <div dir={dir} className="min-h-screen w-full text-black dark:text-white">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-17 md:py-25">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 pt-17 pb-28 md:py-25">
         {/* Header */}
         <div className="flex flex-col gap-3.5 sm:flex-row sm:items-center sm:justify-between">
           <div className="hidden md:block">
@@ -266,16 +266,19 @@ export default function ProjectsPage() {
             </button>
           </div>
 
+          {/* Mobile: floating "new project" button */}
           <button
             type="button"
             onClick={() => setShowCreate(true)}
-            className="md:hidden fixed right-3.5 top-5.5 z-40 bg-white dark:bg-neutral-700/70 backdrop-blur-xl p-2 rounded-full active:scale-95 duration-300"
+            aria-label={t.newProject}
+            className="md:hidden fixed right-3.5 top-5.5 z-40 flex h-11 w-11 items-center justify-center rounded-full bg-white text-neutral-900 shadow-[0_4px_16px_rgba(0,0,0,0.12)] backdrop-blur-xl duration-300 active:scale-95 dark:bg-neutral-800 dark:text-white dark:shadow-black/40"
           >
-            <img className="invert dark:invert-0" width={29} height={29} alt="" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0eWxlPSJvcGFjaXR5OjE7Ij48cGF0aCBmaWxsPSJub25lIiAgICAgZD0iTTEyLjAwMSA1djE0LjAwMm03LjAwMS03SDUiLz48L3N2Zz4=" />
+            <IoIosAdd size={28} />
           </button>
 
-          <div className="fixed bottom-5.5 right-0 left-0 w-full px-5">
-            <div className="dn-search-wrap">
+          {/* Mobile: floating search bar */}
+          <div className="md:hidden fixed inset-x-0 bottom-0 z-30 w-full px-4 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-3">
+            <div className="dn-search-wrap shadow-[0_8px_24px_rgba(0,0,0,0.12)] dark:shadow-black/50">
               <Search size={20} className="shrink-0 text-secondary" />
               <input
                 value={search}
