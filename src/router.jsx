@@ -5,7 +5,6 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import MainLayout from "@components/Layouts/MainLayout";
 import DashboardLayout from "@components/Layouts/DashboardLayout";
 import DevNotesLayout from "@tools/DevNotes/layouts/DevNotesLayout";
-import StillTimeLayout from "@tools/StillTime/layouts/StillTimeLayout";
 
 // Protected Route
 import ProtectedRoute from "@components/ProtectedRoute";
@@ -15,6 +14,23 @@ const HomePage = lazy(() => import("@pages/HomePage"));
 const ToolsPage = lazy(() => import("@pages/ToolsPage"));
 const DashboardPage = lazy(() => import("@pages/DashboardPage"));
 const AdminLogin = lazy(() => import("@pages/AdminLogin"));
+const ProjectsPage = lazy(() => import("@pages/ProjectsPage"));
+
+const FitsazProjectPage = lazy(() =>
+  import("@projects/fitsaz/FitsazProjectPage")
+);
+
+const GoldGalleryProjectPage = lazy(() =>
+  import("@projects/gold-gallery/GoldGalleryProjectPage")
+);
+
+const ClothingStoreProjectPage = lazy(() =>
+  import("@projects/clothing-store/ClothingStoreProjectPage")
+);
+
+const PortfolioProjectPage = lazy(() =>
+  import("@projects/portfolio/PortfolioProjectPage")
+);
 
 const SnippetVaultPage = lazy(() =>
   import("@tools/SnippetVault/SnippetVaultPage")
@@ -52,7 +68,7 @@ const TasksPage = lazy(() =>
   import("@tools/DevNotes/pages/Tasks/TasksPage")
 );
 
-const ProjectsPage = lazy(() =>
+const ProjectsPageDevNotes = lazy(() =>
   import("@tools/DevNotes/pages/Projects/ProjectsPage")
 );
 
@@ -62,18 +78,6 @@ const ProgressPage = lazy(() =>
 
 const TemplatesPage = lazy(() =>
   import("@tools/DevNotes/pages/Templates/TemplatesPage")
-);
-
-const ClockPage = lazy(() =>
-  import("@tools/StillTime/pages/ClockPage")
-);
-
-const TimerPage = lazy(() =>
-  import("@tools/StillTime/pages/TimerPage")
-);
-
-const StopwatchPage = lazy(() =>
-  import("@tools/StillTime/pages/StopwatchPage")
 );
 
 const Loader = (
@@ -150,7 +154,48 @@ export const router = createBrowserRouter([
             <UiBuilderPage />
           </Suspense>
         )
-      }
+      },
+      {
+        path: "projects",
+        element: [
+          <Suspense fallback={Loader}>
+            <ProjectsPage />
+          </Suspense>
+        ]
+      },
+      {
+        path: "projects/fitsaz",
+        element: [
+          <Suspense>
+            <FitsazProjectPage />
+          </Suspense>
+        ]
+      },
+      {
+        path: "projects/gold-gallery",
+        element: [
+          <Suspense>
+            <GoldGalleryProjectPage />
+          </Suspense>
+        ]
+      },
+      {
+        path: "projects/clothing-store",
+        element: [
+          <Suspense>
+            <ClothingStoreProjectPage />
+          </Suspense>
+        ]
+      },
+      {
+        path: "projects/portfolio",
+        element: [
+          <Suspense>
+            <PortfolioProjectPage />
+          </Suspense>
+        ]
+      },
+
     ],
   },
 
@@ -214,7 +259,7 @@ export const router = createBrowserRouter([
         path: "projects",
         element: (
           <Suspense fallback={Loader}>
-            <ProjectsPage />
+            <ProjectsPageDevNotes />
           </Suspense>
         ),
       },
@@ -231,41 +276,6 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={Loader}>
             <TemplatesPage />
-          </Suspense>
-        ),
-      },
-    ],
-  },
-
-  {
-    path: "/tools/still-time",
-    element: <StillTimeLayout />,
-    children: [
-      {
-        index: true,
-        element: <Navigate to="clock" replace />,
-      },
-      {
-        path: "clock",
-        element: (
-          <Suspense fallback={Loader}>
-            <ClockPage />
-          </Suspense>
-        ),
-      },
-      {
-        path: "timer",
-        element: (
-          <Suspense fallback={Loader}>
-            <TimerPage />
-          </Suspense>
-        ),
-      },
-      {
-        path: "stopwatch",
-        element: (
-          <Suspense fallback={Loader}>
-            <StopwatchPage />
           </Suspense>
         ),
       },

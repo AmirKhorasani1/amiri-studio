@@ -27,6 +27,7 @@ export default defineConfig({
       "@admin": path.resolve(__dirname, "./src/components/templates/admin"),
       "@home": path.resolve(__dirname, "./src/components/templates/home"),
       "@tools": path.resolve(__dirname, "./src/components/templates/tools"),
+      "@projects": path.resolve(__dirname, "./src/components/templates/projects"),
       "@dev-notes": path.resolve(__dirname, "./src/components/templates/dev-notes"),
       "@ui": path.resolve(__dirname, "./src/components/ui"),
       "@context": path.resolve(__dirname, "./src/context"),

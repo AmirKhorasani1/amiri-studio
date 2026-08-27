@@ -20,6 +20,7 @@
       "@admin/*": ["src/components/templates/admin/*"],
       "@home/*": ["src/components/templates/home/*"],
       "@tools/*": ["src/components/templates/tools/*"],
+      "@projects/*": ["src/components/templates/projects/*"],
       "@dev-notes/*": ["src/components/templates/dev-notes/*"],
       "@ui/*": ["src/components/ui/*"],
 
