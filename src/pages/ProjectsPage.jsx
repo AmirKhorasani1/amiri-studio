@@ -31,7 +31,7 @@ const ProjectsPage = () => {
     <main
       dir={locale === "fa" ? "rtl" : "ltr"}
       lang={locale}
-      className="container relative flex flex-col gap-5 py-30"
+      className="container relative flex flex-col gap-8 py-35"
     >
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-3">

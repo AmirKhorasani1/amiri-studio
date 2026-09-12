@@ -12,72 +12,72 @@ import ProtectedRoute from "@components/ProtectedRoute";
 // Lazy Pages
 const HomePage = lazy(() => import("@pages/HomePage"));
 const ToolsPage = lazy(() => import("@pages/ToolsPage"));
+const ProjectsPage = lazy(() => import("@pages/ProjectsPage"));
+const ArticlesPage = lazy(() => import("@pages/ArticlesPage"));
+const ArticleDetailPage = lazy(() => import("@pages/ArticleDetailPage"));
+
 const DashboardPage = lazy(() => import("@pages/DashboardPage"));
 const AdminLogin = lazy(() => import("@pages/AdminLogin"));
-const ProjectsPage = lazy(() => import("@pages/ProjectsPage"));
-
-const FitsazProjectPage = lazy(() =>
-  import("@projects/fitsaz/FitsazProjectPage")
+const ArticlesManagePage = lazy(
+  () => import("@pages/admin/Articles/ArticlesManagePage"),
+);
+const ArticleFormPage = lazy(
+  () => import("@pages/admin/Articles/ArticleFormPage"),
 );
 
-const GoldGalleryProjectPage = lazy(() =>
-  import("@projects/gold-gallery/GoldGalleryProjectPage")
+const FitsazProjectPage = lazy(
+  () => import("@projects/fitsaz/FitsazProjectPage"),
 );
 
-const ClothingStoreProjectPage = lazy(() =>
-  import("@projects/clothing-store/ClothingStoreProjectPage")
+const GoldGalleryProjectPage = lazy(
+  () => import("@projects/gold-gallery/GoldGalleryProjectPage"),
 );
 
-const PortfolioProjectPage = lazy(() =>
-  import("@projects/portfolio/PortfolioProjectPage")
+const ClothingStoreProjectPage = lazy(
+  () => import("@projects/clothing-store/ClothingStoreProjectPage"),
 );
 
-const SnippetVaultPage = lazy(() =>
-  import("@tools/SnippetVault/SnippetVaultPage")
+const PortfolioProjectPage = lazy(
+  () => import("@projects/portfolio/PortfolioProjectPage"),
 );
 
-const ColorCraftPage = lazy(() =>
-  import("@tools/ColorCraft/ColorCraftPage")
+const SnippetVaultPage = lazy(
+  () => import("@tools/SnippetVault/SnippetVaultPage"),
 );
 
-const TypeScalePage = lazy(() =>
-  import("@tools/TypeScale/TypeScalePage")
+const ColorCraftPage = lazy(() => import("@tools/ColorCraft/ColorCraftPage"));
+
+const TypeScalePage = lazy(() => import("@tools/TypeScale/TypeScalePage"));
+
+const AnimationLabPage = lazy(
+  () => import("@tools/AnimationLab/AnimationLabPage"),
 );
 
-const AnimationLabPage = lazy(() =>
-  import("@tools/AnimationLab/AnimationLabPage")
+const RegexLabPage = lazy(() => import("@tools/RegexLab/pages/RegexLabPage"));
+
+const UiBuilderPage = lazy(
+  () => import("@/components/templates/tools/UIBuilder/UiBuilderPage"),
 );
 
-const RegexLabPage = lazy(() =>
-  import("@tools/RegexLab/pages/RegexLabPage")
+const DevNotesHome = lazy(
+  () => import("@tools/DevNotes/pages/Home/DevNotesHome"),
 );
 
-const UiBuilderPage = lazy(() => 
-  import("@/components/templates/tools/UIBuilder/UiBuilderPage")
+const NotesPage = lazy(() => import("@tools/DevNotes/pages/Notes/NotesPage"));
+
+const TasksPage = lazy(() => import("@tools/DevNotes/pages/Tasks/TasksPage"));
+
+const ProjectsPageDevNotes = lazy(
+  () => import("@tools/DevNotes/pages/Projects/ProjectsPage"),
 );
 
-const DevNotesHome = lazy(() =>
-  import("@tools/DevNotes/pages/Home/DevNotesHome")
+const ProgressPage = lazy(
+  () =>
+    import("@/components/templates/tools/DevNotes/pages/Progress/ProgressPage"),
 );
 
-const NotesPage = lazy(() =>
-  import("@tools/DevNotes/pages/Notes/NotesPage")
-);
-
-const TasksPage = lazy(() =>
-  import("@tools/DevNotes/pages/Tasks/TasksPage")
-);
-
-const ProjectsPageDevNotes = lazy(() =>
-  import("@tools/DevNotes/pages/Projects/ProjectsPage")
-);
-
-const ProgressPage = lazy(() =>
-  import("@/components/templates/tools/DevNotes/pages/Progress/ProgressPage")
-);
-
-const TemplatesPage = lazy(() =>
-  import("@tools/DevNotes/pages/Templates/TemplatesPage")
+const TemplatesPage = lazy(
+  () => import("@tools/DevNotes/pages/Templates/TemplatesPage"),
 );
 
 const Loader = (
@@ -129,7 +129,7 @@ export const router = createBrowserRouter([
           <Suspense fallback={Loader}>
             <TypeScalePage />
           </Suspense>
-        )
+        ),
       },
       {
         path: "tools/animation-lab",
@@ -137,7 +137,7 @@ export const router = createBrowserRouter([
           <Suspense fallback={Loader}>
             <AnimationLabPage />
           </Suspense>
-        )
+        ),
       },
       {
         path: "tools/regex-lab",
@@ -145,7 +145,7 @@ export const router = createBrowserRouter([
           <Suspense fallback={Loader}>
             <RegexLabPage />
           </Suspense>
-        )
+        ),
       },
       {
         path: "tools/ui-builder",
@@ -153,49 +153,64 @@ export const router = createBrowserRouter([
           <Suspense fallback={Loader}>
             <UiBuilderPage />
           </Suspense>
-        )
+        ),
       },
       {
         path: "projects",
         element: [
           <Suspense fallback={Loader}>
             <ProjectsPage />
-          </Suspense>
-        ]
+          </Suspense>,
+        ],
       },
       {
         path: "projects/fitsaz",
         element: [
           <Suspense>
             <FitsazProjectPage />
-          </Suspense>
-        ]
+          </Suspense>,
+        ],
       },
       {
         path: "projects/gold-gallery",
         element: [
           <Suspense>
             <GoldGalleryProjectPage />
-          </Suspense>
-        ]
+          </Suspense>,
+        ],
       },
       {
         path: "projects/clothing-store",
         element: [
           <Suspense>
             <ClothingStoreProjectPage />
-          </Suspense>
-        ]
+          </Suspense>,
+        ],
       },
       {
         path: "projects/portfolio",
         element: [
           <Suspense>
             <PortfolioProjectPage />
-          </Suspense>
-        ]
+          </Suspense>,
+        ],
       },
-
+      {
+        path: "articles",
+        element: (
+          <Suspense fallback={Loader}>
+            <ArticlesPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "articles/:slug",
+        element: (
+          <Suspense fallback={Loader}>
+            <ArticleDetailPage />
+          </Suspense>
+        ),
+      },
     ],
   },
 
@@ -221,6 +236,30 @@ export const router = createBrowserRouter([
         element: (
           <Suspense fallback={Loader}>
             <DashboardPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "articles",
+        element: (
+          <Suspense fallback={Loader}>
+            <ArticlesManagePage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "articles/new",
+        element: (
+          <Suspense fallback={Loader}>
+            <ArticleFormPage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "articles/:id/edit",
+        element: (
+          <Suspense fallback={Loader}>
+            <ArticleFormPage />
           </Suspense>
         ),
       },

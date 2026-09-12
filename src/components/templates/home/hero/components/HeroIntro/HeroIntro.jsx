@@ -1,14 +1,28 @@
 import { motion } from 'framer-motion'
 import { useLanguage } from '@context/LanguageContext'
-
 import AvailabilityStatus from './AvailabilityStatus'
 import {
   buttonRowVariants,
   buttonVariants,
   containerVariants,
   itemVariants,
+  titleContainerVariants,
+  wordVariants,
 } from '@animation/heroIntro.animations'
 import { HERO_TRANSLATIONS } from '@/components/templates/home/hero/components/HeroIntro/heroIntro.data'
+
+// می‌شکنه متن رو به کلمه‌ها تا هرکدوم جدا انیمیت بشن
+const AnimatedWords = ({ text }) =>
+  text.split(' ').map((word, i, arr) => (
+    <motion.span
+      key={`${word}-${i}`}
+      variants={wordVariants}
+      style={{ display: 'inline-block', willChange: 'transform, filter, opacity' }}
+    >
+      {word}
+      {i !== arr.length - 1 ? '\u00A0' : ''}
+    </motion.span>
+  ))
 
 const HeroIntro = () => {
   const { language } = useLanguage()
@@ -34,16 +48,16 @@ const HeroIntro = () => {
           </motion.div>
 
           <motion.h1
-            variants={itemVariants}
+            variants={titleContainerVariants}
             className="text-center text-[36px] leading-11 tracking-tighter md:text-[58px] md:leading-[1.15]"
             style={{
               letterSpacing: isPersian ? 'normal' : '-0.03em',
               fontWeight: isPersian ? 600 : 450,
             }}
           >
-            {t.titleLine1}
+            <AnimatedWords text={t.titleLine1} />
             <br />
-            {t.titleLine2}
+            <AnimatedWords text={t.titleLine2} />
           </motion.h1>
 
           <motion.h2
@@ -59,6 +73,8 @@ const HeroIntro = () => {
           >
             <motion.button
               variants={buttonVariants}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
               className="btn-primary"
             >
               {t.resumeBtn}
@@ -66,6 +82,8 @@ const HeroIntro = () => {
 
             <motion.button
               variants={buttonVariants}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
               className="btn-secondary"
             >
               {t.projectsBtn}

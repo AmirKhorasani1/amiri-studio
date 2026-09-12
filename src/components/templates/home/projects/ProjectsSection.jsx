@@ -1,10 +1,9 @@
 import React from "react"
-import ProjectCardOne from "./components/ProjectCardOne"
-import ProjectCardTwo from "./components/ProjectCardTwo"
-import StickyViewAllLink from "@ui/StickyViewAllLink"
 import { useLanguage } from "@context/LanguageContext"
 import SectionTitle from "@/components/ui/SectionTitle"
-import ProjectCardThree from "./components/ProjectCardThree"
+import ProjectCard from "../../projects/components/ProjectCard"
+import projects from "@/components/templates/projects/data/projects";
+import StickyViewAllLink from "@/components/ui/StickyViewAllLink";
 
 const translations = {
   en: {
@@ -22,14 +21,9 @@ const translations = {
   },
 };
 
-const STICKY_TOP_BASE = 150;
-const STICKY_TOP_STEP = 20;
-
 const ProjectsSection = () => {
   const { language } = useLanguage()
   const t = translations[language]
-
-  const projectCards = [ProjectCardOne, ProjectCardTwo, ProjectCardThree]
 
   return (
     <section className="relative container">
@@ -39,20 +33,19 @@ const ProjectsSection = () => {
           description={t.description}
         />
 
-        <div className="relative">
-          {projectCards.map((Card, index) => (
-            <div
-              key={index}
-              className={`sticky pb-4.5 ${index === projectCards.length - 1 ? "pb-0 md:pb-0" : ""}`}
-              style={{
-                top: `${STICKY_TOP_BASE + index * STICKY_TOP_STEP}px`,
-                zIndex: index + 1,
-              }}
-            >
-              <Card />
-            </div>
-          ))}
-        </div>
+      <section
+        aria-label={t.title}
+        className="grid grid-cols-1 gap-4.5 md:grid-cols-2"
+      >
+        {projects.slice(0, 2).map((project) => (
+          <ProjectCard key={project.id} project={project} />
+        ))}
+      </section>
+
+        <StickyViewAllLink
+          label={t.viewAll}
+          to="/projects"
+        />
       </div>
     </section>
   )

@@ -1,4 +1,5 @@
 // @/components/templates/project/components/ProjectFeatures/ProjectFeatures.jsx
+import { useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useLanguage } from '@context/LanguageContext'
 
@@ -13,22 +14,46 @@ const FEATURES_TRANSLATIONS = {
   },
 }
 
-const FeatureCard = ({ index, title, description }) => (
-  <motion.div
-    variants={itemVariants}
-    className="flex flex-col gap-3 rounded-2xl border-primary bg-neutral-200/40 p-5 backdrop-blur-md dark:bg-neutral-900/40"
-  >
-    <span className="text-xs font-medium tabular-nums text-neutral-400 dark:text-neutral-500">
-      {String(index + 1).padStart(2, '0')}
-    </span>
+const FeatureCard = ({ index, title, description }) => {
+  const ref = useRef(null)
 
-    <h3 className="text-[15px] font-medium md:text-base">{title}</h3>
+  const handleMouseMove = (e) => {
+    const rect = ref.current.getBoundingClientRect()
+    ref.current.style.setProperty('--x', `${e.clientX - rect.left}px`)
+    ref.current.style.setProperty('--y', `${e.clientY - rect.top}px`)
+  }
 
-    {description && (
-      <p className="text-sm leading-6 text-secondary">{description}</p>
-    )}
-  </motion.div>
-)
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      variants={itemVariants}
+      className="group relative flex flex-col gap-4 overflow-hidden rounded-4xl bg-neutral-100 p-5 transition-colors duration-300 dark:bg-neutral-800/80 md:p-7"
+    >
+      <div
+        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 [--spot:rgba(0,0,0,0.05)] group-hover:opacity-100 dark:[--spot:rgba(255,255,255,0.08)]"
+        style={{
+          background:
+            'radial-gradient(280px circle at var(--x, 50%) var(--y, 50%), var(--spot), transparent 70%)',
+        }}
+      />
+
+      <div className="relative z-10 flex flex-col gap-4">
+        <span className="text-sm font-medium tabular-nums text-neutral-400 dark:text-neutral-500 md:text-base">
+          {String(index + 1).padStart(2, '0')}
+        </span>
+
+        <div className="flex flex-col gap-2">
+          <h3 className="text-base font-medium md:text-lg">{title}</h3>
+
+          {description && (
+            <p className="text-sm leading-6 text-secondary">{description}</p>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  )
+}
 
 const ProjectFeatures = ({ features = [] }) => {
   const { language } = useLanguage()
@@ -46,7 +71,7 @@ const ProjectFeatures = ({ features = [] }) => {
     >
       <motion.h2
         variants={itemVariants}
-        className="text-[22px] font-medium tracking-tight md:text-[28px]"
+        className="text-[22px] font-medium tracking-tight md:text-[28px] text-center"
         style={{ fontWeight: isPersian ? 600 : 500 }}
       >
         {t.heading}

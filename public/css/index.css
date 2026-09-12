@@ -6,7 +6,7 @@
 
 body {
   font-family: "Geist", sans-serif;
-  @apply bg-white text-black dark:bg-[#050505] dark:text-white;
+  @apply bg-neutral-100 text-black dark:bg-[#050505] dark:text-white;
 }
 
 html[dir="rtl"] body {
@@ -15,7 +15,7 @@ html[dir="rtl"] body {
 
 @layer components {
   .container {
-    @apply mx-auto w-full max-w-7xl px-4 md:px-6 lg:px-30;
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-6 md:px-6 lg:px-6 xl:px-30;
   }
 
   .bg-primary {
@@ -31,15 +31,15 @@ html[dir="rtl"] body {
   }
 
   .border-primary {
-    @apply border border-neutral-300 dark:border-[#303030]
+    @apply border border-neutral-300/80 dark:border-[#303030]
   }
   .border-t-primary {
-    @apply border-t border-neutral-300 dark:border-[#303030]
+    @apply border-t border-neutral-300/80 dark:border-[#303030]
   }
 
 
   .border-b-primary {
-    @apply border-b border-neutral-300 dark:border-[#303030]
+    @apply border-b border-neutral-300/80 dark:border-[#303030]
   }
 
 

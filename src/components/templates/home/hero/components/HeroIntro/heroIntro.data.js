@@ -3,7 +3,7 @@ export const HERO_TRANSLATIONS = {
     titleLine1: 'Frontend Engineering',
     titleLine2: 'beyond design & logic.',
     description:
-      "I'm Amir Khorasani. I solve complex frontend challenges—from state and APIs to reusable components and smooth animations.",
+      "I'm Amir Khorasani. I build modern frontend systems with scalable architecture, state management, API integration, and reusable components.",
     resumeBtn: 'View My Projects',
     projectsBtn: 'Download Resume',
     available: 'Available for work',
@@ -14,7 +14,7 @@ export const HERO_TRANSLATIONS = {
     titleLine1: 'مهندسی فرانت‌اند',
     titleLine2: 'فراتر از طراحی و منطق.',
     description:
-      'من امیر خراسانی هستم. چالش‌های پیچیده فرانت‌اند را حل می‌کنم؛ از state و API تا کامپوننت‌های قابل‌استفاده‌مجدد و انیمیشن‌های روان.',
+      'من امیر خراسانی هستم. سیستم‌های فرانت‌اند مدرن را با معماری مقیاس‌پذیر، مدیریت state، یکپارچه‌سازی API و کامپوننت‌های reusable توسعه می‌دهم.',
     resumeBtn: 'مشاهده پروژه‌ها',
     projectsBtn: 'دانلود رزومه',
     available: 'آماده همکاری',

@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+
 const TECHS = [
   "HTML",
   "CSS",
@@ -9,86 +11,77 @@ const TECHS = [
   "Redux",
   "Git & Github",
   "WebSocket",
+  "REST API",
+  "state management | zustand",
+  "state management | react-query",
 ];
 
-const TechItem = ({ name }) => (
-  <div className="tech-item flex shrink-0 cursor-pointer items-center rounded-full bg-neutral-100 px-5 py-2.5 transition-all duration-300 ease-out dark:bg-neutral-800/80">
-    <span className="tech-item-label whitespace-nowrap text-sm font-medium text-neutral-500 transition-all duration-300 dark:text-neutral-400 md:text-base">
-      {name}
-    </span>
-  </div>
-);
-
-const TechSet = ({ hidden = false }) => (
-  <div
-    aria-hidden={hidden}
-    className="flex shrink-0 items-center gap-4 sm:gap-6 md:gap-8"
-  >
-    {TECHS.map((name) => (
-      <TechItem key={name} name={name} />
-    ))}
-  </div>
-);
-
-const TechMarquee = () => (
-  <div
-    className="relative -mx-4 w-full overflow-hidden"
-    style={{
-      WebkitMaskImage:
-        "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
-      maskImage:
-        "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
-    }}
-  >
-    <div className="marquee-track flex w-max shrink-0 items-center gap-4 sm:gap-6 md:gap-8">
-      <TechSet />
-      <TechSet hidden />
+function TechItem({ name }) {
+  return (
+    <div className="group flex shrink-0 cursor-pointer items-center rounded-full bg-neutral-100 px-5 py-2.5 transition-colors duration-300 hover:bg-neutral-900/5 dark:bg-neutral-800/80 dark:hover:bg-white/[0.06]">
+      <span className="whitespace-nowrap text-sm font-medium text-neutral-500 transition-colors duration-300 group-hover:text-neutral-900 dark:text-neutral-400 dark:group-hover:text-white md:text-base">
+        {name}
+      </span>
     </div>
+  );
+}
 
-    <style>{`
-      .marquee-track {
-        animation: tech-marquee 50s linear infinite;
-        will-change: transform;
-      }
+function TechSet({ hidden = false }) {
+  return (
+    // فاصله‌ها دقیقاً تنظیم شده‌اند تا با عرض کل همخوانی داشته باشند
+    <div
+      aria-hidden={hidden}
+      className="flex shrink-0 items-center gap-4 pr-4 sm:gap-6 sm:pr-6 md:gap-8 md:pr-8"
+    >
+      {TECHS.map((name) => (
+        <TechItem key={name} name={name} />
+      ))}
+    </div>
+  );
+}
 
-      .marquee-track:hover {
-        animation-play-state: paused;
-      }
-
-      .tech-item:hover {
-        background-color: rgb(23 23 23 / 0.05);
-      }
-
-      :is(.dark) .tech-item:hover {
-        background-color: rgb(255 255 255 / 0.06);
-      }
-
-      .tech-item:hover .tech-item-label {
-        opacity: 1;
-        color: #171717;
-      }
-
-      :is(.dark) .tech-item:hover .tech-item-label {
-        color: #ffffff;
-      }
-
-      @keyframes tech-marquee {
-        from {
-          transform: translate3d(0, 0, 0);
+export default function TechMarquee() {
+  return (
+    <>
+      {/* 
+        استفاده از CSS Keyframes برای حرکت فوق‌روان.
+        چون ۴ مجموعه در پایین قرار دادیم، وقتی به -25% می‌رسد،
+        دقیقاً معادل یک مجموعه کامل جابجا شده است و ریست شدن آن کاملا نامرئی خواهد بود.
+      */}
+      <style>{`
+        @keyframes marquee-scroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-25%); } 
         }
-
-        to {
-          transform: translate3d(-50%, 0, 0);
+        .animate-marquee-scroll {
+          /* می‌توانید 30s را برای تغییر سرعت کم و زیاد کنید */
+          animation: marquee-scroll 30s linear infinite; 
         }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .marquee-track {
-          animation: none;
+        .animate-marquee-scroll:hover {
+          animation-play-state: paused;
         }
-      }
-    `}</style>
-  </div>
-);
+        @media (prefers-reduced-motion: reduce) {
+          .animate-marquee-scroll {
+            animation: none;
+          }
+        }
+      `}</style>
 
-export default TechMarquee;
+      <div
+        className="relative -mx-4 w-full overflow-hidden"
+        style={{
+          WebkitMaskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
+          maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
+        }}
+      >
+        {/* کانتینر چرخنده با ۴ کپی برای پوشش دادن کامل هر سایز مانیتوری بدون پرش */}
+        <div className="flex w-max shrink-0 items-center animate-marquee-scroll">
+          <TechSet />
+          <TechSet hidden />
+          <TechSet hidden />
+          <TechSet hidden />
+        </div>
+      </div>
+    </>
+  );
+}

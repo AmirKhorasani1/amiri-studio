@@ -92,8 +92,8 @@ const Navbar = () => {
   )
 
   return (
-    <div className="fixed inset-x-0 top-0 z-50 w-full bg-[#0505058f] py-3 backdrop-blur-xl transition-all duration-700">
-      <div className="container flex items-center justify-between">
+    <div className="fixed inset-x-0 top-0 z-50 transition-all duration-700">
+      <div className="flex items-center justify-between container bg-neutral-100/60 dark:bg-[#050505bd] py-3 backdrop-blur-md">
         {/* Desktop navigation */}
         <div className="hidden items-center gap-8 md:flex">
           <img
@@ -178,13 +178,6 @@ const Navbar = () => {
               <HiOutlineMenuAlt4 size={27} />
             )}
           </button>
-
-          <button
-            type="button"
-            className="btn btn-primary py-2.5 px-4 hidden md:block"
-          >
-            {t.startProject}
-          </button>
         </div>
       </div>
 
@@ -254,13 +247,6 @@ const Navbar = () => {
               </div>
 
               <LanguageToggleButton className="md:hidden" />
-
-              <button
-                type="button"
-                className="btn btn-primary w-full py-3"
-              >
-                {t.startProject}
-              </button>
             </div>
           </motion.div>
         )}

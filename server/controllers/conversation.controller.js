@@ -1,11 +1,6 @@
 const Conversation = require("../models/Conversation");
 const { getIO } = require("../socket/socket");
 
-// POST /api/conversations
-// اگه قبلاً مکالمه‌ای با همین شماره وجود داشته باشه، همون رو (با تاریخچه‌ی
-// کامل پیام‌ها) برمی‌گردونه به‌جای اینکه یه مکالمه‌ی خالی جدید بسازه. این
-// دقیقاً همون چیزیه که باعث می‌شه اگه localStorage سمت کاربر پاک بشه ولی
-// دوباره همون شماره رو وارد کنه، بره سراغ همون چت قبلی‌ش.
 const createConversation = async (req, res) => {
   try {
     const { fullName, phone, email, company } = req.body;
@@ -19,8 +14,6 @@ const createConversation = async (req, res) => {
     let conversation = await Conversation.findOne({ phone: normalizedPhone });
 
     if (conversation) {
-      // همون آدم دوباره برگشته — تاریخچه رو دست نمی‌زنیم، فقط اگه اطلاعات
-      // تماسش (اسم/ایمیل/شرکت) تغییر کرده بود، آپدیتش می‌کنیم.
       let hasChanges = false;
 
       if (fullName && fullName.trim() && fullName.trim() !== conversation.fullName) {
@@ -50,7 +43,6 @@ const createConversation = async (req, res) => {
       company,
     });
 
-    // به داشبوردهای بازِ ادمین اطلاع بده که مکالمه جدید اومد
     getIO().to("admin-room").emit("new-conversation", conversation);
 
     res.status(201).json({ success: true, data: conversation, reused: false });

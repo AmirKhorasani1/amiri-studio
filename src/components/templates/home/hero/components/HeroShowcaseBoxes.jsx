@@ -25,12 +25,14 @@ const translations = {
 
 const SLIDE_DURATION = 15000;
 
+const EASE_OUT = [0.16, 1, 0.3, 1];
+
 const containerVariants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.15,
-      delayChildren: 0.45,
+      staggerChildren: 0,
+      delayChildren: 0.9,
     },
   },
 };
@@ -38,16 +40,18 @@ const containerVariants = {
 const boxVariants = {
   hidden: {
     opacity: 0,
-    y: 70,
-    scale: 0.96,
+    y: 55,
+    scale: 0.97,
+    filter: "blur(10px)",
   },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
+    filter: "blur(0px)",
     transition: {
-      duration: 0.85,
-      ease: [0.22, 1, 0.36, 1],
+      duration: 1,
+      ease: EASE_OUT,
     },
   },
 };
@@ -61,7 +65,7 @@ const Shine = ({ animationKey }) => (
       duration: 0.9,
       ease: [0.4, 0, 0.2, 1],
     }}
-    className="pointer-events-none absolute -top-[120%] left-0 h-[340%] w-[35%] rotate-50 bg-gradient-to-r from-transparent via-white/5 to-transparent blur-[20px]"
+    className="pointer-events-none absolute -top-[120%] left-0 h-[340%] w-[35%] rotate-50 bg-gradient-to-r from-transparent via-black/5 dark:via-white/5 to-transparent blur-[20px]"
     aria-hidden="true"
   />
 );
@@ -80,7 +84,7 @@ const ShowcaseCard = ({
   return (
     <motion.div
       variants={boxVariants}
-      className="group relative h-[285px] w-full overflow-hidden rounded-3xl bg-neutral-200/80 transition-transform duration-500 hover:-translate-y-0.5 dark:bg-neutral-800/80 md:h-[300px]"
+      className="group relative h-[285px] w-full overflow-hidden rounded-4xl bg-neutral-200/80 transition-transform duration-500 hover:-translate-y-0.5 dark:bg-neutral-800/80 md:h-[300px] shadow-2xl shadow-black/5"
       onMouseEnter={() => setShineKey((prev) => prev + 1)}
     >
       {children}
@@ -89,7 +93,7 @@ const ShowcaseCard = ({
 
       <div
         dir={isRTL ? "rtl" : "ltr"}
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex h-[90px] items-end justify-between bg-gradient-to-t from-neutral-200 via-neutral-200/75 to-transparent px-4 pb-4 text-sm text-neutral-800 dark:from-neutral-900/80 dark:via-neutral-900/60 dark:text-neutral-200"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex h-[90px] items-end justify-between bg-gradient-to-t from-white via-white to-transparent px-4 pb-4 text-sm text-neutral-800 dark:from-neutral-900/80 dark:via-neutral-900/60 dark:text-neutral-200"
       >
         <h3 className="font-medium">{title}</h3>
 

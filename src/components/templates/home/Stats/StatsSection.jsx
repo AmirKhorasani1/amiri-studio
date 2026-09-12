@@ -69,10 +69,10 @@ const usePrefersReducedMotion = () => {
 const GridBackground = () => (
   <div
     aria-hidden
-    className="pointer-events-none absolute inset-0"
+    className="pointer-events-none absolute inset-0 text-neutral-900/[0.06] dark:text-white/[0.07]"
     style={{
       backgroundImage:
-        "linear-gradient(to right, rgba(255,255,255,0.07) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.07) 1px, transparent 1px)",
+        "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
       backgroundSize: `${GRID_SIZE}px ${GRID_SIZE}px`,
       WebkitMaskImage:
         "radial-gradient(ellipse 75% 65% at 50% 50%, black 0%, black 25%, transparent 78%)",
@@ -294,7 +294,7 @@ const StatItem = ({
 }) => {
   return (
     <div className="relative flex flex-col items-center gap-3 px-6 py-10 text-center">
-      <span className="text-[44px] font-[450] leading-none tracking-tight text-white md:text-7xl">
+      <span className="text-[44px] font-[450] leading-none tracking-tight text-black dark:text-white md:text-7xl">
         <CountUpNumber
           value={stat.value}
           suffix={stat.suffix}
@@ -303,11 +303,11 @@ const StatItem = ({
       </span>
 
       <div className="flex flex-col md:gap-1">
-        <span className="text-base text-neutral-300">
+        <span className="text-base text-neutral-500 dark:text-neutral-300">
           {copy.label}
         </span>
 
-        <span className="max-w-[220px] text-sm text-neutral-500">
+        <span className="max-w-[220px] text-sm text-neutral-700 dark:text-neutral-500">
           {copy.description}
         </span>
       </div>
