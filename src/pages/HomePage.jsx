@@ -2,13 +2,12 @@ import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import HeroSection from "@home/hero/HeroSection";
 
 const ToolsSection = lazy(() => import("@home/tools/ToolsSection"));
+const AiChat = lazy(() => import("@home/ai-chat/AiChat"));
 const StatsSection = lazy(() => import("@home/Stats/StatsSection"));
 const ProjectsSection = lazy(() => import("@home/projects/ProjectsSection"));
 const SkillsSection = lazy(() => import("@home/skills/SkillsSection"));
 const ContactMeSection = lazy(() => import("@home/contact/ContactMeSection"));
-const BlogSection = lazy(
-  () => import("@/components/templates/home/articles/ArticlesSection"),
-);
+const BlogSection = lazy(() => import("@/components/templates/home/articles/ArticlesSection"),);
 
 function SectionFallback({ minHeight = 360 }) {
   return (
@@ -80,6 +79,7 @@ export default function HomePage() {
     <>
       {/* Keep the above-the-fold content in the initial bundle. */}
       <HeroSection />
+      <DeferredSection component={AiChat} minHeight={420} />
 
       {/* Load below-the-fold sections only as they approach the viewport. */}
       <DeferredSection component={ToolsSection} minHeight={420} />
