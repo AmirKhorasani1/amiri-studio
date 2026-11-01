@@ -4,12 +4,14 @@ const express = require("express");
 const http = require("http");
 const cors = require("cors");
 const connectDB = require("./config/db");
+const validateEnvironment = require("./config/validate-env");
 const conversationRoutes = require("./routes/conversation.routes");
 const authRoutes = require("./routes/auth.routes");
 const articleRoutes = require("./routes/article.routes");
 const aiChatRoutes = require("./routes/ai-chat.routes");
 const { initSocket } = require("./socket/socket");
 
+validateEnvironment();
 connectDB();
 
 const app = express();
@@ -71,7 +73,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, error: "Internal server error" });
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT || 5000);
 server.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`🌐 Server available on 0.0.0.0:${PORT}`);
