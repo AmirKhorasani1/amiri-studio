@@ -4,7 +4,7 @@ const { AI_CHAT_SYSTEM_PROMPT } = require("../config/ai-chat.prompt");
 
 const router = express.Router();
 
-const MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-20b";
+const MODEL = (process.env.GROQ_MODEL || "openai/gpt-oss-20b").trim();
 const WINDOW_MS = 10 * 60 * 1000;
 const MAX_REQUESTS = 20;
 const requestBuckets = new Map();
@@ -73,11 +73,13 @@ router.post("/", async (req, res) => {
     });
   }
 
-  const apiKey = process.env.GROQ_API_KEY;
-  if (!apiKey) {
+  const apiKey = process.env.GROQ_API_KEY?.trim();
+  if (!apiKey || apiKey.includes("\\")) {
+    console.error("AI chat is not configured: GROQ_API_KEY is missing or malformed.");
     return res.status(503).json({
       success: false,
-      error: "سرویس هوش مصنوعی هنوز پیکربندی نشده است.",
+      error: "کلید Groq تنظیم نشده یا قالب آن نامعتبر است.",
+      code: "GROQ_API_KEY_INVALID",
     });
   }
 
@@ -100,19 +102,42 @@ router.post("/", async (req, res) => {
       }),
     });
   } catch (error) {
-    console.error("Groq connection error:", error.message);
+    const causeCode = error.cause?.code || error.code || error.name || "UNKNOWN";
+    console.error("Groq connection error:", causeCode, error.message);
     return res.status(502).json({
       success: false,
-      error: "ارتباط با سرویس هوش مصنوعی برقرار نشد. دوباره تلاش کنید.",
+      error: "ارتباط با Groq برقرار نشد. اتصال اینترنت سرور و دسترسی به api.groq.com را بررسی کنید.",
+      code: "GROQ_CONNECTION_FAILED",
+      causeCode,
     });
   }
 
   if (!upstream.ok || !upstream.body) {
     const errorBody = await upstream.text().catch(() => "");
-    console.error("Groq API error:", upstream.status, errorBody.slice(0, 500));
+    let providerError = {};
+
+    try {
+      providerError = JSON.parse(errorBody);
+    } catch {
+      // Keep the provider response out of the public API response.
+    }
+
+    const providerCode =
+      providerError.error?.code || providerError.error?.type || "UPSTREAM_ERROR";
+
+    console.error("Groq API rejected the request:", {
+      status: upstream.status,
+      code: providerCode,
+      message: providerError.error?.message || errorBody.slice(0, 300),
+      model: MODEL,
+    });
+
     return res.status(502).json({
       success: false,
-      error: "سرویس هوش مصنوعی در حال حاضر پاسخ‌گو نیست.",
+      error: "Groq درخواست را نپذیرفت. لاگ بک‌اند علت دقیق را نشان می‌دهد.",
+      code: "GROQ_UPSTREAM_ERROR",
+      providerStatus: upstream.status,
+      providerCode,
     });
   }
 
