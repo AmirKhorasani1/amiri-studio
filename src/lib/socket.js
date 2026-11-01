@@ -1,17 +1,20 @@
 import { io } from "socket.io-client";
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
+// Use the current frontend origin so Socket.IO follows the active network.
+// Vite proxies /socket.io to the Express server during development.
+const SOCKET_URL = window.location.origin;
 
 const isLighthouse = navigator.userAgent.includes("Lighthouse");
 
 export const socket = io(SOCKET_URL, {
+  path: "/socket.io",
   autoConnect: false,
-  transports: ["websocket"],
+  transports: ["websocket", "polling"],
   withCredentials: true,
 });
 
 export const connectSocket = () => {
-  if (!SOCKET_URL || isLighthouse) return;
+  if (isLighthouse) return;
 
   if (!socket.connected) {
     socket.connect();
