@@ -37,7 +37,7 @@ const ToolsPage = () => {
     <main
       dir={isRTL ? "rtl" : "ltr"}
       lang={language}
-      className="container relative flex flex-col gap-8 py-37 md:gap-10"
+      className="container relative flex flex-col gap-8 py-27 md:py-35 md:gap-10"
     >
       {/* Page Header */}
       <div className="flex flex-col gap-4">

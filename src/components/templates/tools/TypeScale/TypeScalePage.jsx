@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Check, Copy } from "lucide-react";
 import { useLanguage } from "@context/LanguageContext";
-import { PixelRuler, MiniSlider, Chip } from "./TypescaleControls";
+import { PixelRuler, MiniSlider, Chip } from "./components/TypescaleControls";
 import {
   PRESETS,
   RATIOS,
@@ -12,7 +12,7 @@ import {
   round,
   toRem,
   fluidClamp,
-} from "./Typescale.data";
+} from "./components/Typescale.data";
 
 const PANEL = "rounded-4xl bg-neutral-200/65 hover:bg-neutral-200/80 transition-all dark:bg-neutral-800/80 dark:hover:bg-neutral-800/90 duration-300";
 const INNER = "border border-neutral-300 bg-white dark:border-neutral-700 dark:bg-neutral-800";

@@ -9,15 +9,15 @@ const translations = {
   en: {
     back: "Tools",
     title: "Regex Lab",
-    description: "Test, debug & understand regular expressions.",
+    description: "Test and debug regular expressions, explore different patterns, and see matches in real time.",
     breadcrumbHome: 'Home',
     breadcrumbTools: 'Tools',
     breadcrumbCurrent: 'Regex Lab',
   },
   fa: {
     back: "ابزارها",
-    title: "آزمایشگاه Regex",
-    description: "تست، دیباگ و درک عبارت‌های باقاعده.",
+    title: "آزمایش Regex",
+    description: "عبارت‌ها را تست و دیباگ کنید، الگوهای مختلف را بررسی کنید و تطابق‌ها را به‌صورت زنده مشاهده کنید.",
     breadcrumbHome: 'خانه',
     breadcrumbTools: 'ابزارها',
     breadcrumbCurrent: 'آزمایشگاه Regex',
@@ -29,7 +29,7 @@ const RegexHeader = () => {
   const t = translations[language];
 
   return (
-    <header className="flex flex-col gap-3">
+    <header className="flex flex-col gap-5">
       <SectionTitle 
         title={t.title} 
         description={t.description} 

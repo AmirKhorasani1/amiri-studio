@@ -42,7 +42,7 @@ const RegexEditor = ({ pattern, onChange, isValid }) => {
       <div
         dir="ltr"
         className={cn(
-          "mt-1.5 flex items-center gap-1.5 rounded-2xl border bg-neutral-50 px-3 py-2.5 transition-colors dark:bg-white/[0.03]",
+          "mt-1.5 flex items-center gap-1.5 rounded-full border bg-neutral-50 px-3 py-2.5 transition-colors dark:bg-white/[0.03]",
           isValid
             ? "border-neutral-200 focus-within:border-neutral-400 dark:border-neutral-700 dark:focus-within:border-neutral-500"
             : "border-neutral-400 dark:border-neutral-400"

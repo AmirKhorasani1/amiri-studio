@@ -201,10 +201,10 @@ const SkillsList = ({ activeIndex = 0, itemCount }) => {
         <AnimatePresence mode="wait">
           <motion.div
             key={activeItem.id}
-            initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
+            initial={{ opacity: 0, y: 25, filter: "blur(6px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            exit={{ opacity: 0, y: -24, filter: "blur(6px)" }}
-            transition={{ duration: 0.55, ease: EASE_OUT }}
+            exit={{ opacity: 0, y: -25, filter: "blur(6px)" }}
+            transition={{ duration: 0.35, ease: EASE_OUT }}
             className="flex items-start gap-5"
           >
             <span className="shrink-0 select-none pt-0.5 text-xl font-normal text-neutral-400 dark:text-neutral-500 md:text-2xl">

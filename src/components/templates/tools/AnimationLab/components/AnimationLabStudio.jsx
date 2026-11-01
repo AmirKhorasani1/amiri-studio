@@ -1,7 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import { Check, Copy, Pause, Play, RotateCcw } from "lucide-react";
 import { useLanguage } from "@context/LanguageContext";
-import { DraggableRuler, MiniSlider, Chip, BezierEditor } from "./AnimationAlabControls";
+import {
+  DraggableRuler,
+  MiniSlider,
+  Chip,
+  BezierEditor,
+} from "./AnimationAlabControls";
 
 import {
   TYPES,
@@ -120,33 +126,56 @@ export default function AnimationLabStudio() {
   const [runId, setRunId] = useState(0);
   const [copied, setCopied] = useState(false);
 
-  const params = useMemo(() => ({
-    tx, ty, scaleVal, rotateVal, blurFrom, blurTo, opacityFrom, opacityTo,
-  }), [tx, ty, scaleVal, rotateVal, blurFrom, blurTo, opacityFrom, opacityTo]);
+  const params = useMemo(
+    () => ({
+      tx,
+      ty,
+      scaleVal,
+      rotateVal,
+      blurFrom,
+      blurTo,
+      opacityFrom,
+      opacityTo,
+    }),
+    [tx, ty, scaleVal, rotateVal, blurFrom, blurTo, opacityFrom, opacityTo],
+  );
 
   const visibleControls = TYPE_CONTROLS[type] ?? [];
   const steps = useMemo(() => buildSteps(type, params), [type, params]);
   const easingCss = useMemo(() => easingToCss(bezier), [bezier]);
 
   const activeEasing = useMemo(
-    () => EASINGS.find((e) => e.bezier.every((v, i) => Math.abs(v - bezier[i]) < 0.005)),
-    [bezier]
+    () =>
+      EASINGS.find((e) =>
+        e.bezier.every((v, i) => Math.abs(v - bezier[i]) < 0.005),
+      ),
+    [bezier],
   );
 
   const keyframeName = `${type}Anim`;
 
   const exportCode = useMemo(
-    () => buildCss({
+    () =>
+      buildCss({
+        type,
+        name: keyframeName,
+        steps,
+        duration,
+        delay,
+        easingCss,
+        iteration,
+        direction,
+      }),
+    [
       type,
-      name: keyframeName,
+      keyframeName,
       steps,
       duration,
       delay,
       easingCss,
       iteration,
       direction,
-    }),
-    [type, keyframeName, steps, duration, delay, easingCss, iteration, direction]
+    ],
   );
 
   useEffect(() => {
@@ -198,12 +227,14 @@ export default function AnimationLabStudio() {
       <style>{`
         ${STYLES}
         @keyframes ${keyframeName} {
-          ${steps.map(({ offset, ...props }) => {
-            const declarations = Object.entries(props)
-              .map(([key, value]) => `${key}: ${value};`)
-              .join(" ");
-            return `${offset}% { ${declarations} }`;
-          }).join("\n")}
+          ${steps
+            .map(({ offset, ...props }) => {
+              const declarations = Object.entries(props)
+                .map(([key, value]) => `${key}: ${value};`)
+                .join(" ");
+              return `${offset}% { ${declarations} }`;
+            })
+            .join("\n")}
         }
       `}</style>
 
@@ -218,22 +249,44 @@ export default function AnimationLabStudio() {
       </header>
 
       {/* Types */}
-      <div className="al-scroll flex gap-1.5 overflow-x-auto pb-1">
-        {TYPES.map((id) => (
-          <button
-            key={id}
-            type="button"
-            onClick={() => setType(id)}
-            className={`whitespace-nowrap rounded-full px-4 py-2.5 text-sm font-medium tracking-wide transition-colors ${
-              type === id
-                ? "bg-black text-white dark:bg-white dark:text-black"
-                : "text-neutral-500 hover:text-black dark:text-neutral-400 dark:hover:text-white"
-            }`}
-          >
-            {t.types[id]}
-          </button>
-        ))}
-      </div>
+      <section>
+        <div className="w-full lg:w-fit mt-3 flex border border-neutral-200 dark:border-neutral-800 p-1 rounded-full overflow-x-auto hide-scrollbar">
+          {TYPES.map((id) => {
+            const active = type === id;
+
+            return (
+              <motion.button
+                key={id}
+                type="button"
+                onClick={() => setType(id)}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                className={`relative shrink-0 whitespace-nowrap rounded-full px-4 py-2.5 text-sm font-medium tracking-wide cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-black/20 dark:focus-visible:ring-white/30 ${
+                  !active ? "hover:bg-black/5 dark:hover:bg-white/5" : ""
+                }`}
+              >
+                {active && (
+                  <motion.span
+                    layoutId="activeTypePill"
+                    className="absolute inset-0 rounded-full bg-black dark:bg-white"
+                    transition={{ type: "spring", stiffness: 500, damping: 50 }}
+                  />
+                )}
+
+                <span
+                  className={`relative z-10 transition-colors duration-200 ${
+                    active
+                      ? "text-white dark:text-black"
+                      : "text-black/50 dark:text-neutral-400/90"
+                  }`}
+                >
+                  {t.types[id]}
+                </span>
+              </motion.button>
+            );
+          })}
+        </div>
+      </section>
 
       {/* Preview */}
       <div className="my-6 flex h-56 items-center justify-center overflow-hidden rounded-4xl border border-neutral-300 bg-white dark:border-neutral-700 dark:bg-neutral-800 md:h-64">
@@ -259,11 +312,19 @@ export default function AnimationLabStudio() {
       {/* Transport */}
       <div className="mb-8 flex flex-col gap-3">
         <div className="flex flex-wrap items-center justify-center gap-2">
-          <button type="button" onClick={() => setPlaying(true)} className={`${BUTTON} ${playing ? "bg-black text-white dark:bg-white dark:text-black" : ""}`}>
+          <button
+            type="button"
+            onClick={() => setPlaying(true)}
+            className={`${BUTTON} ${playing ? "bg-black text-white dark:bg-white dark:text-black" : ""}`}
+          >
             <Play size={13} /> {t.play}
           </button>
 
-          <button type="button" onClick={() => setPlaying(false)} className={`${BUTTON} ${!playing ? "bg-black text-white dark:bg-white dark:text-black" : ""}`}>
+          <button
+            type="button"
+            onClick={() => setPlaying(false)}
+            className={`${BUTTON} ${!playing ? "bg-black text-white dark:bg-white dark:text-black" : ""}`}
+          >
             <Pause size={13} /> {t.pause}
           </button>
 
@@ -312,7 +373,9 @@ export default function AnimationLabStudio() {
         {/* Easing / Timing */}
         <div className={`${PANEL} flex flex-col gap-6 p-5 md:p-6`}>
           <div>
-            <p className="mb-2.5 text-xs font-medium text-neutral-500 dark:text-neutral-400">{t.easing}</p>
+            <p className="mb-2.5 text-xs font-medium text-neutral-500 dark:text-neutral-400">
+              {t.easing}
+            </p>
 
             <div className="flex flex-wrap gap-2">
               {EASINGS.map((e) => (
@@ -338,27 +401,56 @@ export default function AnimationLabStudio() {
           <div>
             <p className="mb-1.5 flex items-center justify-between text-xs font-medium text-neutral-500 dark:text-neutral-400">
               <span>{t.duration}</span>
-              <span dir="ltr" className="tabular-nums text-black dark:text-white">{duration}ms</span>
+              <span
+                dir="ltr"
+                className="tabular-nums text-black dark:text-white"
+              >
+                {duration}ms
+              </span>
             </p>
 
-            <DraggableRuler value={duration} min={0} max={2000} step={10} onChange={setDuration} />
+            <DraggableRuler
+              value={duration}
+              min={0}
+              max={2000}
+              step={10}
+              onChange={setDuration}
+            />
 
             <div className="mt-2 flex flex-wrap gap-1.5">
               {DURATIONS.map((d) => (
-                <Chip key={d} active={duration === d} onClick={() => setDuration(d)}>
+                <Chip
+                  key={d}
+                  active={duration === d}
+                  onClick={() => setDuration(d)}
+                >
                   {d}ms
                 </Chip>
               ))}
             </div>
           </div>
 
-          <MiniSlider label={t.delay} value={delay} min={0} max={1000} step={10} unit="ms" onChange={setDelay} />
+          <MiniSlider
+            label={t.delay}
+            value={delay}
+            min={0}
+            max={1000}
+            step={10}
+            unit="ms"
+            onChange={setDelay}
+          />
 
           <div>
-            <p className="mb-2.5 text-xs font-medium text-neutral-500 dark:text-neutral-400">{t.iteration}</p>
+            <p className="mb-2.5 text-xs font-medium text-neutral-500 dark:text-neutral-400">
+              {t.iteration}
+            </p>
             <div className="flex flex-wrap gap-2">
               {ITERATIONS.map((item) => (
-                <Chip key={item.id} active={iteration === item.value} onClick={() => setIteration(item.value)}>
+                <Chip
+                  key={item.id}
+                  active={iteration === item.value}
+                  onClick={() => setIteration(item.value)}
+                >
                   {t.iterations[item.id]}
                 </Chip>
               ))}
@@ -366,10 +458,16 @@ export default function AnimationLabStudio() {
           </div>
 
           <div>
-            <p className="mb-2.5 text-xs font-medium text-neutral-500 dark:text-neutral-400">{t.direction}</p>
+            <p className="mb-2.5 text-xs font-medium text-neutral-500 dark:text-neutral-400">
+              {t.direction}
+            </p>
             <div className="flex flex-wrap gap-2">
               {DIRECTIONS.map((item) => (
-                <Chip key={item.id} active={direction === item.value} onClick={() => setDirection(item.value)}>
+                <Chip
+                  key={item.id}
+                  active={direction === item.value}
+                  onClick={() => setDirection(item.value)}
+                >
                   {t.directions[item.id]}
                 </Chip>
               ))}
@@ -385,28 +483,77 @@ export default function AnimationLabStudio() {
             visibleControls.includes("rotate") ||
             visibleControls.includes("blur")) && (
             <div className="flex flex-col gap-4">
-              <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400">{t.transform}</p>
+              <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
+                {t.transform}
+              </p>
 
               {visibleControls.includes("translateX") && (
-                <MiniSlider label={t.controls.translateX} value={tx} min={-150} max={150} step={5} unit="px" onChange={setTx} />
+                <MiniSlider
+                  label={t.controls.translateX}
+                  value={tx}
+                  min={-150}
+                  max={150}
+                  step={5}
+                  unit="px"
+                  onChange={setTx}
+                />
               )}
 
               {visibleControls.includes("translateY") && (
-                <MiniSlider label={t.controls.translateY} value={ty} min={-150} max={150} step={5} unit="px" onChange={setTy} />
+                <MiniSlider
+                  label={t.controls.translateY}
+                  value={ty}
+                  min={-150}
+                  max={150}
+                  step={5}
+                  unit="px"
+                  onChange={setTy}
+                />
               )}
 
               {visibleControls.includes("scale") && (
-                <MiniSlider label={t.controls.scale} value={scaleVal} min={0.1} max={2} step={0.05} onChange={setScaleVal} />
+                <MiniSlider
+                  label={t.controls.scale}
+                  value={scaleVal}
+                  min={0.1}
+                  max={2}
+                  step={0.05}
+                  onChange={setScaleVal}
+                />
               )}
 
               {visibleControls.includes("rotate") && (
-                <MiniSlider label={t.controls.rotate} value={rotateVal} min={0} max={360} step={5} unit="°" onChange={setRotateVal} />
+                <MiniSlider
+                  label={t.controls.rotate}
+                  value={rotateVal}
+                  min={0}
+                  max={360}
+                  step={5}
+                  unit="°"
+                  onChange={setRotateVal}
+                />
               )}
 
               {visibleControls.includes("blur") && (
                 <>
-                  <MiniSlider label={`${t.controls.blur} — ${t.opacityFrom}`} value={blurFrom} min={0} max={30} step={1} unit="px" onChange={setBlurFrom} />
-                  <MiniSlider label={`${t.controls.blur} — ${t.opacityTo}`} value={blurTo} min={0} max={30} step={1} unit="px" onChange={setBlurTo} />
+                  <MiniSlider
+                    label={`${t.controls.blur} — ${t.opacityFrom}`}
+                    value={blurFrom}
+                    min={0}
+                    max={30}
+                    step={1}
+                    unit="px"
+                    onChange={setBlurFrom}
+                  />
+                  <MiniSlider
+                    label={`${t.controls.blur} — ${t.opacityTo}`}
+                    value={blurTo}
+                    min={0}
+                    max={30}
+                    step={1}
+                    unit="px"
+                    onChange={setBlurTo}
+                  />
                 </>
               )}
             </div>
@@ -414,7 +561,9 @@ export default function AnimationLabStudio() {
 
           {visibleControls.includes("opacity") && (
             <div>
-              <p className="mb-3 text-xs font-medium text-neutral-500 dark:text-neutral-400">{t.opacity}</p>
+              <p className="mb-3 text-xs font-medium text-neutral-500 dark:text-neutral-400">
+                {t.opacity}
+              </p>
 
               <div className="flex flex-col gap-4">
                 <MiniSlider
@@ -441,7 +590,9 @@ export default function AnimationLabStudio() {
           )}
 
           <div>
-            <p className="mb-2.5 text-xs font-medium text-neutral-500 dark:text-neutral-400">{t.quickPresets}</p>
+            <p className="mb-2.5 text-xs font-medium text-neutral-500 dark:text-neutral-400">
+              {t.quickPresets}
+            </p>
 
             <div className="flex flex-col gap-3">
               {Object.entries(QUICK_PRESETS).map(([category, presets]) => (
@@ -452,7 +603,10 @@ export default function AnimationLabStudio() {
 
                   <div className="flex flex-wrap gap-1.5">
                     {presets.map((preset) => (
-                      <Chip key={preset.id} onClick={() => applyQuickPreset(preset)}>
+                      <Chip
+                        key={preset.id}
+                        onClick={() => applyQuickPreset(preset)}
+                      >
                         {t.presets[preset.id]}
                       </Chip>
                     ))}
@@ -467,7 +621,9 @@ export default function AnimationLabStudio() {
       {/* CSS Output */}
       <div className={`${PANEL} mt-4 p-5 md:p-6`}>
         <div className="mb-3 flex items-center justify-between gap-3">
-          <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400">{t.cssOutput}</p>
+          <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
+            {t.cssOutput}
+          </p>
 
           <button
             type="button"

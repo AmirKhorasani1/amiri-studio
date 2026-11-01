@@ -70,7 +70,7 @@ const RegexLabPage = () => {
   };
 
   return (
-    <main dir={isRTL ? "rtl" : "ltr"} className="container py-30">
+    <main dir={isRTL ? "rtl" : "ltr"} className="container py-22 md:py-30">
       <RegexHeader />
 
       <div className="mt-8">
@@ -82,12 +82,8 @@ const RegexLabPage = () => {
       </div>
 
       <div className="mt-4.5 grid gap-4.5 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,.85fr)]">
-        <section className="rounded-4xl bg-neutral-200/70 p-4 dark:bg-neutral-800/80 sm:p-5">
-          <span className="block text-xs font-medium tracking-wide text-secondary">
-            {t.playground}
-          </span>
-
-          <div className="mt-4 flex flex-col gap-5">
+        <section className="rounded-4xl p-5 md:p-7 bg-neutral-200/65 hover:bg-neutral-200/80 transition-all dark:bg-neutral-800/80 dark:hover:bg-neutral-800/90 duration-300">
+          <div className="flex flex-col gap-5">
             <RegexEditor
               pattern={pattern}
               onChange={handlePatternChange}
@@ -110,12 +106,8 @@ const RegexLabPage = () => {
           </div>
         </section>
 
-        <section className="rounded-4xl bg-neutral-200/70 p-4 dark:bg-neutral-800/80 sm:p-5">
-          <span className="block text-xs font-medium tracking-wide text-secondary">
-            {t.analysis}
-          </span>
-
-          <div className="mt-4 flex flex-col gap-6">
+        <section className="rounded-4xl bg-neutral-200/65 hover:bg-neutral-200/80 transition-all dark:bg-neutral-800/80 dark:hover:bg-neutral-800/90 duration-300 p-5 md:p-7">
+          <div className="flex flex-col gap-6">
             <RegexExplanation pattern={pattern} />
 
             <MatchList

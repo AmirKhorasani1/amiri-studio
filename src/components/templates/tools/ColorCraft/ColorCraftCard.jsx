@@ -42,7 +42,7 @@ const translations = {
     action: "Explore",
   },
   fa: {
-    title: "ColorCraft",
+    title: "استودیو رنگ",
     description:
       "طیف‌های رنگی، گرادیان‌ها و کنتراست را پیش از پیاده‌سازی رابط کاربری بررسی کنید.",
     countLabel: "رنگ · پالت کامل خاکستری",

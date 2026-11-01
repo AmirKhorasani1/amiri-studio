@@ -90,7 +90,7 @@ const SkillsIconsBox = () => {
   ];
 
   return (
-    <div className="relative flex h-[290px] w-full items-center justify-center md:h-auto md:min-h-full md:w-1/2">
+    <div className="relative flex h-[240px] w-full items-center justify-center md:h-auto md:min-h-full md:w-1/2">
       <div
         className="pointer-events-none absolute inset-0 -z-10 flex justify-evenly"
         style={{
