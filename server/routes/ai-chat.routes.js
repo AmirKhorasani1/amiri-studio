@@ -132,9 +132,19 @@ router.post("/", async (req, res) => {
       model: MODEL,
     });
 
-    return res.status(502).json({
+    // Preserve provider 4xx responses (for example 401/403) so the client
+    // can distinguish access/configuration problems from gateway failures.
+    const responseStatus =
+      upstream.status >= 400 && upstream.status < 500 ? upstream.status : 502;
+
+    return res.status(responseStatus).json({
       success: false,
-      error: "Groq درخواست را نپذیرفت. لاگ بک‌اند علت دقیق را نشان می‌دهد.",
+      error:
+        upstream.status === 403
+          ? "Groq دسترسی این درخواست را از شبکه یا IP فعلی مسدود کرده است. تنظیمات شبکه یا IP خروجی سرور را بررسی کنید."
+          : upstream.status === 401
+            ? "کلید API سرویس Groq معتبر نیست یا دسترسی آن لغو شده است."
+            : "Groq درخواست را نپذیرفت. جزئیات بیشتر در لاگ بک‌اند ثبت شده است.",
       code: "GROQ_UPSTREAM_ERROR",
       providerStatus: upstream.status,
       providerCode,
