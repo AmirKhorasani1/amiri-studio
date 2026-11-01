@@ -1,12 +1,13 @@
-require("dotenv").config();
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, ".env") });
 const express = require("express");
 const http = require("http");
 const cors = require("cors");
-const path = require("path");
 const connectDB = require("./config/db");
 const conversationRoutes = require("./routes/conversation.routes");
 const authRoutes = require("./routes/auth.routes");
 const articleRoutes = require("./routes/article.routes");
+const aiChatRoutes = require("./routes/ai-chat.routes");
 const { initSocket } = require("./socket/socket");
 
 connectDB();
@@ -63,6 +64,7 @@ app.get("/api/health", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/conversations", conversationRoutes);
 app.use("/api/articles", articleRoutes);
+app.use("/api/ai-chat", aiChatRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use((err, req, res, next) => {
   console.error(err.stack);
