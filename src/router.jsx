@@ -1,4 +1,5 @@
 import React, { Suspense, lazy } from "react";
+import HomePage from "@pages/HomePage";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
 // Layouts
@@ -10,7 +11,6 @@ import DevNotesLayout from "@tools/DevNotes/layouts/DevNotesLayout";
 import ProtectedRoute from "@components/ProtectedRoute";
 
 // Lazy Pages
-const HomePage = lazy(() => import("@pages/HomePage"));
 const ToolsPage = lazy(() => import("@pages/ToolsPage"));
 const ProjectsPage = lazy(() => import("@pages/ProjectsPage"));
 const ArticlesPage = lazy(() => import("@pages/ArticlesPage"));
@@ -93,11 +93,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: (
-          <Suspense fallback={Loader}>
-            <HomePage />
-          </Suspense>
-        ),
+        element: <HomePage />,
       },
       {
         path: "tools",
