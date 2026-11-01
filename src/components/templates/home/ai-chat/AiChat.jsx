@@ -178,7 +178,7 @@ const AiChat = () => {
               role="alert"
               className="mx-4 mb-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs leading-6 text-red-700 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-300 sm:mx-6"
             >
-              ارسال پیام با خطا مواجه شد. اتصال بک‌اند و تنظیم بودن کلید Groq را بررسی کن و دوباره تلاش کن.
+              {error.message || "ارسال پیام با خطا مواجه شد. لطفاً اتصال بک‌اند و سرویس هوش مصنوعی را بررسی کن."}
             </div>
           )}
 
