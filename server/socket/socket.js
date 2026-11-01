@@ -3,14 +3,13 @@ const jwt = require("jsonwebtoken");
 
 let ioInstance;
 
-function initSocket(server, allowedOrigins) {
+function initSocket(server, corsOrigin) {
   ioInstance = new Server(server, {
     cors: {
-      origin: allowedOrigins,
+      origin: corsOrigin,
       methods: ["GET", "POST"],
       credentials: true,
     },
-
     transports: ["websocket", "polling"],
   });
 

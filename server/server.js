@@ -17,20 +17,41 @@ const allowedOrigins = (process.env.CLIENT_URLS || "")
   .map((url) => url.trim())
   .filter(Boolean);
 
-initSocket(server, allowedOrigins);
+const isLocalNetworkOrigin = (origin) => {
+  try {
+    const { hostname, protocol } = new URL(origin);
+    if (protocol !== "http:" && protocol !== "https:") return false;
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-  })
-);
+    return (
+      hostname === "localhost" ||
+      hostname === "127.0.0.1" ||
+      hostname === "::1" ||
+      hostname.endsWith(".local") ||
+      /^10(?:\.\d{1,3}){3}$/.test(hostname) ||
+      /^192\.168(?:\.\d{1,3}){2}$/.test(hostname) ||
+      /^172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2}$/.test(hostname)
+    );
+  } catch {
+    return false;
+  }
+};
 
+const isAllowedOrigin = (origin) =>
+  !origin ||
+  allowedOrigins.includes(origin) ||
+  (process.env.NODE_ENV !== "production" && isLocalNetworkOrigin(origin));
+
+const corsOrigin = (origin, callback) => {
+  if (isAllowedOrigin(origin)) {
+    return callback(null, true);
+  }
+
+  return callback(new Error("Not allowed by CORS"));
+};
+
+initSocket(server, corsOrigin);
+
+app.use(cors({ origin: corsOrigin }));
 app.use(express.json());
 
 app.get("/api/health", (req, res) => {
@@ -46,7 +67,7 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
+server.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`✅ Allowed origins: ${allowedOrigins.join(", ")}`);
 });
